@@ -1,0 +1,911 @@
+[
+  {
+    "questionText": "Что такое JVM?",
+    "answers": [
+      "Среда выполнения Java-приложений",
+      "Компилятор Java",
+      "Фреймворк для веб-приложений"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой тип данных в Java является примитивным?",
+    "answers": [
+      "String",
+      "Integer",
+      "int"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Что означает ключевое слово 'final' при объявлении переменной?",
+    "answers": [
+      "Переменная может быть изменена только один раз",
+      "Переменная не может быть изменена после инициализации",
+      "Переменная автоматически удаляется сборщиком мусора"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой модификатор доступа позволяет доступ только внутри одного пакета?",
+    "answers": [
+      "private",
+      "protected",
+      "package-private (по умолчанию)"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Что такое интерфейс в Java?",
+    "answers": [
+      "Класс, содержащий только статические методы",
+      "Абстрактный тип, определяющий контракт поведения",
+      "Механизм множественного наследования реализации"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой метод вызывается при запуске Java-приложения?",
+    "answers": [
+      "start()",
+      "init()",
+      "main(String[] args)"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Что такое исключение (Exception) в Java?",
+    "answers": [
+      "Ошибка компиляции",
+      "Событие, нарушающее нормальный поток выполнения программы",
+      "Предупреждение от компилятора"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из перечисленных типов не является обёрткой для примитива?",
+    "answers": [
+      "Double",
+      "String",
+      "Boolean"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Что делает оператор 'new' в Java?",
+    "answers": [
+      "Объявляет новую переменную",
+      "Вызывает сборщик мусора",
+      "Создаёт новый объект в куче"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Какой класс является родителем всех классов в Java?",
+    "answers": [
+      "Object",
+      "Class",
+      "Root"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Что такое полиморфизм?",
+    "answers": [
+      "Возможность одного и того же метода работать по-разному в зависимости от объекта",
+      "Наследование от нескольких классов",
+      "Использование только статических методов"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой модификатор доступа самый строгий?",
+    "answers": [
+      "private",
+      "protected",
+      "public"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Что такое абстрактный класс?",
+    "answers": [
+      "Класс, который нельзя инстанцировать и может содержать абстрактные методы",
+      "Класс без конструктора",
+      "Класс, содержащий только final-методы"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих циклов не существует в Java?",
+    "answers": [
+      "for",
+      "foreach",
+      "repeat-until"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Что такое autoboxing?",
+    "answers": [
+      "Автоматическое преобразование примитива в объект обёртки",
+      "Упаковка нескольких объектов в один массив",
+      "Автоматическая сериализация объектов"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой метод используется для сравнения объектов по значению?",
+    "answers": [
+      "==",
+      "compareTo()",
+      "equals()"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Что такое StringBuilder?",
+    "answers": [
+      "Неизменяемая строка",
+      "Изменяемая строка с синхронизацией",
+      "Изменяемая строка без синхронизации"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Какой из этих типов коллекций не допускает дубликатов?",
+    "answers": [
+      "List",
+      "Set",
+      "Queue"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Что такое generics в Java?",
+    "answers": [
+      "Механизм обработки исключений",
+      "Механизм обеспечения типобезопасности коллекций",
+      "Способ создания глобальных переменных"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой метод должен быть переопределён при использовании объекта в HashMap в качестве ключа?",
+    "answers": [
+      "toString()",
+      "hashCode() и equals()",
+      "compareTo()"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Что такое класс-обёртка (wrapper class)?",
+    "answers": [
+      "Класс, оборачивающий примитивный тип в объект",
+      "Класс, скрывающий реализацию другого класса",
+      "Класс, используемый только для тестирования"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих методов принадлежит классу Object?",
+    "answers": [
+      "length()",
+      "clone()",
+      "size()"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Что такое композиция в ООП?",
+    "answers": [
+      "Один класс наследуется от другого",
+      "Один класс содержит экземпляр другого класса как поле",
+      "Несколько классов реализуют один интерфейс"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой модификатор используется для запрета переопределения метода?",
+    "answers": [
+      "static",
+      "final",
+      "abstract"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Что такое статический блок в Java?",
+    "answers": [
+      "Блок кода, выполняемый при каждом создании объекта",
+      "Блок кода, выполняемый один раз при загрузке класса",
+      "Блок кода внутри статического метода"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из этих типов не относится к коллекциям Java?",
+    "answers": [
+      "ArrayList",
+      "HashMap",
+      "StringBuffer"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Что такое NullPointerException?",
+    "answers": [
+      "Исключение при попытке использовать null как объект",
+      "Ошибка компиляции из-за отсутствующего импорта",
+      "Исключение при выходе за границы массива"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих операторов имеет наивысший приоритет?",
+    "answers": [
+      "+",
+      "*",
+      "()"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Что такое лямбда-выражение в Java?",
+    "answers": [
+      "Анонимная функция, используемая с функциональными интерфейсами",
+      "Метод без параметров",
+      "Специальный тип исключения"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих интерфейсов функциональный?",
+    "answers": [
+      "List",
+      "Runnable",
+      "Map"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Что такое try-with-resources?",
+    "answers": [
+      "Блок для обработки исключений без finally",
+      "Автоматическое закрытие ресурсов, реализующих AutoCloseable",
+      "Способ объявления глобальных переменных"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из этих методов не может быть статическим?",
+    "answers": [
+      "main",
+      "toString",
+      "valueOf"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Что такое наследование в Java?",
+    "answers": [
+      "Создание нового класса на основе существующего",
+      "Использование нескольких интерфейсов",
+      "Объединение двух классов в один"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих типов данных занимает 64 бита?",
+    "answers": [
+      "int",
+      "long",
+      "short"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Что делает ключевое слово 'super'?",
+    "answers": [
+      "Вызывает конструктор текущего класса",
+      "Ссылается на родительский класс",
+      "Останавливает выполнение метода"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из этих методов используется для запуска потока?",
+    "answers": [
+      "run()",
+      "start()",
+      "execute()"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Что такое поток (Thread) в Java?",
+    "answers": [
+      "Объект для работы с файлами",
+      "Независимый путь выполнения кода",
+      "Тип коллекции"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из этих классов является immutable?",
+    "answers": [
+      "StringBuilder",
+      "String",
+      "ArrayList"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Что такое интерфейс Comparable?",
+    "answers": [
+      "Позволяет сравнивать объекты для сортировки",
+      "Позволяет сериализовать объект",
+      "Позволяет клонировать объект"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих методов вызывается сборщиком мусора перед удалением объекта?",
+    "answers": [
+      "finalize()",
+      "destroy()",
+      "close()"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Что такое enum в Java?",
+    "answers": [
+      "Специальный класс для определения констант",
+      "Тип исключения",
+      "Модификатор доступа"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих методов принадлежит классу Thread?",
+    "answers": [
+      "sleep()",
+      "wait()",
+      "notify()"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Что такое synchronized в Java?",
+    "answers": [
+      "Ключевое слово для управления доступом к ресурсам в многопоточной среде",
+      "Метод для остановки потока",
+      "Аннотация для тестов"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих типов коллекций гарантирует порядок вставки?",
+    "answers": [
+      "HashSet",
+      "LinkedHashSet",
+      "TreeSet"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Что такое класс Class в Java?",
+    "answers": [
+      "Метаописание типа во время выполнения",
+      "Родитель всех пользовательских классов",
+      "Класс для работы с файлами"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих методов используется для получения длины массива?",
+    "answers": [
+      "length()",
+      "size()",
+      "length"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Что такое checked exception?",
+    "answers": [
+      "Исключение, которое должно быть обработано или объявлено",
+      "Исключение времени выполнения",
+      "Ошибка компиляции"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих методов не принадлежит классу String?",
+    "answers": [
+      "substring()",
+      "append()",
+      "charAt()"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Что такое var в Java 10+?",
+    "answers": [
+      "Ключевое слово для объявления переменной с выводом типа",
+      "Тип данных для хранения любого значения",
+      "Синоним для Object"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих операторов используется для сравнения ссылок?",
+    "answers": [
+      "equals()",
+      "==",
+      "compareTo()"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Что такое анонимный класс?",
+    "answers": [
+      "Класс без имени, объявленный и инстанцированный в одном выражении",
+      "Класс, не имеющий конструктора",
+      "Класс, помеченный как private"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих методов используется для ожидания завершения потока?",
+    "answers": [
+      "join()",
+      "wait()",
+      "sleep()"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Что такое StackOverflowError?",
+    "answers": [
+      "Ошибка при переполнении стека вызовов (например, бесконечная рекурсия)",
+      "Ошибка при нехватке памяти в куче",
+      "Ошибка при работе с сетью"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих типов не может быть ключом в HashMap?",
+    "answers": [
+      "String",
+      "Integer",
+      "null"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Что такое метод main объявлен как static?",
+    "answers": [
+      "Чтобы его можно было вызвать без создания экземпляра класса",
+      "Чтобы он выполнялся в отдельном потоке",
+      "Чтобы он был недоступен из других классов"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих классов реализует интерфейс List?",
+    "answers": [
+      "HashSet",
+      "TreeMap",
+      "ArrayList"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Что такое volatile переменная?",
+    "answers": [
+      "Переменная, значение которой может измениться в другом потоке и всегда читается из памяти",
+      "Переменная, которая автоматически удаляется",
+      "Переменная, доступная только для чтения"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих методов принадлежит классу Math?",
+    "answers": [
+      "random()",
+      "shuffle()",
+      "sort()"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Что такое класс-компаньон в Java?",
+    "answers": [
+      "Такого понятия нет в Java (есть в Kotlin/Scala)",
+      "Статический внутренний класс",
+      "Класс с тем же именем, что и файл"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих методов используется для преобразования строки в число?",
+    "answers": [
+      "Integer.parseInt()",
+      "Integer.valueOf().intValue()",
+      "Оба предыдущих"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Что такое serialVersionUID?",
+    "answers": [
+      "Уникальный идентификатор для сериализуемых классов",
+      "Номер версии компилятора",
+      "Идентификатор потока"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих методов не является частью жизненного цикла потока?",
+    "answers": [
+      "NEW",
+      "RUNNING",
+      "DESTROYED"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Что такое shallow copy?",
+    "answers": [
+      "Полное копирование объекта и всех вложенных объектов",
+      "Копирование только ссылок на вложенные объекты",
+      "Копирование только примитивных полей"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из этих методов используется для сериализации объекта?",
+    "answers": [
+      "writeObject()",
+      "save()",
+      "serialize()"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Что такое класс ClassCastException?",
+    "answers": [
+      "Исключение при неправильном приведении типов",
+      "Ошибка при работе с классами",
+      "Исключение при отсутствии класса в classpath"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих методов используется для ожидания условия в многопоточности?",
+    "answers": [
+      "wait()",
+      "sleep()",
+      "yield()"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Что такое интерфейс Iterator?",
+    "answers": [
+      "Интерфейс для перебора элементов коллекции",
+      "Интерфейс для создания потоков",
+      "Интерфейс для обработки исключений"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих методов не модифицирует исходную коллекцию?",
+    "answers": [
+      "Collections.sort()",
+      "list.add()",
+      "list.remove()"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Что такое default-метод в интерфейсе?",
+    "answers": [
+      "Метод с реализацией по умолчанию, добавленный в Java 8",
+      "Метод, вызываемый по умолчанию при создании объекта",
+      "Метод, помеченный аннотацией @Default"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих классов является потокобезопасным?",
+    "answers": [
+      "ArrayList",
+      "HashMap",
+      "ConcurrentHashMap"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Что такое System.out.println()?",
+    "answers": [
+      "Метод для записи в файл",
+      "Метод для вывода текста в стандартный поток вывода",
+      "Метод для логирования ошибок"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из этих операторов используется для логического И?",
+    "answers": [
+      "&",
+      "&&",
+      "AND"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Что такое boxing?",
+    "answers": [
+      "Преобразование объекта в примитив",
+      "Преобразование примитива в объект",
+      "Упаковка нескольких переменных в массив"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из этих методов используется для сравнения строк без учёта регистра?",
+    "answers": [
+      "equals()",
+      "equalsIgnoreCase()",
+      "compareToIgnoreCase()"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Что такое класс RuntimeException?",
+    "answers": [
+      "Checked exception",
+      "Unchecked exception",
+      "Ошибка компиляции"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из этих методов возвращает текущий поток?",
+    "answers": [
+      "Thread.currentThread()",
+      "Thread.getRunningThread()",
+      "Thread.activeThread()"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Что такое transient поле?",
+    "answers": [
+      "Поле, игнорируемое при сериализации",
+      "Временная переменная в методе",
+      "Поле, доступное только в том же пакете"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих методов используется для остановки потока (устаревший)?",
+    "answers": [
+      "stop()",
+      "interrupt()",
+      "halt()"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Что такое instanceof?",
+    "answers": [
+      "Оператор для проверки принадлежности объекта к типу",
+      "Метод для получения типа объекта",
+      "Аннотация для наследования"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих типов коллекций работает по принципу FIFO?",
+    "answers": [
+      "Stack",
+      "Queue",
+      "Set"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Что такое метод hashCode()?",
+    "answers": [
+      "Возвращает уникальный идентификатор объекта",
+      "Возвращает целочисленное значение, используемое в хеш-таблицах",
+      "Возвращает адрес объекта в памяти"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из этих классов используется для работы с датой и временем в Java 8+?",
+    "answers": [
+      "Date",
+      "Calendar",
+      "LocalDateTime"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Что такое Stream API?",
+    "answers": [
+      "API для работы с сетевыми потоками",
+      "API для функциональной обработки коллекций",
+      "API для работы с файлами"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из этих методов Stream терминальный?",
+    "answers": [
+      "map()",
+      "filter()",
+      "collect()"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Что такое Optional в Java?",
+    "answers": [
+      "Контейнер для значения, которое может быть null",
+      "Тип исключения",
+      "Специальный вид коллекции"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих методов создаёт параллельный Stream?",
+    "answers": [
+      "stream()",
+      "parallelStream()",
+      "parallel()"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Что такое Predicate в Java?",
+    "answers": [
+      "Функциональный интерфейс, принимающий аргумент и возвращающий boolean",
+      "Интерфейс для сравнения объектов",
+      "Аннотация для валидации"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих методов используется для преобразования Stream в список?",
+    "answers": [
+      "toList()",
+      "collect(Collectors.toList())",
+      "asList()"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Что такое модульность в Java 9+?",
+    "answers": [
+      "Система управления зависимостями через pom.xml",
+      "Система разделения кода на модули с явными зависимостями",
+      "Новый способ объявления пакетов"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из этих операторов используется для тернарного условия?",
+    "answers": [
+      "?:",
+      "??",
+      "if-else"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Что такое record в Java 14+?",
+    "answers": [
+      "Специальный тип класса для хранения неизменяемых данных",
+      "Тип исключения",
+      "Новый вид интерфейса"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих методов используется для получения текущей даты?",
+    "answers": [
+      "new Date()",
+      "LocalDate.now()",
+      "Calendar.getInstance().getDate()"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Что такое switch expression в Java 12+?",
+    "answers": [
+      "Switch, возвращающий значение",
+      "Новый цикл",
+      "Альтернатива if-else"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих методов не может быть вызван у примитивного типа?",
+    "answers": [
+      "toString()",
+      "intValue()",
+      "Ни один из них"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Что такое класс AssertionError?",
+    "answers": [
+      "Исключение, выбрасываемое при провале assert",
+      "Ошибка компиляции",
+      "Исключение при работе с файлами"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих методов используется для замены подстроки?",
+    "answers": [
+      "replace()",
+      "replaceAll()",
+      "Оба предыдущих"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Что такое класс ClassLoader?",
+    "answers": [
+      "Загружает классы в JVM во время выполнения",
+      "Компилирует Java-файлы",
+      "Управляет памятью"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих методов используется для паузы в потоке?",
+    "answers": [
+      "wait()",
+      "sleep()",
+      "pause()"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Что такое интерфейс Cloneable?",
+    "answers": [
+      "Маркерный интерфейс для разрешения клонирования",
+      "Интерфейс с методом clone()",
+      "Интерфейс для копирования файлов"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из этих методов используется для получения системного свойства?",
+    "answers": [
+      "System.getProperty()",
+      "System.getenv()",
+      "Runtime.getProperty()"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Что такое OutOfMemoryError?",
+    "answers": [
+      "Ошибка при нехватке памяти в куче",
+      "Ошибка при переполнении стека",
+      "Ошибка при работе с диском"
+    ],
+    "correctAnswerIndex": 0
+  }
+]
