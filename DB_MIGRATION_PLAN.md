@@ -11,7 +11,7 @@ Completed
 ---
 
 ## Stage 2 – Database Design
-
+Completed
 Goal:
 Design relational schema compatible with Hibernate.
 
@@ -38,7 +38,7 @@ src/main/resources/db/schema.sql
 
 ## Stage 3 – Hibernate Infrastructure
 
-Planned:
+Completed:
 
 Create package
 
