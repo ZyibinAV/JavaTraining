@@ -1,0 +1,52 @@
+package com.homeapp.javatraining.source;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.homeapp.javatraining.model.Question;
+import com.homeapp.javatraining.model.Topic;
+import com.homeapp.javatraining.util.ValidationFactory;
+import com.homeapp.javatraining.validation.QuestionValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.InputStream;
+import java.util.List;
+
+public class FileQuestionSource implements QuestionSource {
+    private static final Logger log = LoggerFactory.getLogger(FileQuestionSource.class);
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    private static final String QUESTIONS_FOLDER = "questions/";
+
+
+    @Override
+    public List<Question> loadQuestions(Topic topic) {
+        String fileName = QUESTIONS_FOLDER + topic.getCode() + ".json";
+
+        log.debug("Loading questions from file={}", fileName);
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream(fileName);
+
+        if (inputStream == null) {
+            log.error("Questions file not found: {}", fileName);
+            throw new IllegalStateException("File not found in resources: " + fileName);
+        }
+
+        try {
+            List<Question> questions = objectMapper.readValue(
+                    inputStream,
+                    new TypeReference<List<Question>>() {
+                    }
+            );
+            QuestionValidator questionValidator = ValidationFactory.createQuestionValidator();
+            questionValidator.validate(questions);
+            log.info("Questions loaded successfully: topic={}, count={}", topic, questions.size());
+            return questions;
+        } catch (Exception e) {
+            log.error("Error reading questions file: {}", fileName, e);
+            throw new IllegalStateException("Error reading: " + fileName, e);
+        }
+    }
+}
