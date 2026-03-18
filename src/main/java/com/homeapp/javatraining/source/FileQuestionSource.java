@@ -2,6 +2,7 @@ package com.homeapp.javatraining.source;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.homeapp.javatraining.model.Answer;
 import com.homeapp.javatraining.model.Question;
 import com.homeapp.javatraining.model.Topic;
 import com.homeapp.javatraining.util.ValidationFactory;
@@ -10,7 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class FileQuestionSource implements QuestionSource {
     private static final Logger log = LoggerFactory.getLogger(FileQuestionSource.class);
@@ -35,11 +38,31 @@ public class FileQuestionSource implements QuestionSource {
         }
 
         try {
-            List<Question> questions = objectMapper.readValue(
+            List<Map<String, Object>> rawQuestions = objectMapper.readValue(
                     inputStream,
-                    new TypeReference<List<Question>>() {
+                    new TypeReference<List<Map<String, Object>>>() {
                     }
             );
+            List<Question> questions = new ArrayList<>();
+            for (Map<String, Object> raw : rawQuestions) {
+                Question question = new Question();
+                question.setQuestionText((String) raw.get("questionText"));
+                question.setCorrectAnswerIndex((Integer) raw.get("correctAnswerIndex"));
+                question.setTopic(topic);
+
+                List<String> rawAnswers = (List<String>) raw.get("answers");
+                List<Answer> answers = new ArrayList<>();
+
+                for (int i = 0; i < rawAnswers.size(); i++) {
+                    Answer answer = new Answer();
+                    answer.setAnswerText(rawAnswers.get(i));
+                    answer.setAnswerIndex(i);
+                    answer.setQuestion(question);
+                    answers.add(answer);
+                }
+                question.setAnswers(answers);
+                questions.add(question);
+            }
             QuestionValidator questionValidator = ValidationFactory.createQuestionValidator();
             questionValidator.validate(questions);
             log.info("Questions loaded successfully: topic={}, count={}", topic, questions.size());

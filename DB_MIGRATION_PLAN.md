@@ -83,6 +83,14 @@ Add annotations:
 @OneToMany
 @JoinColumn
 
+Update:
+
+JSON adapter implemented:
+- FileQuestionSource now converts JSON into entity model (Question + Answer)
+
+Next:
+- implement HibernateQuestionRepository
+
 ---
 
 ## Stage 5 – Repository Migration

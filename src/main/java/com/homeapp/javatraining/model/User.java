@@ -1,22 +1,40 @@
 package com.homeapp.javatraining.model;
 
+import jakarta.persistence.*;
+import lombok.*;
+
 import java.time.LocalDateTime;
 
+
+@Entity
+@Table(name = "users")
+@Setter
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
     private long id;
-    private final String username;
-    private final String passwordHash;
-    private final String email;
+    @Column(nullable = false, unique = true)
+    private String username;
+    @Column(name = "password_hash", nullable = false)
+    private String passwordHash;
+    @Column(nullable = false, unique = true)
+    private String email;
     private String nickname;
+    @Column(columnDefinition = "TEXT")
     private String about;
+    @Column(name = "avatar_path")
     private String avatarPath;
+    @Enumerated(EnumType.STRING)
     private Role role;
-    private final LocalDateTime createdAt;
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
     private boolean blocked;
 
-    public User(long id, String username, String passwordHash, String email, Role role) {
-        this.id = id;
+    public User(String username, String passwordHash, String email, Role role) {
         this.username = username;
         this.passwordHash = passwordHash;
         this.email = email;
@@ -29,70 +47,10 @@ public class User {
 
     }
 
-    public long getId() {
-        return id;
+    public void changeRole(Role newRole) {
+        this.role = newRole;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public String getAbout() {
-        return about;
-    }
-
-    public String getAvatarPath() {
-        return avatarPath;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public void setAbout(String about) {
-        this.about = about;
-    }
-
-    public void setAvatarPath(String avatarPath) {
-        this.avatarPath = avatarPath;
-    }
-
-    public boolean isBlocked() {
-        return blocked;
-    }
-
-    public void setBlocked(boolean blocked) {
-        this.blocked = blocked;
-    }
-
-    public void changeRole(Role role) {
-        this.role = role;
-    }
-
-    public void setId(long id) {
-        if (this.id != 0) {
-            throw new IllegalStateException("ID пользователя уже установлен");
-        }
-        this.id = id;
-    }
 }
+
+

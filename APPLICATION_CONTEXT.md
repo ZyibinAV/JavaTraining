@@ -28,7 +28,9 @@ learning progress.
 ## Project Structure
 
 src/main/java/com/homeapp/javatraining/
-
+├── docker/
+└── postgres/   
+│       └── init.sql
 ├── config/          # Application configuration and initialization  
 │   ├── ApplicationConfig.java
 │   └── hibernate/   # Hibernate infrastructure
@@ -66,7 +68,7 @@ src/main/java/com/homeapp/javatraining/
 src/main/resources/
 
 ├── db/
-│   └── schema.sql   # PostgreSQL database schema
+│   └── training.sql   # PostgreSQL database schema
 
 ├── hibernate.cfg.xml  # Hibernate ORM configuration
 
@@ -136,15 +138,10 @@ src/main/webapp/
 
 **`Topic.java`**
 
-- **Available Topics**:
-    - JAVA_SYNTAX ("java-syntax", "Java Syntax")
-    - JAVA_CORE ("java-core", "Java Core")
-    - JAVA_CONCURRENCY ("java-concurrency", "Java Concurrency")
-    - SERVLETS ("servlets", "Сервлеты")
-    - MAVEN ("maven", "Maven")
-    - JUNIT ("junit5", "JUnit 5")
-    - MOCKITO ("mockito", "Mockito")
-    - LOGGING ("logging", "Logging")
+- **Type**: JPA Entity (replaces enum)
+- **Fields**: id, code, displayName
+- **Purpose**: Represents test topics stored in database
+- **Notes**: Previously implemented as enum, now migrated to database entity
 
 **`Role.java`**
 
@@ -325,7 +322,7 @@ All repositories follow interface-implementation pattern:
 ## Data Flow Architecture
 
 ```
-HTTP Request → Filter → Servlet → Service → Repository → Memory
+HTTP Request → Filter → Servlet → Service → Repository → (Memory | Database)
                 ↓
             JSP View ← Model Data ← Service Response
 ```
@@ -416,7 +413,7 @@ A relational schema for PostgreSQL has been designed.
 
 Schema file:
 
-src/main/resources/db/schema.sql
+src/main/resources/db/training.sql
 
 Defined tables:
 
@@ -426,12 +423,33 @@ questions
 answers  
 test_results
 
+### Data Initialization
+
+The database schema includes initial seed data for topics.
+
+Topics are no longer defined as enum in code and are fully stored in the database.
+
+Source of truth for topics:
+PostgreSQL table "topics"
+
 ### Planned Relationships
 
 User 1 --- * TestResult  
 Topic 1 --- * Question  
 Question 1 --- * Answer  
 Topic 1 --- * TestResult
+
+### Question Loading Update
+
+FileQuestionSource no longer maps JSON directly to Question entity.
+
+Changes:
+- JSON is parsed into raw Map structure
+- Question and Answer entities are constructed manually
+- answers converted from List<String> to List<Answer>
+
+Reason:
+Align JSON source with new database-oriented domain model.
 
 ### Migration Strategy
 

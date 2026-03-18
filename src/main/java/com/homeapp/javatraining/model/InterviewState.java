@@ -4,13 +4,13 @@ import java.util.List;
 import java.util.Set;
 
 public class InterviewState {
-    private final Set<Topic> topics;
+    private final Set<String> topicCodes;
     private final List<Question> questions;
     private int currentIndex;
     private int score;
 
-    public InterviewState(Set<Topic> topics, List<Question> questions) {
-        this.topics = topics;
+    public InterviewState(Set<String> topicCodes, List<Question> questions) {
+        this.topicCodes = topicCodes;
         this.questions = questions;
         this.currentIndex = 0;
         this.score = 0;
@@ -32,8 +32,8 @@ public class InterviewState {
         score++;
     }
 
-    public Set<Topic> getTopics() {
-        return topics;
+    public Set<String> getTopicCodes() {
+        return topicCodes;
     }
 
     public int getTotalQuestions() {
