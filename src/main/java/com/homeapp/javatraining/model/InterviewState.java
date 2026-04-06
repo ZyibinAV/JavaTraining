@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 public class InterviewState {
+
     private final Set<String> topicCodes;
     private final List<Question> questions;
     private int currentIndex;
@@ -34,6 +35,10 @@ public class InterviewState {
 
     public Set<String> getTopicCodes() {
         return topicCodes;
+    }
+
+    public List<Question> getQuestions() {
+        return questions;
     }
 
     public int getTotalQuestions() {

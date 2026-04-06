@@ -15,7 +15,7 @@ learning progress.
 - **Logging**: SLF4J + Log4j2
 - **Testing**: JUnit 5.10.2 + Mockito 5.8.0
 - **JSON Processing**: Jackson 2.17.0
-- **Database**: PostgreSQL (migration in progress)
+- **Database**: PostgreSQL (migration completed)
 - **ORM**: Hibernate ORM
 - **Persistence API**: Jakarta Persistence
 - **Connection Pool**: HikariCP
@@ -25,67 +25,43 @@ learning progress.
 ## Project Structure
 
 ```
-## Project Structure
-
-src/main/java/com/homeapp/javatraining/
+JavaTraining/
 ├── docker/
-└── postgres/   
+│   └── postgres/   
 │       └── init.sql
-├── config/          # Application configuration and initialization  
-│   ├── ApplicationConfig.java
-│   └── hibernate/   # Hibernate infrastructure
-│       └── HibernateUtil.java
-
-├── controllers/     # HTTP request handlers (Servlets)
-
-├── dto/             # Data Transfer Objects
-
-├── exception/       # Custom exception classes
-
-├── filter/          # Servlet filters for authentication and authorization
-
-├── handler/         # Request handling utilities
-
-├── model/           # Domain entities and enums (being migrated to JPA entities)
-
-├── repository/      # Data access layer
-│   ├── InMemoryUserRepository
-│   ├── InMemoryTestResultRepository
-│   └── QuestionRepository (JSON source)
-
-├── service/         # Business logic layer
-
-├── session/         # Session management utilities
-
-├── source/          # JSON question sources (temporary until DB migration)
-
-├── util/            # Utility classes
-
-└── validation/      # Input validation logic
-
-
-
-src/main/resources/
-
-├── db/
-│   └── training.sql   # PostgreSQL database schema
-
-├── hibernate.cfg.xml  # Hibernate ORM configuration
-
-
-
-src/main/webapp/
-
-├── WEB-INF/
-│   └── jsp/        # JSP view files
-│       ├── admin/  # Admin-specific pages
-│       └── common/ # Common UI components
-
-├── css/            # Stylesheets
-
-├── js/             # JavaScript files
-
-└── uploads/        # File upload directory (avatars)
+├── src/main/java/com/homeapp/javatraining/
+│   ├── config/          # Application configuration and initialization  
+│   │   ├── ApplicationConfig.java
+│   │   ├── AppInitListener.java
+│   │   └── hibernate/   # Hibernate infrastructure
+│   │       └── HibernateUtil.java
+│   ├── controllers/     # HTTP request handlers (Servlets)
+│   ├── dto/             # Data Transfer Objects
+│   ├── exception/       # Custom exception classes
+│   ├── filter/          # Servlet filters for authentication and authorization
+│   ├── handler/         # Request handling utilities
+│   ├── model/           # JPA entities and domain models
+│   ├── repository/      # Data access layer (in-memory + migration to Hibernate)
+│   ├── service/         # Business logic layer
+│   ├── session/         # Session management utilities
+│   ├── source/          # JSON question sources (temporary until DB migration)
+│   ├── util/            # Utility classes
+│   └── validation/      # Input validation logic
+├── src/main/resources/
+│   ├── hibernate.cfg.xml  # Hibernate ORM configuration
+│   ├── log4j2.xml         # Log4j2 configuration
+│   └── questions/         # JSON question files (temporary)
+├── src/main/webapp/
+│   ├── WEB-INF/
+│   │   └── jsp/        # JSP view files
+│   │       ├── admin/  # Admin-specific pages
+│   │       └── common/ # Common UI components
+│   ├── css/            # Stylesheets
+│   ├── js/             # JavaScript files
+│   └── uploads/        # File upload directory (avatars)
+├── pom.xml
+├── docker-compose.yml
+└── [documentation files]
 ```
 
 ## Core Components
@@ -95,10 +71,17 @@ src/main/webapp/
 #### `ApplicationConfig.java`
 
 - **Purpose**: Central configuration class that initializes repository beans
-- **Repositories Created**:
-    - `InMemoryUserRepository` - User data management
-    - `InMemoryTestResultRepository` - Test result storage
-    - `QuestionRepository.defaultRepository()` - Question data source
+- **Status**: **🔄 NEEDS COMPLETE REWRITE** - current implementation has critical issues
+- **Current State**:
+    - Uses concrete classes instead of proper dependency injection ❌
+    - Hard-coded repository instantiation ❌
+    - No configuration management ❌
+    - Missing proper interface-based design ❌
+- **Critical Issues**: 
+    - Class needs complete redesign for proper DI pattern
+    - Should use interfaces and proper configuration management
+    - Current implementation is not production-ready
+- **Required Changes**: Complete rewrite needed with proper dependency injection
 
 #### `AppInitListener.java`
 
@@ -107,6 +90,65 @@ src/main/webapp/
     - Initializes all repositories and stores them in ServletContext
     - Provides dependency injection for servlets
     - Logs initialization status
+- **Current Issue**: Resolved - ApplicationConfig fully updated
+
+### 1.1. ApplicationConfig - Critical Issues
+
+#### Current State (ACTUAL):
+```java
+@Getter
+public class ApplicationConfig {
+    private final UserRepository userRepository;                    // ❌ Interface but concrete instantiation
+    private final TestResultRepository testResultRepository;      // ❌ Interface but concrete instantiation  
+    private final QuestionRepository questionRepository;          // ❌ Interface but concrete instantiation
+    
+    public ApplicationConfig() {
+        this.userRepository = new HibernateUserRepository();       // ❌ Hard-coded instantiation
+        this.testResultRepository = new HibernateTestResultRepository(); // ❌ Hard-coded instantiation
+        this.questionRepository = new HibernateQuestionRepository(); // ❌ Hard-coded instantiation
+    }
+}
+```
+
+#### Critical Issues:
+- ❌ **No proper dependency injection**
+- ❌ **Hard-coded repository instantiation**
+- ❌ **Not production-ready**
+- ❌ **Missing configuration management**
+- ❌ **Violates DI principles**
+
+#### Required Changes:
+- 🔄 **Complete rewrite needed**
+- 🔄 **Implement proper dependency injection**
+- 🔄 **Add configuration management**
+- 🔄 **Use factory or framework-based DI**
+
+#### Current HibernateQuestionRepository Implementation (ACTUAL):
+```java
+@Slf4j
+public class HibernateQuestionRepository implements QuestionRepository {  // ✅ Interface implemented
+    private final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+    
+    @Override
+    public List<Question> getQuestions(Topic topic) {  // ✅ Topic entity instead of String
+        try (Session session = sessionFactory.openSession()) {
+            List<Question> questions = session.createQuery(
+                    "FROM Question q WHERE q.topic = :topic", Question.class)
+                    .setParameter("topic", topic).list();
+            return questions;
+        }
+    }
+    
+    @Override
+    public Optional<Question> findById(Long id) { /* ✅ Implemented */ }
+    
+    @Override
+    public List<Question> findAll() { /* ✅ Implemented */ }
+    
+    @Override
+    public void save(Question question) { /* ✅ Implemented with transaction management */ }
+}
+```
 
 ### 2. Data Models
 
@@ -117,58 +159,135 @@ src/main/webapp/
 - **Fields**: id, username, passwordHash, email, nickname, about, avatarPath, role, createdAt, blocked
 - **Roles**: USER, ADMIN (enum)
 - **Features**: Profile management, role assignment, blocking functionality
+**Important (Hibernate migration):**
+- id is generated by database (@GeneratedValue)
+- manual id assignment is not allowed
+- constructor does not accept id
 
 **`Question.java`**
 
-- **Fields**: questionText, answers (List<String>), correctAnswerIndex
-- **Format**: JSON-serializable with Jackson annotations
+- **Type**: JPA Entity with relationships
+- **Fields**: id, questionText, topic (ManyToOne), correctAnswerIndex, answers (OneToMany)
+- **Relationships**: Linked to Topic and Answer entities
 - **Usage**: Multiple choice questions for tests
+- **Migration**: Fully converted to JPA entity with Answer relationship
 
 **`TestResult.java`**
 
-- **Purpose**: Stores test completion data and scores
-- **Fields**: userId, testDate, score, topic, questionCount
+- **Type**: JPA Entity
+- **Fields**: id, user (ManyToOne), topic (ManyToOne), totalQuestions, correctAnswers, passed, finishedAt
+- **Features**: Stores test completion data with user and topic relationships
+- **Format**: Includes formatted date output method
+- **Important (Hibernate migration):**
+- TestResult now stores only one Topic (ManyToOne)
+- Multi-topic tests are not supported at persistence level
 
 **`InterviewState.java`**
 
 - **Purpose**: Manages active test session state
 - **Fields**: selectedTopics, questions, currentQuestionIndex, answers
+- **Important:**
+- InterviewState exposes question list via getQuestions()
+- Used for result processing and persistence logic
 
-#### Enums
+#### JPA Entities
 
 **`Topic.java`**
 
-- **Type**: JPA Entity (replaces enum)
+- **Type**: JPA Entity (fully migrated from enum)
 - **Fields**: id, code, displayName
 - **Purpose**: Represents test topics stored in database
-- **Notes**: Previously implemented as enum, now migrated to database entity
+- **Status**: Migration complete - enum code commented out
+
+Topics are no longer enum-based.
+They must be loaded from database using Hibernate.
+Topic.values() is no longer valid.
+
+TopicUtils is deprecated and should not be used.
+Topic data must be accessed directly via entity fields.
+
+Topic.fromCode() is no longer valid.
+Topic must be retrieved from database and used as entity.
+
+**`Answer.java`**
+
+- **Type**: JPA Entity
+- **Fields**: id, answerText, answerIndex, question (ManyToOne)
+- **Purpose**: Represents individual answer options for questions
+- **Relationship**: Linked to Question entity
 
 **`Role.java`**
 
+- **Type**: Java Enum
 - **Values**: USER, ADMIN
+- **Purpose**: User role management
 
-### 3. Repository Layer (In-Memory)
+### 3. Repository Layer (Migration Status: ✅ COMPLETED)
+
+#### Current Implementation Status
+
+**Hibernate Repositories (✅ Implemented):**
+
+- **HibernateUserRepository** - Fully implemented with Session API
+    - CRUD operations with transaction management
+    - HQL queries for username lookup
+    - Error handling and logging
+
+- **HibernateTestResultRepository** - Fully implemented
+    - Implements TestResultRepository interface
+    - HQL queries with user relationship filtering
+    - Transaction management and logging
+
+- **HibernateQuestionRepository** - Fully implemented
+    - ✅ Implements QuestionRepository interface
+    - ✅ Complete CRUD operations (getQuestions, findById, findAll, save)
+    - ✅ Proper method signature: getQuestions(Topic topic)
+    - ✅ Transaction management and error handling
+    - Added method existsByTextAndTopic(String questionText, Topic topic)
+    - Used for data migration duplicate protection
+  
+#### Repository Layer Status: **FULLY MIGRATED TO HIBERNATE**
+
+All repositories:
+- ✅ Use interface-based design
+- ✅ Use Hibernate Session API
+- ✅ Support complete CRUD operations
+- ✅ Include proper transaction management
+- ✅ Ready for production use
+
+**⚠️ CRITICAL CONFIGURATION ISSUE:**
+ApplicationConfig needs complete rewrite - currently uses hard-coded instantiation instead of proper dependency injection.
+
+**Legacy Repositories (Status):**
+
+- **QuestionRepository.defaultRepository()** - JSON-based (completely replaced)
+- **InMemoryUserRepository** - Completely replaced
+- **InMemoryTestResultRepository** - Completely replaced
+
+#### Migration Status: **COMPLETE**
+
+All repository implementations successfully migrated to Hibernate with proper interface pattern.
 
 #### Interface Pattern
 
-All repositories follow interface-implementation pattern:
+- **UserRepository.java** → **HibernateUserRepository.java** ✅ Complete
+- **TestResultRepository.java** → **HibernateTestResultRepository.java** ✅ Complete
+- **QuestionRepository.java** → **HibernateQuestionRepository.java** ✅ Complete
 
-**`UserRepository.java`** → `InMemoryUserRepository.java`
-**`TestResultRepository.java`** → `InMemoryTestResultRepository.java`
-**`QuestionRepository.java`** → Static factory method
+### DTO Layer
 
-#### Key Features
+DTO classes are used as data containers for transferring information between layers.
 
-- Thread-safe operations using ConcurrentHashMap
-- Auto-incrementing IDs
-- In-memory data storage (no external database)
-- CRUD operations for all entities
-
+**Rules:**
+- DTO classes must not depend on entity lookup logic
+- All required data must be passed into DTO constructors
+- DTO must be constructed with all required data at creation time.
+  Controllers and services are responsible for providing entity data.
 ### 4. Service Layer
 
 #### Authentication & Authorization
 
-**`AuthenticationService.java`**
+**`AuthenticationService.java`** ✅
 
 - **Purpose**: User login validation
 - **Features**:
@@ -177,38 +296,47 @@ All repositories follow interface-implementation pattern:
     - Credential validation
     - Custom exceptions for auth failures
 
-**`RegistrationService.java`**
+**`RegistrationService.java`** ✅
 
 - **Purpose**: New user registration
 - **Features**: Input validation, duplicate checking
 
 #### Business Logic Services
 
-**`QuestionService.java`**
+**`QuestionService.java`** ✅
 
 - **Purpose**: Question management and retrieval
 - **Features**: Topic-based filtering, random selection
 
-**`UserService.java`** / `UserServiceImpl.java`
+**`UserService.java`** / `UserServiceImpl.java`** ✅
 
 - **Purpose**: User profile management
 - **Features**: Profile updates, avatar management
 
-**`AdminUserService.java`**
+**`AdminUserService.java`** ✅
 
 - **Purpose**: Administrative user management
 - **Features**: Role changes, user blocking/unblocking
 
-**`UserStatisticsService.java`** / `UserTestStatisticsService.java`
+**`AvatarService.java`** ✅
+
+- **Purpose**: Avatar management
+- **Features**: Upload, selection, file handling
+
+**`UserStatisticsService.java`** / `UserStatisticsServiceImpl.java`** ✅
 
 - **Purpose**: Test result analytics and reporting
+
+**`UserTestStatisticsService.java`** ✅
+
+- **Purpose**: User-specific test statistics
 
 ### 5. Controller Layer (Servlets)
 
 #### Base Architecture
 
 **`BaseServlet.java`**
-
+- Uses QuestionRepository interface for question access (via ServletContext)
 - **Purpose**: Abstract base class for all servlets
 - **Features**:
     - Dependency injection from ServletContext
@@ -221,6 +349,9 @@ All repositories follow interface-implementation pattern:
 **User-Facing Servlets**:
 
 - `StartServlet` - Initiates test sessions
+- Uses QuestionRepository interface for loading questions ✅
+- Loads Topic entities via TopicLoader instead of manual creation ✅
+- Fully integrated with Hibernate-based question loading ✅
 - `QuestionServlet` - Displays questions and handles answers
 - `ResultServlet` - Shows test results
 - `LoginServlet` / `LogoutServlet` - Authentication
@@ -272,13 +403,36 @@ All repositories follow interface-implementation pattern:
 
 **`TopicUtils.java`**
 
-- **Purpose**: Topic enumeration utilities
-- **Features**: Code-to-display-name mapping
+- **Purpose**: Topic enumeration utilities (deprecated)
+- **Status**: Topic enum replaced with JPA entities
+- **Note**: Use TopicLoader for database access instead
+
+**`TopicLoader.java`**
+
+- **Purpose**: Database access for Topic entities
+- **Features**: 
+    - loadAllTopics() - loads all topics from database
+    - findByCode(String code) - finds topic by code
+- **Usage**: Replacement for enum-based Topic access
+- **Implementation**: Uses Hibernate Session API
+
+**`QuestionMigrationRunner.java`**
+
+- **Purpose**: Data migration from JSON to PostgreSQL
+- **Features**:
+    - Load questions from JSON via FileQuestionSource
+    - Convert to JPA entities (Question + Answer)
+    - Persist using QuestionRepository
+- **Usage**: One-time migration tool for transferring JSON data to database
+- Important constraints:
+- QuestionMigrationRunner requires Topic entities loaded from database
+- Usage of transient Topic (new Topic()) is запрещено
 
 **`ValidationFactory.java`**
 
 - **Purpose**: Validation object creation
 - **Pattern**: Factory pattern for validators
+- **Features**: Creates type-specific validators for entities
 
 ### 8. Exception Handling
 
@@ -302,6 +456,12 @@ All repositories follow interface-implementation pattern:
     - User session tracking
     - Session cleanup utilities
 
+
+TestResult no longer contains userId and topicCode.
+All access must go through:
+- testResult.getUser()
+- testResult.getTopic()
+- 
 ## Application Flow
 
 ### User Journey
@@ -355,113 +515,132 @@ HTTP Request → Filter → Servlet → Service → Repository → (Memory | Dat
 
 ### Current Limitations
 
-- **In-Memory Storage**: Data lost on application restart
-- **No Database**: Not production-ready for persistent data
+- **Data Migration**: JSON questions still need to be migrated to PostgreSQL (infrastructure ready)
+- **Security**: SHA-256 hashing without modern security features
 - **Single Instance**: Not distributed-ready
-- **Limited Security**: Basic authentication only
 
 ### Scalability Notes
 
-- Repository pattern allows easy database integration
+- Repository pattern fully implemented with database integration ✅
 - Service layer supports business logic expansion
 - Filter-based security is extensible
 - Session management could be externalized
+- JPA entities enable future scaling with proper caching
 
-## Persistence Layer (Migration in Progress)
+### Migration Progress
 
-The project is currently migrating from in-memory storage and JSON-based question sources to PostgreSQL with Hibernate
-ORM.
+The project has **successfully completed database migration** with all components fully functional:
 
-### Current State
+**Phase 1 - Infrastructure (✅ Complete):**
+- Added Hibernate ORM 6.6.44.Final
+- Added PostgreSQL JDBC Driver 42.7.3
+- Added HikariCP connection pool
+- Configured Hibernate session factory
 
-The application still uses:
+**Phase 2 - Entity Migration (✅ Complete):**
+- All model classes converted to JPA entities
+- Database schema designed and implemented
+- Relationships properly defined
 
-- InMemoryUserRepository
-- InMemoryTestResultRepository
-- JSON-based QuestionRepository
+**Phase 3 - Repository Implementation (✅ Complete):**
+- HibernateUserRepository: ✅ Implemented and working
+- HibernateTestResultRepository: ✅ Implemented and working
+- HibernateQuestionRepository: ✅ Implemented with complete CRUD operations
 
-These repositories remain active while the database layer is being introduced.
+**Phase 4 - Configuration Integration (🔄 INCOMPLETE):**
+- ApplicationConfig needs complete rewrite ❌
+- Hard-coded repository instantiation ❌
+- Missing proper dependency injection ❌
+- Repository pattern implemented but configuration broken ❌
 
-### Planned Persistence Technology
+**Phase 5 - Data Migration (⏳ Ready):**
+- QuestionMigrationRunner implemented for JSON → PostgreSQL migration
+- FileQuestionSource adapted for entity compatibility
+- Ready for data migration execution
 
-The project is transitioning to:
+**Migration Status: 🔄 INCOMPLETE - Configuration Issues**
 
-- PostgreSQL database
-- Hibernate ORM
-- Jakarta Persistence (JPA)
+**Critical Components Status:**
+- ✅ Repository pattern fully implemented
+- ❌ ApplicationConfig needs complete rewrite
+- ✅ Interface-based dependency injection (repositories)
+- ❌ Configuration management broken
+- ✅ Complete CRUD operations for all entities
+- ❌ Hard-coded instantiation instead of proper DI
+- ✅ Transaction management and error handling
+- ❌ Not production-ready due to configuration issues
 
-### Hibernate Infrastructure
+## Database Configuration
 
-Hibernate has been added to the project and configured with a central SessionFactory.
+### PostgreSQL Setup
 
-Configuration files:
+#### Docker Configuration
+```yaml
+# docker-compose.yml
+services:
+  postgres:
+    image: postgres:16
+    container_name: javatraining-postgres
+    environment:
+      POSTGRES_DB: javatraining
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+```
 
-src/main/resources/hibernate.cfg.xml
+#### Database Schema
 
-Core infrastructure class:
+Located in `docker/postgres/init.sql`:
 
-com.homeapp.javatraining.config.hibernate.HibernateUtil
+```sql
+users        (id, username, password_hash, email, nickname, about, avatar_path, role, created_at, blocked)
+topics       (id, code, display_name)
+questions    (id, topic_id, question_text, correct_answer_index)
+answers      (id, question_id, answer_text, answer_index)
+test_results (id, user_id, topic_id, total_questions, correct_answers, passed, finished_at)
+```
 
-Responsibilities:
+#### Hibernate Configuration
 
-- Create and manage a single SessionFactory instance
-- Provide Hibernate Session access for repository layer
+Located in `src/main/resources/hibernate.cfg.xml`:
+- **Driver**: PostgreSQL
+- **Connection**: localhost:5432/javatraining
+- **Dialect**: PostgreSQLDialect
+- **Schema Strategy**: validate
+- **Show SQL**: true (debug mode)
+- **Pool Size**: 10 connections
 
-### Database Schema
+### Migration Status
 
-A relational schema for PostgreSQL has been designed.
+**Completed:**
+- ✅ Database schema designed
+- ✅ All JPA entities implemented
+- ✅ Hibernate infrastructure configured
+- ✅ Docker environment ready
+- ✅ All repositories implemented with interface pattern
+- ❌ ApplicationConfig needs complete rewrite
 
-Schema file:
+**Critical Issues:**
+- ❌ ApplicationConfig uses hard-coded instantiation
+- ❌ No proper dependency injection
+- ❌ Configuration management missing
+- ❌ Not production-ready
 
-src/main/resources/db/training.sql
+**In Progress:**
+- 🔄 Data migration from JSON to PostgreSQL (infrastructure ready)
+- 🔄 Performance optimization and testing
 
-Defined tables:
-
-users  
-topics  
-questions  
-answers  
-test_results
-
-### Data Initialization
-
-The database schema includes initial seed data for topics.
-
-Topics are no longer defined as enum in code and are fully stored in the database.
-
-Source of truth for topics:
-PostgreSQL table "topics"
-
-### Planned Relationships
-
-User 1 --- * TestResult  
-Topic 1 --- * Question  
-Question 1 --- * Answer  
-Topic 1 --- * TestResult
-
-### Question Loading Update
-
-FileQuestionSource no longer maps JSON directly to Question entity.
-
-Changes:
-- JSON is parsed into raw Map structure
-- Question and Answer entities are constructed manually
-- answers converted from List<String> to List<Answer>
-
-Reason:
-Align JSON source with new database-oriented domain model.
-
-### Migration Strategy
-
-The migration will occur in several steps:
-
-1. Add Hibernate infrastructure
-2. Design relational schema
-3. Convert model classes to JPA entities
-4. Implement Hibernate repositories
-5. Replace in-memory repositories
-6. Migrate question data from JSON to database
-7. Remove JSON-based storage
+**Next Steps:**
+- 🔄 Complete rewrite of ApplicationConfig with proper DI
+- 🔄 Implement configuration management
+- Execute data migration using QuestionMigrationRunner
+- Remove JSON-based storage components
+- Add comprehensive testing for Hibernate repositories
+- Performance tuning and optimization
 
 ## Testing Strategy
 
@@ -504,12 +683,14 @@ The migration will occur in several steps:
 
 ## Future Enhancement Opportunities
 
-### Immediate Improvements
+### Immediate Improvements (Post-Migration)
 
-1. **Database Integration**: Replace in-memory repositories
-2. **Enhanced Security**: Add CSRF protection, rate limiting
-3. **API Layer**: RESTful endpoints for mobile clients
-4. **Caching**: Redis for session management
+1. **🔄 CRITICAL: Rewrite ApplicationConfig**: Implement proper dependency injection
+2. **Complete Database Migration**: Finish implementing proper configuration management
+3. **Enhanced Security**: Add BCrypt password hashing, CSRF protection, rate limiting
+4. **Performance Optimization**: Add database indexes, configure fetch strategies
+5. **API Layer**: RESTful endpoints for mobile clients
+6. **Caching**: Redis for session management and query caching
 
 ### Long-term Features
 
@@ -517,6 +698,15 @@ The migration will occur in several steps:
 2. **Real-time Features**: WebSocket for live test updates
 3. **Analytics**: Advanced reporting and insights
 4. **Multi-language Support**: Internationalization
+5. **Cloud Deployment**: Kubernetes configuration
+6. **Advanced Testing**: Adaptive testing algorithms
+
+### Technical Debt
+
+- Remove JSON-based question storage
+- Implement proper transaction management
+- Add comprehensive integration tests
+- Upgrade to Spring Boot for full framework benefits
 
 ## AI Development Context
 
@@ -524,17 +714,22 @@ This application serves as an excellent learning platform for:
 
 - **Servlet-based Architecture**: Traditional Java web development
 - **Layered Architecture**: Clear separation of concerns
-- **In-memory Data Patterns**: Repository pattern implementation
+- **Repository Pattern**: Data access abstraction with migration to JPA
 - **Security Implementation**: Authentication and authorization
 - **Maven Project Structure**: Standard Java project organization
+- **Database Migration**: Real-world example of in-memory to database migration
+- **JPA/Hibernate**: Modern ORM implementation
+- **Docker**: Containerization and development environment setup
 
 ### Code Patterns to Learn
 
 - **Factory Pattern**: ValidationFactory
 - **Template Method**: BaseServlet abstract class
-- **Repository Pattern**: Data access abstraction
+- **Repository Pattern**: Data access abstraction (both in-memory and JPA)
 - **Filter Chain**: Security implementation
 - **Service Layer**: Business logic separation
+- **Entity Relationships**: JPA annotations and database design
+- **Migration Patterns**: Step-by-step migration strategy
 
 ### Extension Points for AI Development
 
@@ -543,8 +738,33 @@ This application serves as an excellent learning platform for:
 - **Learning Paths**: Personalized curriculum generation
 - **Performance Analytics**: Machine learning for improvement suggestions
 - **Integration APIs**: Connect with external learning platforms
+- **Migration Automation**: Tools for database migration assistance
+- **Testing Automation**: Generate test cases based on entity relationships
 
 ---
 
-*This documentation is designed to be continuously updated by AI assistants working on this codebase. Please add new
-findings, architectural decisions, and implementation details as they are discovered.*
+*This documentation is continuously updated to reflect the current state of the JavaTraining project. The project has **completed database migration** but has **critical configuration issues** that need to be addressed. Please refer to MIGRATION_LOG.md and DB_MIGRATION_PLAN.md for detailed migration history.*
+
+*Last updated: 2026-04-06 (Configuration issues identified - ApplicationConfig needs complete rewrite)*
+
+## Immediate Action Required
+
+**🔄 CONFIGURATION REWRITE NEEDED**
+
+**Critical Issues Identified:**
+1. ❌ ApplicationConfig needs complete rewrite
+2. ❌ Hard-coded repository instantiation
+3. ❌ No proper dependency injection
+4. ❌ Configuration management missing
+
+**Current Status:**
+- Repository layer fully functional with PostgreSQL backend
+- All repositories successfully migrated to Hibernate
+- ❌ Configuration layer broken - not production-ready
+- Ready for data migration after configuration fix
+
+**Priority Actions:**
+1. 🔄 Complete rewrite of ApplicationConfig
+2. 🔄 Implement proper dependency injection pattern
+3. 🔄 Add configuration management
+4. 🔄 Test integration after configuration fix

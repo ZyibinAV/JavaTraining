@@ -1,71 +1,52 @@
 package com.homeapp.javatraining.model;
 
 import com.homeapp.javatraining.util.TopicUtils;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
+@Getter
+@NoArgsConstructor
+@Entity
+@Table(name = "test_results")
 public class TestResult {
-
-    private long id;
-    private long userId;
-    private String topicCode;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "topic_id", nullable = false)
+    private Topic topic;
+    @Column(name = "total_questions", nullable = false)
     private int totalQuestions;
+    @Column(name = "correct_answers", nullable = false)
     private int correctAnswers;
+    @Column(name = "passed", nullable = false)
     private boolean passed;
+    @Column(name = "finished_at", nullable = false)
     private LocalDateTime finishedAt;
 
-    public TestResult(long userId,
-                      String topicCode,
+    public TestResult(User user,
+                      Topic topic,
                       int totalQuestions,
                       int correctAnswers,
                       boolean passed,
                       LocalDateTime finishedAt) {
-        this.userId = userId;
-        this.topicCode = topicCode;
+        this.user = user;
+        this.topic = topic;
         this.totalQuestions = totalQuestions;
         this.correctAnswers = correctAnswers;
         this.passed = passed;
         this.finishedAt = finishedAt;
-    }
 
-    public void setId(long id) {
-        if (this.id != 0) {
-            throw new IllegalStateException("id is already set");
-        }
-        this.id = id;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public String getTopicCode() {
-        return topicCode;
-    }
-
-    public int getTotalQuestions() {
-        return totalQuestions;
-    }
-
-    public int getCorrectAnswers() {
-        return correctAnswers;
-    }
-
-    public boolean isPassed() {
-        return passed;
-    }
-
-    public LocalDateTime getFinishedAt() {
-        return finishedAt;
     }
 
     public String getTopicDisplayName() {
-        return TopicUtils.convertTopicCodesToDisplayNames(topicCode);
+        return topic.getDisplayName();
     }
 
     public String getFormattedFinishedAt() {

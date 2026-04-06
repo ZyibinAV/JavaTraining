@@ -12,7 +12,7 @@ import java.util.Objects;
 @Table(name = "topics")
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class Topic {
 
     @Id

@@ -5,13 +5,11 @@ import com.homeapp.javatraining.model.Topic;
 public class TopicStats extends BaseStats {
 
     private final String topicCode;
-    private String topicDisplayName;
+    private final String topicDisplayName;
 
-
-    public TopicStats(String topicCode) {
+    public TopicStats(String topicCode, String topicDisplayName) {
         this.topicCode = topicCode;
-        Topic topic = Topic.fromCode(topicCode);
-        this.topicDisplayName = topic.getDisplayName();
+        this.topicDisplayName = topicDisplayName;
     }
 
     public String getTopicCode() {
@@ -21,5 +19,6 @@ public class TopicStats extends BaseStats {
     public String getTopicDisplayName() {
         return topicDisplayName;
     }
+
 
 }

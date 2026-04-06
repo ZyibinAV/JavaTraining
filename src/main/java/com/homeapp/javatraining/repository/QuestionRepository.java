@@ -2,30 +2,21 @@ package com.homeapp.javatraining.repository;
 
 import com.homeapp.javatraining.model.Question;
 import com.homeapp.javatraining.model.Topic;
-import com.homeapp.javatraining.source.FileQuestionSource;
-import com.homeapp.javatraining.source.QuestionSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Optional;
 
-public class QuestionRepository {
-    private static final Logger log = LoggerFactory.getLogger(QuestionRepository.class);
+public interface QuestionRepository {
 
-    private final QuestionSource source;
+    List<Question> getQuestions(Topic topic);
 
-    public QuestionRepository(QuestionSource source) {
-        this.source = source;
-    }
+    Optional<Question> findById(Long id);
 
-    public static QuestionRepository defaultRepository() {
-        return new QuestionRepository(new FileQuestionSource());
-    }
+    List<Question> findAll();
 
-    public List<Question> getQuestions(Topic topic) {
-        log.debug("Loading questions for topic={}", topic);
-        List<Question> questions = source.loadQuestions(topic);
-        log.info("Questions loaded for topic={}, count={}", topic, questions.size());
-        return questions;
-    }
+    void save(Question question);
+
+    boolean existsByTextAndTopic(String questionText, Topic topic);
+
+    void saveAll(List<Question> questions);
 }

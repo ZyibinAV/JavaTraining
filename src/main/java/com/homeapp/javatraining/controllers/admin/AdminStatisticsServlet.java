@@ -4,6 +4,7 @@ import com.homeapp.javatraining.controllers.BaseServlet;
 import com.homeapp.javatraining.dto.TopicStats;
 import com.homeapp.javatraining.dto.UserStats;
 import com.homeapp.javatraining.model.TestResult;
+import com.homeapp.javatraining.model.Topic;
 import com.homeapp.javatraining.model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -25,6 +26,7 @@ public class AdminStatisticsServlet extends BaseServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+
         log.debug("GET /admin/statistics");
 
         List<TestResult> results = testResultRepository.findAll();
@@ -41,7 +43,11 @@ public class AdminStatisticsServlet extends BaseServlet {
         }
 
         for (TestResult r : results) {
-            UserStats stats = userStats.get(r.getUserId());
+            if (r.getUser() == null) continue;
+
+            Long userId = r.getUser().getId();
+            UserStats stats = userStats.get(userId);
+
             if (stats != null) {
                 stats.incrementTotal();
                 if (r.isPassed()) {
@@ -53,18 +59,20 @@ public class AdminStatisticsServlet extends BaseServlet {
         Map<String, TopicStats> topicStats = new HashMap<>();
 
         for (TestResult r : results) {
-            String[] topics = r.getTopicCode().split(",");
+            if (r.getTopic() == null) continue;
 
-            for (String rawTopic : topics) {
-                String topic = rawTopic.trim();
+            Topic topic = r.getTopic();
+            String topicCode = topic.getCode();
 
-                TopicStats stats =
-                        topicStats.computeIfAbsent(topic, TopicStats::new);
+            // ✅ FIX: передаём displayName
+            TopicStats stats = topicStats.computeIfAbsent(
+                    topicCode,
+                    code -> new TopicStats(code, topic.getDisplayName())
+            );
 
-                stats.incrementTotal();
-                if (r.isPassed()) {
-                    stats.incrementPassed();
-                }
+            stats.incrementTotal();
+            if (r.isPassed()) {
+                stats.incrementPassed();
             }
         }
 

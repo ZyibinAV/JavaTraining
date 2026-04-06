@@ -4,11 +4,13 @@ import com.homeapp.javatraining.model.Role;
 import com.homeapp.javatraining.model.User;
 import com.homeapp.javatraining.repository.UserRepository;
 import com.homeapp.javatraining.util.PasswordUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Slf4j
 public class UserServiceImpl implements UserService {
-    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
+
 
     private final UserRepository userRepository;
 
@@ -30,7 +32,6 @@ public class UserServiceImpl implements UserService {
                 });
         String passwordHash = PasswordUtil.hashPassword(rawPassword);
         User user = new User(
-                0,
                 username,
                 passwordHash,
                 email,

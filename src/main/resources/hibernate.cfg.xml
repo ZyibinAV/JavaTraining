@@ -39,6 +39,12 @@
         <!-- Connection pool -->
         <property name="hibernate.connection.pool_size">10</property>
 
+        <mapping class="com.homeapp.javatraining.model.Topic"/>
+        <mapping class="com.homeapp.javatraining.model.Question"/>
+        <mapping class="com.homeapp.javatraining.model.Answer"/>
+        <mapping class="com.homeapp.javatraining.model.User"/>
+        <mapping class="com.homeapp.javatraining.model.TestResult"/>
+
     </session-factory>
 
 </hibernate-configuration>

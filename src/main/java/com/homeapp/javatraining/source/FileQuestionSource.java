@@ -7,16 +7,15 @@ import com.homeapp.javatraining.model.Question;
 import com.homeapp.javatraining.model.Topic;
 import com.homeapp.javatraining.util.ValidationFactory;
 import com.homeapp.javatraining.validation.QuestionValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class FileQuestionSource implements QuestionSource {
-    private static final Logger log = LoggerFactory.getLogger(FileQuestionSource.class);
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 

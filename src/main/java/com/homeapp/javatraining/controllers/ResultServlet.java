@@ -1,9 +1,6 @@
 package com.homeapp.javatraining.controllers;
 
-import com.homeapp.javatraining.model.InterviewState;
-import com.homeapp.javatraining.model.TestResult;
-import com.homeapp.javatraining.model.Topic;
-import com.homeapp.javatraining.model.User;
+import com.homeapp.javatraining.model.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +9,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @WebServlet("/result")
@@ -47,10 +45,12 @@ public class ResultServlet extends BaseServlet {
         int correctAnswers = interviewState.getScore();
         boolean passed = correctAnswers * 2 >= totalQuestions;
 
-        String topicCodes = interviewState.getTopics()
-                .stream()
-                .map(Topic::getCode)
-                .collect(Collectors.joining(", "));
+        List<Question> questions = interviewState.getQuestions();
+
+        if (questions.isEmpty()) {
+            throw new IllegalStateException("No questions in interview state");
+        }
+        Topic topic = questions.get(0).getTopic();
 
         log.info("Interview finished for user {}, passed={}, score={}/{}",
                 user.getUsername(),
@@ -59,8 +59,8 @@ public class ResultServlet extends BaseServlet {
                 totalQuestions);
 
         TestResult result = new TestResult(
-                user.getId(),
-                topicCodes,
+                user,
+                topic,
                 totalQuestions,
                 correctAnswers,
                 passed,
@@ -71,7 +71,7 @@ public class ResultServlet extends BaseServlet {
 
         log.info("Test result saved for user {}", user.getUsername());
 
-        req.setAttribute("topics", topicCodes);
+        req.setAttribute("topics", topic.getDisplayName());
         req.setAttribute("total", totalQuestions);
         req.setAttribute("correct", correctAnswers);
         req.setAttribute("passed", passed);
