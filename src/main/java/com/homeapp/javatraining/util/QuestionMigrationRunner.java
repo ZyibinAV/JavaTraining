@@ -4,7 +4,7 @@ package com.homeapp.javatraining.util;
 import com.homeapp.javatraining.model.Question;
 import com.homeapp.javatraining.model.Topic;
 import com.homeapp.javatraining.repository.QuestionRepository;
-import com.homeapp.javatraining.source.FileQuestionSource;
+import com.homeapp.javatraining.tools.migration.JsonQuestionImportSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,7 +16,7 @@ import java.util.List;
 public class QuestionMigrationRunner {
 
     private final QuestionRepository questionRepository;
-    private final FileQuestionSource fileQuestionSource;
+    private final JsonQuestionImportSource fileQuestionSource;
 
     public void migrate(List<Topic> topics) {
         for (Topic topic : topics) {

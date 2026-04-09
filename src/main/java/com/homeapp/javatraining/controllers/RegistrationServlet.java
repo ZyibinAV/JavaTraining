@@ -14,12 +14,9 @@ import java.io.IOException;
 @WebServlet("/register")
 public class RegistrationServlet extends BaseServlet {
 
-    private RegistrationService registrationService;
 
     @Override
     protected void initializeSpecificServices() {
-        UserService userService = new UserServiceImpl(userRepository);
-        this.registrationService = new RegistrationService(userService);
     }
 
     @Override

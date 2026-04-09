@@ -5,13 +5,14 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @WebListener
+@Slf4j
 public class AppInitListener implements ServletContextListener {
 
-    private static final Logger log = LoggerFactory.getLogger(AppInitListener.class);
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
@@ -31,6 +32,18 @@ public class AppInitListener implements ServletContextListener {
 
         context.setAttribute("questionRepository", config.getQuestionRepository());
         log.info("QuestionRepository initialized");
+
+        context.setAttribute("userService", config.getUserService());
+        log.info("UserService initialized");
+
+        context.setAttribute("authenticationService", config.getAuthenticationService());
+        log.info("AuthenticationService initialized");
+
+        context.setAttribute("registrationService", config.getRegistrationService());
+        log.info("RegistrationService initialized");
+
+        context.setAttribute("questionService", config.getQuestionService());
+        log.info("QuestionService initialized");
 
         log.info("Application context initialization completed successfully");
     }

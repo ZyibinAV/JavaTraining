@@ -6,17 +6,17 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 
 @WebServlet("/login")
 public class LoginServlet extends BaseServlet {
 
-    private AuthenticationService authService;
 
     @Override
     protected void initializeSpecificServices() {
-        this.authService = new AuthenticationService(userRepository);
+
     }
 
     @Override
@@ -34,7 +34,7 @@ public class LoginServlet extends BaseServlet {
         String password = req.getParameter("password");
 
         requestHandler.handleRequest(req, resp, () -> {
-            User user = authService.authenticate(username, password);
+            User user = authenticationService .authenticate(username, password);
 
             setCurrentUser(req, user);
 

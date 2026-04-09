@@ -1,6 +1,7 @@
 package com.homeapp.javatraining.controllers;
 
 import com.homeapp.javatraining.model.*;
+import com.homeapp.javatraining.service.TestResultService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,8 +16,11 @@ import java.util.stream.Collectors;
 @WebServlet("/result")
 public class ResultServlet extends BaseServlet {
 
+    private TestResultService testResultService;
+
     @Override
     protected void initializeSpecificServices() {
+        this.testResultService = (TestResultService) getServletContext().getAttribute("testResultService");
     }
 
     @Override
@@ -40,41 +44,13 @@ public class ResultServlet extends BaseServlet {
             resp.sendRedirect(req.getContextPath() + "/home");
             return;
         }
+        TestResult result = testResultService.processAndSaveResult(user, interviewState);
 
-        int totalQuestions = interviewState.getTotalQuestions();
-        int correctAnswers = interviewState.getScore();
-        boolean passed = correctAnswers * 2 >= totalQuestions;
+        req.setAttribute("topics", result.getTopic().getDisplayName());
+        req.setAttribute("total", result.getTotalQuestions());
+        req.setAttribute("correct", result.getCorrectAnswers());
+        req.setAttribute("passed", result.isPassed());
 
-        List<Question> questions = interviewState.getQuestions();
-
-        if (questions.isEmpty()) {
-            throw new IllegalStateException("No questions in interview state");
-        }
-        Topic topic = questions.get(0).getTopic();
-
-        log.info("Interview finished for user {}, passed={}, score={}/{}",
-                user.getUsername(),
-                passed,
-                correctAnswers,
-                totalQuestions);
-
-        TestResult result = new TestResult(
-                user,
-                topic,
-                totalQuestions,
-                correctAnswers,
-                passed,
-                LocalDateTime.now()
-        );
-
-        testResultRepository.save(result);
-
-        log.info("Test result saved for user {}", user.getUsername());
-
-        req.setAttribute("topics", topic.getDisplayName());
-        req.setAttribute("total", totalQuestions);
-        req.setAttribute("correct", correctAnswers);
-        req.setAttribute("passed", passed);
 
         session.removeAttribute("interviewState");
 

@@ -1,22 +1,54 @@
 package com.homeapp.javatraining.service;
 
 import com.homeapp.javatraining.model.InterviewState;
+import com.homeapp.javatraining.model.Question;
+import com.homeapp.javatraining.model.Topic;
+import com.homeapp.javatraining.repository.QuestionRepository;
+import com.homeapp.javatraining.util.TopicLoader;
 import com.homeapp.javatraining.util.ValidationFactory;
 import com.homeapp.javatraining.validation.QuestionValidator;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+@Slf4j
 public class QuestionService {
 
-    private static final Logger log = LoggerFactory.getLogger(QuestionService.class);
     private final QuestionValidator questionValidator;
+    private final QuestionRepository questionRepository;
 
-    public QuestionService() {
-        this.questionValidator = ValidationFactory.createQuestionValidator();
+    public QuestionService(QuestionValidator questionValidator, QuestionRepository questionRepository) {
+        this.questionValidator = questionValidator;
+        this.questionRepository = questionRepository;
+    }
+
+    public List<Question> getRandomQuestionsByTopics(List<String> topicCodes, int questionCount) {
+        List<Question> allQuestions = new ArrayList<>();
+
+        for (String code : topicCodes) {
+            Topic topic = TopicLoader.findByCode(code);
+
+            if (topic == null) {
+                throw  new IllegalArgumentException("Topic not found: " + code);
+            }
+
+            allQuestions.addAll(questionRepository.getQuestions(topic));
+        }
+        if (allQuestions.size() < questionCount) {
+            throw new IllegalStateException("Not enough questions");
+        }
+        Collections.shuffle(allQuestions);
+        return allQuestions.subList(0, questionCount);
     }
 
     public void processAnswer(InterviewState state, String answerIndexStr) {
-        questionValidator.validateAnswer(answerIndexStr, state.getCurrentQuestion().getAnswers().size() - 1);
+        questionValidator.validateAnswer(
+                answerIndexStr, state.getCurrentQuestion().getAnswers().size() - 1
+        );
 
         int selectedIndex = Integer.parseInt(answerIndexStr);
 

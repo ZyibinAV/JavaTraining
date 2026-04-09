@@ -19,7 +19,7 @@ public class QuestionServlet extends BaseServlet {
 
     @Override
     protected void initializeSpecificServices() {
-        this.questionService = new QuestionService();
+
     }
 
     @Override

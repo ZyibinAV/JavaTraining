@@ -1,5 +1,6 @@
 package com.homeapp.javatraining.controllers;
 
+import com.homeapp.javatraining.filter.AuthFilter;
 import com.homeapp.javatraining.handler.RequestHandler;
 import com.homeapp.javatraining.model.Role;
 import com.homeapp.javatraining.model.User;
@@ -7,13 +8,19 @@ import com.homeapp.javatraining.repository.HibernateQuestionRepository;
 import com.homeapp.javatraining.repository.QuestionRepository;
 import com.homeapp.javatraining.repository.TestResultRepository;
 import com.homeapp.javatraining.repository.UserRepository;
+import com.homeapp.javatraining.service.AuthenticationService;
+import com.homeapp.javatraining.service.QuestionService;
+import com.homeapp.javatraining.service.RegistrationService;
+import com.homeapp.javatraining.service.UserService;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 public abstract class BaseServlet extends HttpServlet {
 
@@ -22,6 +29,12 @@ public abstract class BaseServlet extends HttpServlet {
     protected UserRepository userRepository;
     protected TestResultRepository testResultRepository;
     protected QuestionRepository questionRepository;
+
+    protected UserService userService;
+    protected AuthenticationService authenticationService;
+    protected RegistrationService registrationService;
+    protected QuestionService questionService;
+
     protected RequestHandler requestHandler;
 
     @Override
@@ -38,6 +51,12 @@ public abstract class BaseServlet extends HttpServlet {
         this.userRepository = (UserRepository) context.getAttribute("userRepository");
         this.testResultRepository = (TestResultRepository) context.getAttribute("testResultRepository");
         this.questionRepository = (QuestionRepository) context.getAttribute("questionRepository");
+
+        this.userService = (UserService) context.getAttribute("userService");
+        this.authenticationService = (AuthenticationService) context.getAttribute("authenticationService");
+        this.registrationService = (RegistrationService) context.getAttribute("registrationService");
+        this.questionService = (QuestionService) context.getAttribute("questionService");
+
         this.requestHandler = new RequestHandler();
 
         validateDependencies();
@@ -52,6 +71,18 @@ public abstract class BaseServlet extends HttpServlet {
         }
         if (questionRepository == null) {
             throw new ServletException("QuestionRepository not found in ServletContext");
+        }
+        if(userService == null) {
+            throw new ServletException("UserService not found in ServletContext");
+        }
+        if(authenticationService == null) {
+            throw new ServletException("AuthenticationService not found in ServletContext");
+        }
+        if(registrationService == null) {
+            throw new ServletException("RegistrationService not found in ServletContext");
+        }
+        if(questionService == null) {
+            throw new ServletException("QuestionService not found in ServletContext");
         }
         if (requestHandler == null) {
             throw new ServletException("RequestHandler initialization failed");

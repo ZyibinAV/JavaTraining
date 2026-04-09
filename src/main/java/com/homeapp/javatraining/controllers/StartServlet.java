@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+
 @WebServlet("/start")
 public class StartServlet extends BaseServlet {
 
@@ -35,26 +36,10 @@ public class StartServlet extends BaseServlet {
 
         int questionCount = Integer.parseInt(req.getParameter("questionCount"));
 
-        List<Question> allQuestions = new ArrayList<>();
+        List<String> topicCodes = Arrays.asList(topicParams);
 
-        for (String code : topicParams) {
-
-            Topic topic = TopicLoader.findByCode(code);
-
-            if (topic == null) {
-                throw new IllegalStateException("Topic not found: " + code);
-            }
-
-            allQuestions.addAll(questionRepository.getQuestions(topic));
-        }
-
-        if (allQuestions.size() < questionCount) {
-            throw new IllegalStateException("Not enough questions");
-        }
-
-        Collections.shuffle(allQuestions);
-        List<Question> selectedQuestions = allQuestions.subList(0, questionCount);
-
+        List<Question> selectedQuestions =
+                questionService.getRandomQuestionsByTopics(topicCodes, questionCount);
         InterviewState interviewState = new InterviewState(new HashSet<>(), selectedQuestions);
 
         HttpSession session = req.getSession(true);

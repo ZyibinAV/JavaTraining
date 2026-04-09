@@ -6,6 +6,7 @@ import com.homeapp.javatraining.dto.UserStats;
 import com.homeapp.javatraining.model.TestResult;
 import com.homeapp.javatraining.model.Topic;
 import com.homeapp.javatraining.model.User;
+import com.homeapp.javatraining.service.AdminStatisticsService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,8 +20,12 @@ import java.util.Map;
 @WebServlet("/admin/statistics")
 public class AdminStatisticsServlet extends BaseServlet {
 
+    private AdminStatisticsService adminStatisticsService;
+
     @Override
     protected void initializeSpecificServices() {
+        this.adminStatisticsService =
+                (AdminStatisticsService) getServletContext().getAttribute("adminStatisticsService");
     }
 
     @Override
@@ -29,62 +34,13 @@ public class AdminStatisticsServlet extends BaseServlet {
 
         log.debug("GET /admin/statistics");
 
-        List<TestResult> results = testResultRepository.findAll();
-        List<User> users = userRepository.findAll();
+        AdminStatisticsService.AdminStatisticsData data =
+                adminStatisticsService.getStatistics();
 
-        int totalTests = results.size();
-        long passedTests = results.stream()
-                .filter(TestResult::isPassed)
-                .count();
-
-        Map<Long, UserStats> userStats = new HashMap<>();
-        for (User user : users) {
-            userStats.put(user.getId(), new UserStats(user));
-        }
-
-        for (TestResult r : results) {
-            if (r.getUser() == null) continue;
-
-            Long userId = r.getUser().getId();
-            UserStats stats = userStats.get(userId);
-
-            if (stats != null) {
-                stats.incrementTotal();
-                if (r.isPassed()) {
-                    stats.incrementPassed();
-                }
-            }
-        }
-
-        Map<String, TopicStats> topicStats = new HashMap<>();
-
-        for (TestResult r : results) {
-            if (r.getTopic() == null) continue;
-
-            Topic topic = r.getTopic();
-            String topicCode = topic.getCode();
-
-            // ✅ FIX: передаём displayName
-            TopicStats stats = topicStats.computeIfAbsent(
-                    topicCode,
-                    code -> new TopicStats(code, topic.getDisplayName())
-            );
-
-            stats.incrementTotal();
-            if (r.isPassed()) {
-                stats.incrementPassed();
-            }
-        }
-
-        log.info("Admin statistics prepared: totalTests={}, passedTests={}, users={}",
-                totalTests,
-                passedTests,
-                users.size());
-
-        req.setAttribute("totalTests", totalTests);
-        req.setAttribute("passedTests", passedTests);
-        req.setAttribute("userStats", userStats.values());
-        req.setAttribute("topicStats", topicStats.values());
+        req.setAttribute("totalTests", data.getTotalTests());
+        req.setAttribute("passedTests", data.getPassedTests());
+        req.setAttribute("userStats", data.getUserStats());
+        req.setAttribute("topicStats", data.getTopicStats());
 
         req.getRequestDispatcher("/WEB-INF/jsp/admin/statistics.jsp")
                 .forward(req, resp);

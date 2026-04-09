@@ -1,4 +1,4 @@
-package com.homeapp.javatraining.source;
+package com.homeapp.javatraining.tools.migration;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-public class FileQuestionSource implements QuestionSource {
+public class JsonQuestionImportSource implements JsonQuestionSource {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 

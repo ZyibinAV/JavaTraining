@@ -3,7 +3,7 @@ package com.homeapp.javatraining.util;
 import com.homeapp.javatraining.model.Topic;
 import com.homeapp.javatraining.repository.HibernateQuestionRepository;
 import com.homeapp.javatraining.repository.QuestionRepository;
-import com.homeapp.javatraining.source.FileQuestionSource;
+import com.homeapp.javatraining.tools.migration.JsonQuestionImportSource;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -12,7 +12,7 @@ public class MigrationMain {
 
     public static void main(String[] args) {
         QuestionRepository questionRepository = new HibernateQuestionRepository();
-        FileQuestionSource fileQuestionSource = new FileQuestionSource();
+        JsonQuestionImportSource fileQuestionSource = new JsonQuestionImportSource();
         TopicLoader topicLoader = new TopicLoader();
 
         List<Topic> topics = topicLoader.loadAllTopics();

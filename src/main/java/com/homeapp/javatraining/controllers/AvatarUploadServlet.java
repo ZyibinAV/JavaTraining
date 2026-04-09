@@ -7,6 +7,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.util.UUID;
         maxFileSize = 5 * 1024 * 1024,  // 5MB
         maxRequestSize = 6 * 1024 * 1024 // 6MB
 )
+
 public class AvatarUploadServlet extends BaseServlet {
 
     private static final String UPLOAD_DIR = "/uploads/avatars";
