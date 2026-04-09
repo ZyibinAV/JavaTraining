@@ -88,6 +88,33 @@ h3::after {
     text-decoration: underline;
 }
 
+.logout-form {
+    display: inline !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.logout-form span {
+    color: #ffffff !important;
+    margin-right: 12px !important;
+}
+
+.app-header .logout-button {
+    background: none !important;
+    border: none !important;
+    color: #ffffff !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    font-size: inherit !important;
+    font-family: inherit !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.app-header .logout-button:hover {
+    text-decoration: underline !important;
+}
+
 .header-row {
     display: flex;
     justify-content: space-between;

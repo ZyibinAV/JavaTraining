@@ -3,7 +3,6 @@ package com.homeapp.javatraining.controllers;
 import com.homeapp.javatraining.model.User;
 import com.homeapp.javatraining.service.RegistrationService;
 import com.homeapp.javatraining.service.UserService;
-import com.homeapp.javatraining.service.UserServiceImpl;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;

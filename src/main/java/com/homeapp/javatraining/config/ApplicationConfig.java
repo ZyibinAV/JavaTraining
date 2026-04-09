@@ -23,6 +23,7 @@ public class ApplicationConfig {
     private final RegistrationService registrationService;
     private final QuestionService questionService;
     private final AdminStatisticsService adminStatisticsService;
+    private final TestResultService testResultService;
 
     public ApplicationConfig() {
         this.userRepository = createUserRepository();
@@ -34,6 +35,7 @@ public class ApplicationConfig {
         this.registrationService = createdRegistrationService();
         this.questionService = createdQuestionService();
         this.adminStatisticsService = createAdminStatisticsService();
+        this.testResultService = createTestResultService();
     }
 
     private AdminStatisticsService createAdminStatisticsService() {

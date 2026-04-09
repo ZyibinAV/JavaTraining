@@ -70,4 +70,3 @@ VALUES ('java-syntax', 'Java Syntax'),
        ('junit5', 'JUnit 5'),
        ('mockito', 'Mockito'),
        ('logging', 'Logging');
-DELETE FROM topics;

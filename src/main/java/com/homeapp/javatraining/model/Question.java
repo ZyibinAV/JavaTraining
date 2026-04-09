@@ -21,12 +21,12 @@ public class Question {
     private Long id;
     @Column(name = "question_text", nullable = false)
     private String questionText;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "topic_id", nullable = false)
     private Topic topic;
     @Column(name = "correct_answer_index", nullable = false)
     private int correctAnswerIndex;
-    @OneToMany(mappedBy = "question", cascade =  CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Answer> answers = new ArrayList<>();
 
     public Question() {

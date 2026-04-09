@@ -4,7 +4,6 @@ import com.homeapp.javatraining.filter.AuthFilter;
 import com.homeapp.javatraining.handler.RequestHandler;
 import com.homeapp.javatraining.model.Role;
 import com.homeapp.javatraining.model.User;
-import com.homeapp.javatraining.repository.HibernateQuestionRepository;
 import com.homeapp.javatraining.repository.QuestionRepository;
 import com.homeapp.javatraining.repository.TestResultRepository;
 import com.homeapp.javatraining.repository.UserRepository;

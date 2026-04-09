@@ -27,6 +27,7 @@ public class AdminBlockUserServlet extends BaseServlet {
         userRepository.findById(userId).ifPresent(user -> {
             if (user.getId() != admin.getId()) {
                 user.setBlocked(!user.isBlocked());
+                userRepository.save(user);
                 log.info("Admin {} changed block status for user {} to {}",
                         admin.getUsername(),
                         user.getUsername(),

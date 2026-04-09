@@ -1,6 +1,7 @@
 package com.homeapp.javatraining.controllers;
 
 import com.homeapp.javatraining.model.User;
+import com.homeapp.javatraining.repository.UserRepository;
 import com.homeapp.javatraining.service.AvatarService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -14,9 +15,11 @@ import java.util.List;
 public class AvatarSelectServlet extends BaseServlet {
 
     private final AvatarService avatarService = new AvatarService();
+    private UserRepository userRepository;
 
     @Override
     protected void initializeSpecificServices() {
+        this.userRepository = (UserRepository) getServletContext().getAttribute("userRepository");
     }
 
     @Override
@@ -44,6 +47,7 @@ public class AvatarSelectServlet extends BaseServlet {
         if (availableAvatars.contains(selectedAvatar)) {
             log.info("User {} changed avatar to {}", user.getUsername(), selectedAvatar);
             user.setAvatarPath(selectedAvatar);
+            userRepository.save(user);
         } else {
             log.warn("User {} attempted to select invalid avatar: {}",
                     user.getUsername(),

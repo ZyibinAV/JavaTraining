@@ -57,7 +57,7 @@
                                 <path class="checkmark-path" d="M5 12l5 5L20 7"></path>
                             </svg>
                         </div>
-                        <span class="answer-text">${answer}</span>
+                        <span class="answer-text">${answer.answerText}</span>
                     </div>
                     <div class="answer-indicator"></div>
                 </label>

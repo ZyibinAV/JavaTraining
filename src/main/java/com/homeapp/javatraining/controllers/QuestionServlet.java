@@ -1,9 +1,9 @@
 package com.homeapp.javatraining.controllers;
 
 import com.homeapp.javatraining.model.InterviewState;
+import com.homeapp.javatraining.model.Topic;
 import com.homeapp.javatraining.service.QuestionService;
 import com.homeapp.javatraining.session.SessionUtils;
-import com.homeapp.javatraining.util.TopicUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,8 +14,6 @@ import java.io.IOException;
 
 @WebServlet("/question")
 public class QuestionServlet extends BaseServlet {
-
-    private QuestionService questionService;
 
     @Override
     protected void initializeSpecificServices() {
@@ -43,11 +41,7 @@ public class QuestionServlet extends BaseServlet {
 
         log.debug("Displaying question {} of {}", state.getCurrentIndex(), state.getTotalQuestions());
 
-        String topicsDisplay = TopicUtils.convertTopicCodesToDisplayNames(
-                String.join(",", state.getTopicCodes())
-        );
-
-        req.setAttribute("topics", topicsDisplay);
+        req.setAttribute("topics", state.getTopics());
         req.setAttribute("question", state.getCurrentQuestion());
         req.setAttribute("questionNumber", state.getCurrentIndex() + 1);
         req.setAttribute("totalQuestions", state.getTotalQuestions());

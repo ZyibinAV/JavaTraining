@@ -1,12 +1,11 @@
 package com.homeapp.javatraining.controllers;
 
-import com.homeapp.javatraining.config.hibernate.HibernateUtil;
 import com.homeapp.javatraining.model.Topic;
+import com.homeapp.javatraining.util.TopicLoader;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.hibernate.Session;
 
 import java.io.IOException;
 import java.util.List;
@@ -22,10 +21,7 @@ public class TestSettingServlet extends BaseServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         log.debug("GET /test/settings");
 
-        List<Topic> topics;
-        try(Session session = HibernateUtil.getSessionFactory().openSession()) {
-            topics = session.createQuery("FROM Topic", Topic.class).list();
-        }
+        List<Topic> topics = TopicLoader.loadAllTopics();
         req.setAttribute("topics", topics);
         req.getRequestDispatcher("/WEB-INF/jsp/test-settings.jsp").forward(req, resp);
     }

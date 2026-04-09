@@ -45,6 +45,12 @@ public class AppInitListener implements ServletContextListener {
         context.setAttribute("questionService", config.getQuestionService());
         log.info("QuestionService initialized");
 
+        context.setAttribute("testResultService", config.getTestResultService());
+        log.info("TestResultService initialized");
+
+        context.setAttribute("adminStatisticsService", config.getAdminStatisticsService());
+        log.info("AdminStatisticsService initialized");
+
         log.info("Application context initialization completed successfully");
     }
 

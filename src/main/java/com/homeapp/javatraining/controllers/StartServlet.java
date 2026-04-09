@@ -38,9 +38,13 @@ public class StartServlet extends BaseServlet {
 
         List<String> topicCodes = Arrays.asList(topicParams);
 
+        Set<Topic> selectedTopics = topicCodes.stream()
+                .map(TopicLoader::findByCode)
+                .collect(Collectors.toSet());
+
         List<Question> selectedQuestions =
                 questionService.getRandomQuestionsByTopics(topicCodes, questionCount);
-        InterviewState interviewState = new InterviewState(new HashSet<>(), selectedQuestions);
+        InterviewState interviewState = new InterviewState(selectedTopics, selectedQuestions);
 
         HttpSession session = req.getSession(true);
         SessionUtils.setInterviewState(session, interviewState);

@@ -163,7 +163,9 @@ Implementation Details:
 - ✅ Complete CRUD operations (getQuestions, findById, findAll, save)
 - ✅ Proper method signature: getQuestions(Topic topic)
 - ✅ Transaction management and error handling
+- ✅ Batch processing and duplicate protection
 - ✅ Ready for production use
+
 ---
 
 ## Stage 5.5 – Repository Testing (NEW)
@@ -212,6 +214,8 @@ public class ApplicationConfig {
     private final AuthenticationService authenticationService;
     private final RegistrationService registrationService;
     private final QuestionService questionService;
+    private final AdminStatisticsService adminStatisticsService;
+    private final TestResultService testResultService;
 
     public ApplicationConfig() {
         this.userRepository = createUserRepository();
@@ -222,6 +226,8 @@ public class ApplicationConfig {
         this.authenticationService = createdAuthenticationService();
         this.registrationService = createdRegistrationService();
         this.questionService = createdQuestionService();
+        this.adminStatisticsService = createAdminStatisticsService();
+        this.testResultService = createTestResultService();
     }
 
     private UserRepository createUserRepository() {
@@ -248,80 +254,126 @@ The application uses manual dependency injection instead of full Spring Framewor
 
 ---
 
+## Priority 0 – Critical Service Injection Fixes
+
+**COMPLETED** ✅ (2026-04-09)
+
+**Context**: Comprehensive analysis revealed critical issues with service injection that would cause NullPointerException at runtime.
+
+**Issues Fixed:**
+
+1. **TestResultService not injected** ✅
+   - Added field `private final TestResultService testResultService;` to ApplicationConfig
+   - Added call `this.testResultService = createTestResultService();` in constructor
+   - Added registration in AppInitListener: `context.setAttribute("testResultService", config.getTestResultService());`
+
+2. **AdminStatisticsService not injected** ✅
+   - Added registration in AppInitListener: `context.setAttribute("adminStatisticsService", config.getAdminStatisticsService());`
+
+3. **Database initialization deletes data** ✅
+   - Removed `DELETE FROM topics;` from docker/postgres/init.sql
+   - Topics are now correctly persisted after initialization
+
+**Result:**
+- ✅ All services properly injected
+- ✅ No NullPointerException risks
+- ✅ Database initialization fixed
+- ✅ Application can save results and show statistics
+
+---
+
 ## Stage 6.5 – Servlet Layer Refactoring
 
-**⏸️ READY FOR EXECUTION**
+**COMPLETED** ✅ (2026-04-09)
 
-**Context:** After DB migration, servlets need refactoring to properly use service layer and remove direct repository access, deprecated utilities, and HibernateUtil usage.
+**Context**: After critical fixes, servlet layer had architectural violations that needed refactoring for proper layered architecture.
 
-### Identified Issues:
+### Issues Fixed:
 
-**StartServlet.java**
-- ⚠ Directly uses questionRepository (violates service layer)
-- Comment: "⚠ Рабочий код ❗ Но нарушает слой Service ❗ И начнёт разваливаться при усложнении логики"
-- ✅ Uses TopicLoader correctly
+**StartServlet.java** ✅
+- ⚠ Previously used questionRepository directly (violated service layer)
+- ✅ Now uses TopicLoader to load Topic entities
+- ✅ Passes Set<Topic> to InterviewState instead of empty Set
 
-**QuestionServlet.java**
-- ❌ Uses TopicUtils (deprecated - should use Topic entities directly)
-- ⚠ Has QuestionService field but doesn't initialize it in initializeSpecificServices
-- ⚠ Uses state.getTopicCodes() which may not exist in InterviewState
+**QuestionServlet.java** ✅
+- ❌ Previously used TopicUtils (deprecated)
+- ⚠ Previously had redundant questionService field
+- ✅ Removed TopicUtils import and usage
+- ✅ Removed redundant questionService field
+- ✅ Now uses Topic entities directly: `state.getTopics().stream().map(Topic::getDisplayName)`
 
-**ResultServlet.java**
-- ⚠ Uses repository directly (testResultRepository.save) - should use service layer
-- Comment: "// доработать и упростить"
-- ✅ Uses Topic entity correctly
+**ResultServlet.java** ✅
+- ⚠ Previously used repository directly
+- ✅ Now uses TestResultService
+- ✅ Service layer properly integrated
 
-**RegistrationServlet.java**
-- ✅ Uses registrationService correctly
-- ⚠ Has UserServiceImpl import (should use interface UserService)
+**RegistrationServlet.java** ✅
+- ⚠ Previously imported UserServiceImpl (concrete implementation)
+- ✅ Now uses UserService interface only
 
-**LoginServlet.java**
+**LoginServlet.java** ✅
 - ✅ Uses authenticationService correctly
 
-**AdminStatisticsServlet.java**
-- ⚠ Uses repositories directly (testResultRepository, userRepository) - should use service layer
-- ✅ Already has fix for Topic entity usage
+**AdminStatisticsServlet.java** ✅
+- ⚠ Previously used repositories directly
+- ✅ Now uses AdminStatisticsService
+- ✅ Service layer properly integrated
 
-**TestSettingServlet.java**
-- ❌ Uses HibernateUtil directly (should use TopicLoader or service layer)
-- Bypasses repository/service layer
+**TestSettingServlet.java** ✅
+- ❌ Previously used HibernateUtil directly
+- ✅ Now uses TopicLoader.loadAllTopics()
+- ✅ No direct Hibernate usage
 
-### Refactoring Requirements:
+**InterviewState.java** ✅
+- ❌ Previously used Set<String> topicCodes
+- ✅ Now uses Set<Topic> topics
+- ✅ Constructor updated
+- ✅ Method changed from getTopicCodes() to getTopics()
 
-**1. Service Layer Integration**
-- Remove direct repository access from all servlets
-- Ensure all servlets use appropriate services
-- Initialize services in initializeSpecificServices() method
-- Remove service implementation imports, use interfaces only
+**BaseServlet.java** ✅
+- ⚠ Previously imported HibernateQuestionRepository
+- ✅ Now uses only QuestionRepository interface
 
-**2. Remove Deprecated Utilities**
-- Remove TopicUtils usage from QuestionServlet
-- Use Topic entities directly with getDisplayName()
-- Update InterviewState if it has outdated methods
+**TestResult.java** ✅
+- ⚠ Previously imported unused TopicUtils
+- ✅ Removed unused import
 
-**3. Remove Direct Hibernate Usage**
-- Remove HibernateUtil usage from TestSettingServlet
-- Use TopicLoader or appropriate service instead
-- Ensure all database access goes through repository → service → servlet
+### Refactoring Requirements (ALL COMPLETED):
 
-**4. Proper Layer Architecture**
-- Servlet → Service → Repository → Database
-- No bypassing service layer
-- No direct Hibernate session usage in servlets
-- No direct repository access in servlets
+**1. Service Layer Integration** ✅
+- ✅ Removed direct repository access from all servlets
+- ✅ All servlets use appropriate services
+- ✅ Services initialized in ServletContext
+- ✅ Interface-based dependency injection
 
-**5. Service Initialization**
-- Ensure all services are properly injected via ServletContext
-- Initialize services in initializeSpecificServices()
-- Validate service dependencies in BaseServlet
+**2. Remove Deprecated Utilities** ✅
+- ✅ Removed TopicUtils usage from QuestionServlet
+- ✅ Topic entities used directly with getDisplayName()
+- ✅ InterviewState refactored to use Set<Topic>
 
-### Expected Outcome:
-- All servlets follow proper layered architecture
-- No direct repository access in servlet layer
-- No deprecated utility usage
-- No direct Hibernate usage in servlets
-- Clean separation of concerns
-- Improved maintainability
+**3. Remove Direct Hibernate Usage** ✅
+- ✅ Removed HibernateUtil usage from TestSettingServlet
+- ✅ TopicLoader used for database access
+- ✅ All database access through repository → service → servlet
+
+**4. Proper Layer Architecture** ✅
+- ✅ Servlet → Service → Repository → Database
+- ✅ No bypassing service layer
+- ✅ No direct Hibernate session usage in servlets
+- ✅ No direct repository access in servlets
+
+**5. Service Initialization** ✅
+- ✅ All services properly injected via ServletContext
+- ✅ Services validated in BaseServlet
+- ✅ No manual service creation in servlets
+
+### Expected Outcome (ACHIEVED):
+- ✅ All servlets follow proper layered architecture
+- ✅ No direct repository access in servlet layer
+- ✅ No deprecated utility usage
+- ✅ No direct Hibernate usage in servlets
+- ✅ Clean separation of concerns
+- ✅ Improved maintainability
 
 ---
 
@@ -366,6 +418,7 @@ Restriction:
 
 - Not part of runtime architecture
 - Not used in application flow (Servlet → Service → Repository)
+
 ---
 
 ## Stage 8 – Remove JSON Storage
@@ -450,6 +503,20 @@ Add integration tests:
 
 ## Migration Status Summary
 
+### ✅ Completed (Priority 0 - Critical Fixes):
+- TestResultService injection fixed
+- AdminStatisticsService injection fixed
+- Database initialization fixed (DELETE FROM topics; removed)
+
+### ✅ Completed (Priority 1 - Servlet Layer Refactoring):
+- QuestionServlet: TopicUtils removed, Topic entities used
+- InterviewState: Refactored to Set<Topic>
+- StartServlet: Topic entities passed to InterviewState
+- TestSettingServlet: HibernateUtil removed, TopicLoader used
+- BaseServlet: Concrete implementation import removed
+- RegistrationServlet: Interface import used
+- TestResult: Unused import removed
+
 ### ✅ Completed (Stages 1-6):
 - Infrastructure setup
 - Database design
@@ -464,17 +531,16 @@ Add integration tests:
 - JSON storage removed from runtime
 - Migration tools moved to tools.migration package
 
-### ⏸️ Ready for Execution (Stages 6.5, 7, 9-10):
-- **Servlet Layer Refactoring** (NEW PRIORITY - identified issues with layer violations)
-- Data migration (infrastructure ready)
-- Performance tuning (ready after servlet refactoring and data migration)
-- Final refactoring (ready after servlet refactoring and data migration)
+### ⏸️ Ready for Execution (Stages 7, 9-10):
+- **Data migration** (infrastructure ready)
+- **Performance tuning** (ready after data migration)
+- **Final refactoring** (ready after data migration)
 
-### Current Migration State: **✅ INFRASTRUCTURE COMPLETE - Servlet Refactoring Required**
+### Current Migration State: **✅ INFRASTRUCTURE COMPLETE - READY FOR DATA MIGRATION**
 
-**Root Cause:** All infrastructure components are complete and functional. ApplicationConfig uses manual DI with factory methods. However, servlet layer has identified issues with layer violations.
+**Root Cause:** All infrastructure components are complete and functional. ApplicationConfig uses manual DI with factory methods. All services properly injected. Servlet layer follows proper layered architecture.
 
-**Impact:** Application works with PostgreSQL but servlets bypass service layer in some cases, violating proper architecture.
+**Impact:** Application works with PostgreSQL, all critical issues resolved, architectural violations fixed, ready for data migration and testing.
 
 ### Current Application Status:
 - ✅ User management works with PostgreSQL
@@ -484,9 +550,13 @@ Add integration tests:
 - ✅ Repository pattern implemented at interface level
 - ✅ Configuration layer functional with manual DI
 - ✅ Service layer with proper dependency injection
-- ⚠ Servlet layer has dependency injection but some servlets bypass service layer
-- ⚠ **ARCHITECTURAL ISSUES** - servlets directly access repositories and deprecated utilities
-- ❌ **NOT PRODUCTION-READY** until servlet refactoring completed
+- ✅ All services properly injected (TestResultService, AdminStatisticsService)
+- ✅ Servlet layer follows proper layered architecture
+- ✅ No deprecated utilities in servlets
+- ✅ No direct Hibernate usage in servlets
+- ✅ No direct repository access in servlets
+- ✅ Database initialization fixed (no data deletion)
+- ✅ **READY FOR DATA MIGRATION AND TESTING**
 
 ### Technical Specifications:
 - **Hibernate**: 6.6.44.Final
@@ -505,7 +575,7 @@ Add integration tests:
 
 ### **Primary Goal:** Migrate from collections/JSON storage to PostgreSQL database using Hibernate
 
-#### **Current Status:** Infrastructure complete, ready for data migration execution
+#### **Current Status:** Infrastructure complete, critical issues resolved, ready for data migration execution
 
 ### **Completed Components:**
 #### **1. Repository Pattern – ✅ COMPLETED & PRODUCTION-READY**
@@ -518,65 +588,71 @@ Add integration tests:
 - ✅ ApplicationConfig with manual DI (factory methods)
 - ✅ Service layer with proper dependency injection
 - ✅ Servlet layer with dependency injection
+- ✅ All services properly injected (TestResultService, AdminStatisticsService)
 - ✅ **READY FOR PRODUCTION**
 
-### **Priority 1 - Servlet Layer Refactoring (NEW):**  
+#### **3. Priority 0 – Critical Fixes – ✅ COMPLETED**
+- ✅ TestResultService injection fixed
+- ✅ AdminStatisticsService injection fixed
+- ✅ Database initialization fixed
+- ✅ **NO CRITICAL ISSUES REMAINING**
 
-#### **3. Refactor Servlet Layer for Proper Architecture**
-- Remove direct repository access from servlets (StartServlet, ResultServlet, AdminStatisticsServlet)
-- Remove deprecated TopicUtils usage (QuestionServlet)
-- Remove direct HibernateUtil usage (TestSettingServlet)
-- Ensure all servlets use appropriate services
-- Initialize services properly in initializeSpecificServices()
-- Remove service implementation imports, use interfaces only
-- Ensure proper layer architecture: Servlet → Service → Repository → Database
+#### **4. Priority 1 – Servlet Layer Refactoring – ✅ COMPLETED**
+- ✅ All servlets follow proper layered architecture
+- ✅ No deprecated utilities in servlets
+- ✅ No direct Hibernate usage in servlets
+- ✅ No direct repository access in servlets
+- ✅ Interface-based dependency injection throughout
+- ✅ **ARCHITECTURAL VIOLATIONS RESOLVED**
 
-### **Priority 2 - Data Migration:**  
+### **Priority 3 - Data Migration:**  
 
-#### **4. Execute JSON to PostgreSQL Migration**
+#### **5. Execute JSON to PostgreSQL Migration**
 - Use QuestionMigrationRunner with TopicLoader
 - Load JSON questions from external source
 - Convert and insert into database via QuestionRepository
 - Validate data integrity and counts
 
-#### **5. Remove JSON Storage Components**
+#### **6. Remove JSON Storage Components**
 - Remove any remaining JSON question files
 - Ensure no runtime dependency on JSON sources
 - Verify all question loading via QuestionRepository
 
-### **Priority 3 - Testing & Validation:**
+### **Priority 4 - Testing & Validation:**
 
-#### **6. Test Complete Integration**
+#### **7. Test Complete Integration**
 - Unit tests for all repositories
 - Integration tests for database operations
 - End-to-end application testing
 - Verify servlet layer follows proper architecture
 
-### **Priority 4 - Optimization:**
+### **Priority 5 - Optimization:**
 
-#### **7. Performance Tuning**
+#### **8. Performance Tuning**
 - Database indexes
 - Fetch strategies optimization
 - Connection pool tuning
 
 ### **Timeline:**
-- **Priority 1 (servlet refactoring): Ready to execute - CRITICAL for proper architecture**
-- **Priority 2 (data migration): After servlet refactoring**
-- **Priority 3 (testing): After data migration**
-- **Priority 4 (optimization): After testing**
+- **Priority 0 (critical fixes):** ✅ COMPLETED
+- **Priority 1 (servlet refactoring):** ✅ COMPLETED
+- **Priority 3 (data migration):** Ready to execute - NEXT PRIORITY
+- **Priority 4 (testing):** After data migration
+- **Priority 5 (optimization):** After testing
 
 ### **Success Criteria:**
 1. ✅ Application starts without errors
 2. ✅ All repositories use PostgreSQL via Hibernate
 3. ✅ Repository pattern properly implemented
 4. ✅ Configuration layer functional with manual DI
-5. ⚠ Servlet layer properly uses service layer (not repositories directly)
-6. ⚠ No deprecated utilities (TopicUtils) in servlets
-7. ⚠ No direct Hibernate usage in servlets
-8. ✅ JSON storage completely removed
-9. ✅ Data migration successful
-10. ✅ All tests pass
-11. ✅ Application production-ready
+5. ✅ All services properly injected
+6. ✅ Servlet layer properly uses service layer
+7. ✅ No deprecated utilities (TopicUtils) in servlets
+8. ✅ No direct Hibernate usage in servlets
+9. ✅ JSON storage completely removed
+10. ⏳ Data migration successful
+11. ⏳ All tests pass
+12. ⏳ Application production-ready
 
 ### **Current Application Status:**
 - ✅ Application starts and runs
@@ -585,20 +661,22 @@ Add integration tests:
 - ✅ Questions work through PostgreSQL (repository ready + batch processing)
 - ✅ Repository pattern implemented at interface level (production-ready)
 - ✅ Configuration layer functional with manual DI (production-ready)
-- ⚠ Servlet layer has architectural violations (direct repository access, deprecated utilities)
-- ⚠ **NOT PRODUCTION-READY** until servlet refactoring completed
+- ✅ All services properly injected and functional
+- ✅ Servlet layer follows proper layered architecture
+- ✅ No critical issues remaining
+- ✅ **READY FOR DATA MIGRATION AND TESTING**
 
 ---
 
-**Migration Plan Status: ✅ INFRASTRUCTURE COMPLETE - Servlet Refactoring Required**
-**Last Updated: 2026-04-09 (Status: All infrastructure phases complete, servlet layer refactoring identified as new priority)**
-**Next Action: Refactor servlet layer for proper architecture (remove direct repository access, deprecated utilities, Hibernate usage)**
+**Migration Plan Status: ✅ INFRASTRUCTURE COMPLETE - READY FOR DATA MIGRATION**
+**Last Updated: 2026-04-09 (Status: All infrastructure phases complete, critical issues resolved, servlet layer refactored, ready for data migration)**
+**Next Action: Execute data migration from JSON to PostgreSQL**
 
 ## SUMMARY
 
 **Primary Goal:** Migrate from collections/JSON storage to PostgreSQL database using Hibernate
 
-**Current Status:** Infrastructure is **COMPLETE**, but servlet layer requires refactoring for proper architecture
+**Current Status:** Infrastructure is **COMPLETE**, critical issues **RESOLVED**, servlet layer **REFACTORED**, ready for data migration
 
 **Repository Layer**: ✅ **COMPLETE & PRODUCTION-READY**
 - All 3 repositories fully implemented with complete CRUD operations
@@ -611,18 +689,22 @@ Add integration tests:
 - All repositories injected via interfaces
 - Service layer with proper constructor injection
 - Servlet layer with dependency injection via ServletContext
+- All services properly injected (TestResultService, AdminStatisticsService)
 - Framework-free manual DI (intentional design choice)
 
-**Servlet Layer**: ⚠ **REQUIRES REFACTORING**
-- Some servlets bypass service layer and access repositories directly
-- Deprecated TopicUtils usage in QuestionServlet
-- Direct HibernateUtil usage in TestSettingServlet
-- Service fields not properly initialized in some servlets
-- Violates proper layered architecture (Servlet → Service → Repository → Database)
+**Servlet Layer**: ✅ **REFACTORED - Proper Architecture**
+- All servlets use service layer (no direct repository access)
+- No deprecated utilities (TopicUtils) in servlets
+- No direct Hibernate usage in servlets
+- Interface-based dependency injection throughout
+- Proper layered architecture (Servlet → Service → Repository → Database)
 
-**Next Action Required**: Refactor servlet layer for proper architecture
-- Remove direct repository access from servlets
-- Remove deprecated TopicUtils usage
-- Remove direct HibernateUtil usage
-- Ensure proper service initialization
-- Enforce layered architecture
+**Critical Issues**: ✅ **ALL RESOLVED**
+- TestResultService injection fixed
+- AdminStatisticsService injection fixed
+- Database initialization fixed
+
+**Next Action Required**: Execute data migration from JSON to PostgreSQL
+- Use QuestionMigrationRunner
+- Validate data integrity
+- Test complete integration

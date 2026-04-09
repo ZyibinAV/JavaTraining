@@ -1,6 +1,7 @@
 package com.homeapp.javatraining.controllers;
 
 import com.homeapp.javatraining.model.User;
+import com.homeapp.javatraining.repository.UserRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -24,9 +25,11 @@ import java.util.UUID;
 public class AvatarUploadServlet extends BaseServlet {
 
     private static final String UPLOAD_DIR = "/uploads/avatars";
+    private UserRepository userRepository;
 
     @Override
     protected void initializeSpecificServices() {
+        this.userRepository = (UserRepository) getServletContext().getAttribute("userRepository");
     }
 
     @Override
@@ -57,6 +60,7 @@ public class AvatarUploadServlet extends BaseServlet {
         filePart.write(file.getAbsolutePath());
 
         user.setAvatarPath(UPLOAD_DIR + "/" + fileName);
+        userRepository.save(user);
         log.info("User {} successfully uploaded avatar: {}", user.getUsername(), fileName);
         resp.sendRedirect(req.getContextPath() + "/profile");
     }

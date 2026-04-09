@@ -25,7 +25,7 @@
             <div class="topics-grid">
                 <c:forEach var="topic" items="${topics}">
                     <label class="topic-card">
-                        <input type="checkbox" name="topics" value="${topic}">
+                        <input type="checkbox" name="topics" value="${topic.code}">
                         <div class="topic-content">
                             <span class="topic-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"

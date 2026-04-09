@@ -25,9 +25,9 @@
 
         <div>
             <c:if test="${not empty currentUser}">
-                <form method="post" action="${pageContext.request.contextPath}/logout">
-                    <span>${currentUser.nickname}</span>
-                    <button type="submit">Выйти</button>
+                <form method="post" action="${pageContext.request.contextPath}/logout" class="logout-form" style="display: inline; margin: 0; padding: 0;">
+                    <span style="color: #ffffff; margin-right: 12px;">${currentUser.nickname}</span>
+                    <button type="submit" class="logout-button" style="background: none; border: none; color: #ffffff; text-decoration: none; cursor: pointer; font-size: inherit; font-family: inherit; padding: 0; margin: 0;">Выйти</button>
                 </form>
             </c:if>
 
