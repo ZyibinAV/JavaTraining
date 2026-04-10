@@ -20,7 +20,12 @@
         <tbody>
         <c:forEach var="user" items="${users}">
             <tr>
-                <td>${user.username}</td>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <img src="${pageContext.request.contextPath}${user.avatarPath}" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255, 255, 255, 0.3);">
+                        <span>${user.username}</span>
+                    </div>
+                </td>
                 <td>${user.email}</td>
                 <td>${user.role}</td>
                 <td>

@@ -19,6 +19,10 @@
                      onerror="this.src='${pageContext.request.contextPath}/resources/avatars/default/default.png'">
                 <div class="profile-details">
                     <h3>${user.nickname}</h3>
+                    <div class="profile-username-section">
+                        <span class="profile-label">Логин:</span>
+                        <span class="profile-username">${user.username}</span>
+                    </div>
                     <p class="profile-email">${user.email}</p>
                     <div class="profile-actions">
                         <a href="${pageContext.request.contextPath}/profile/edit" class="btn-secondary">
