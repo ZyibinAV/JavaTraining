@@ -1,12 +1,16 @@
 package com.homeapp.javatraining.model;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
 public class InterviewState {
 
+    private static final int SESSION_TIMEOUT_MINUTES = 60;
+
     private final Set<Topic> topics;
     private final List<Question> questions;
+    private final LocalDateTime createdAt;
     private int currentIndex;
     private int score;
 
@@ -15,6 +19,7 @@ public class InterviewState {
         this.questions = questions;
         this.currentIndex = 0;
         this.score = 0;
+        this.createdAt = LocalDateTime.now();
     }
 
     public Question getCurrentQuestion() {
@@ -23,6 +28,10 @@ public class InterviewState {
 
     public boolean isFinished() {
         return currentIndex >= questions.size();
+    }
+
+    public boolean isExpired() {
+        return createdAt.plusMinutes(SESSION_TIMEOUT_MINUTES).isBefore(LocalDateTime.now());
     }
 
     public void moveToNextQuestion() {

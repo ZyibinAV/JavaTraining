@@ -19,7 +19,7 @@ public class AdminChangeRoleServlet extends BaseServlet {
 
     @Override
     protected void initializeSpecificServices() {
-        this.adminService = new AdminUserService(userRepository);
+        this.adminService = (AdminUserService) getServletContext().getAttribute("adminUserService");
     }
 
     @Override

@@ -26,7 +26,7 @@ public class AdminUserService {
                 log.warn("Admin {} attempted to change own role. Operation denied", adminId);
                 return;
             }
-            user.changeRole(newRole);
+            user.setRole(newRole);
             userRepository.save(user);
             log.info("User {} role changed to {} by admin {}",
                     targetUserId,

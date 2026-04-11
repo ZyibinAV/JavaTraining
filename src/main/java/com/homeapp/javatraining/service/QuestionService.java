@@ -20,17 +20,19 @@ public class QuestionService {
 
     private final QuestionValidator questionValidator;
     private final QuestionRepository questionRepository;
+    private final TopicLoader topicLoader;
 
-    public QuestionService(QuestionValidator questionValidator, QuestionRepository questionRepository) {
+    public QuestionService(QuestionValidator questionValidator, QuestionRepository questionRepository, TopicLoader topicLoader) {
         this.questionValidator = questionValidator;
         this.questionRepository = questionRepository;
+        this.topicLoader = topicLoader;
     }
 
     public List<Question> getRandomQuestionsByTopics(List<String> topicCodes, int questionCount) {
         List<Question> allQuestions = new ArrayList<>();
 
         for (String code : topicCodes) {
-            Topic topic = TopicLoader.findByCode(code);
+            Topic topic = topicLoader.findByCode(code);
 
             if (topic == null) {
                 throw  new IllegalArgumentException("Topic not found: " + code);

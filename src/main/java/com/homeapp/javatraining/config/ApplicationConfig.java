@@ -3,6 +3,7 @@ package com.homeapp.javatraining.config;
 
 import com.homeapp.javatraining.repository.*;
 import com.homeapp.javatraining.service.*;
+import com.homeapp.javatraining.util.TopicLoader;
 import com.homeapp.javatraining.validation.QuestionValidator;
 import lombok.Getter;
 
@@ -16,6 +17,7 @@ public class ApplicationConfig {
     private final UserRepository userRepository;
     private final TestResultRepository testResultRepository;
     private final QuestionRepository questionRepository;
+    private final TopicRepository topicRepository;
 
     // ===== Services =====
     private final UserService userService;
@@ -24,11 +26,18 @@ public class ApplicationConfig {
     private final QuestionService questionService;
     private final AdminStatisticsService adminStatisticsService;
     private final TestResultService testResultService;
+    private final UserStatisticsService userStatisticsService;
+    private final AvatarService avatarService;
+    private final AdminUserService adminUserService;
+    private final TopicLoader topicLoader;
 
     public ApplicationConfig() {
         this.userRepository = createUserRepository();
         this.testResultRepository = createTestResultRepository();
         this.questionRepository = createQuestionRepository();
+        this.topicRepository = createTopicRepository();
+
+        this.topicLoader = createTopicLoader();
 
         this.userService = createdUserService();
         this.authenticationService = createdAuthenticationService();
@@ -36,6 +45,9 @@ public class ApplicationConfig {
         this.questionService = createdQuestionService();
         this.adminStatisticsService = createAdminStatisticsService();
         this.testResultService = createTestResultService();
+        this.userStatisticsService = createUserStatisticsService();
+        this.avatarService = createAvatarService();
+        this.adminUserService = createAdminUserService();
     }
 
     private AdminStatisticsService createAdminStatisticsService() {
@@ -49,7 +61,8 @@ public class ApplicationConfig {
     private QuestionService createdQuestionService() {
         return new QuestionService(
                 new QuestionValidator(),
-                questionRepository
+                questionRepository,
+                topicLoader
         );
     }
 
@@ -75,6 +88,26 @@ public class ApplicationConfig {
 
     private QuestionRepository createQuestionRepository() {
         return new HibernateQuestionRepository();
+    }
+
+    private TopicRepository createTopicRepository() {
+        return new HibernateTopicRepository();
+    }
+
+    private UserStatisticsService createUserStatisticsService() {
+        return new UserStatisticsServiceImpl();
+    }
+
+    private AvatarService createAvatarService() {
+        return new AvatarService();
+    }
+
+    private AdminUserService createAdminUserService() {
+        return new AdminUserService(userRepository);
+    }
+
+    private TopicLoader createTopicLoader() {
+        return new TopicLoader(topicRepository);
     }
 
 

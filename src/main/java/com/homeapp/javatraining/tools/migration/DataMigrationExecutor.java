@@ -26,20 +26,21 @@ public class DataMigrationExecutor {
             // Initialize application configuration
             log.info("Initializing ApplicationConfig...");
             ApplicationConfig config = new ApplicationConfig();
-            
+
             // Get required dependencies
             QuestionRepository questionRepository = config.getQuestionRepository();
+            TopicLoader topicLoader = config.getTopicLoader();
             JsonQuestionImportSource jsonQuestionImportSource = new JsonQuestionImportSource();
-            
+
             // Create migration runner
             QuestionMigrationRunner migrationRunner = new QuestionMigrationRunner(
                 questionRepository,
                 jsonQuestionImportSource
             );
-            
+
             // Load all topics from database
             log.info("Loading topics from database...");
-            List<Topic> topics = TopicLoader.loadAllTopics();
+            List<Topic> topics = topicLoader.loadAllTopics();
             
             if (topics.isEmpty()) {
                 log.error("No topics found in database. Cannot proceed with migration.");

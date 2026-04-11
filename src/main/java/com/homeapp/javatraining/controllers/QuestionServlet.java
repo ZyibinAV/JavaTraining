@@ -33,6 +33,13 @@ public class QuestionServlet extends BaseServlet {
 
         InterviewState state = SessionUtils.getInterviewState(session);
 
+        if (state.isExpired()) {
+            log.warn("Interview session expired, clearing session and redirecting to /start");
+            SessionUtils.clearInterview(session);
+            resp.sendRedirect(req.getContextPath() + "/start");
+            return;
+        }
+
         if (state.isFinished()) {
             log.info("Interview finished, redirecting to /result");
             resp.sendRedirect(req.getContextPath() + "/result");
@@ -65,6 +72,12 @@ public class QuestionServlet extends BaseServlet {
 
         requestHandler.handleRequest(req, resp, () -> {
             InterviewState state = SessionUtils.getInterviewState(session);
+            if (state.isExpired()) {
+                log.warn("Interview session expired, clearing session and redirecting to /start");
+                SessionUtils.clearInterview(session);
+                resp.sendRedirect(req.getContextPath() + "/start");
+                return;
+            }
             questionService.processAnswer(state, answerIndexParam);
             resp.sendRedirect(req.getContextPath() + "/question");
         }, "/WEB-INF/jsp/question.jsp");

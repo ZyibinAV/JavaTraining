@@ -3,8 +3,6 @@ package com.homeapp.javatraining.controllers;
 import com.homeapp.javatraining.model.TestResult;
 import com.homeapp.javatraining.model.User;
 import com.homeapp.javatraining.service.UserStatisticsService;
-import com.homeapp.javatraining.service.UserStatisticsServiceImpl;
-import com.homeapp.javatraining.service.UserTestStatisticsService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,13 +14,11 @@ import java.util.List;
 @WebServlet("/profile")
 public class ProfileServlet extends BaseServlet {
 
-    private UserStatisticsService topicStatisticsService;
-    private UserTestStatisticsService testStatisticsService;
+    private UserStatisticsService userStatisticsService;
 
     @Override
     protected void initializeSpecificServices() {
-        this.topicStatisticsService = new UserStatisticsServiceImpl();
-        this.testStatisticsService = new UserTestStatisticsService();
+        this.userStatisticsService = (UserStatisticsService) getServletContext().getAttribute("userStatisticsService");
     }
 
     @Override
@@ -36,8 +32,7 @@ public class ProfileServlet extends BaseServlet {
         List<TestResult> results = testResultRepository.findByUserId(user.getId());
         req.setAttribute("results", results);
 
-        req.setAttribute("testStats", testStatisticsService.calculate(results));
-        req.setAttribute("topicStats", topicStatisticsService.calculateUserTopicStats(results));
+        req.setAttribute("topicStats", userStatisticsService.calculateUserTopicStats(results));
 
         log.info("Profile page prepared for user {}", user.getUsername());
         req.getRequestDispatcher("/WEB-INF/jsp/profile.jsp").forward(req, resp);

@@ -29,8 +29,7 @@ public class AuthenticationService {
 
         User user = userOptional.get();
 
-        String passwordHash = PasswordUtil.hashPassword(password);
-        if (!user.getPasswordHash().equals(passwordHash)) {
+        if (!PasswordUtil.verifyPassword(password, user.getPasswordHash())) {
             throw AuthenticationException.invalidCredentials();
         }
 

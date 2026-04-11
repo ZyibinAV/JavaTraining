@@ -44,6 +44,13 @@ public class ResultServlet extends BaseServlet {
             resp.sendRedirect(req.getContextPath() + "/home");
             return;
         }
+
+        if (interviewState.isExpired()) {
+            log.warn("Interview session expired, clearing session and redirecting to /home");
+            session.removeAttribute("interviewState");
+            resp.sendRedirect(req.getContextPath() + "/home");
+            return;
+        }
         TestResult result = testResultService.processAndSaveResult(user, interviewState);
 
         req.setAttribute("topics", result.getTopic().getDisplayName());

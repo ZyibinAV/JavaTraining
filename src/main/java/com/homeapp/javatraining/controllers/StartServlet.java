@@ -19,8 +19,11 @@ import java.util.stream.Collectors;
 @WebServlet("/start")
 public class StartServlet extends BaseServlet {
 
+    private TopicLoader topicLoader;
+
     @Override
     protected void initializeSpecificServices() {
+        this.topicLoader = (TopicLoader) getServletContext().getAttribute("topicLoader");
     }
 
     @Override
@@ -39,7 +42,7 @@ public class StartServlet extends BaseServlet {
         List<String> topicCodes = Arrays.asList(topicParams);
 
         Set<Topic> selectedTopics = topicCodes.stream()
-                .map(TopicLoader::findByCode)
+                .map(topicLoader::findByCode)
                 .collect(Collectors.toSet());
 
         List<Question> selectedQuestions =

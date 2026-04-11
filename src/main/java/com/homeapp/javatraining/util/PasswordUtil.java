@@ -20,4 +20,9 @@ public class PasswordUtil {
             throw new RuntimeException("Failed to hash password", e);
         }
     }
+
+    public static boolean verifyPassword(String rawPassword, String hashedPassword) {
+        String computedHash = hashPassword(rawPassword);
+        return computedHash.equals(hashedPassword);
+    }
 }

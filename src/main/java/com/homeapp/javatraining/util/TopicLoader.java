@@ -1,24 +1,22 @@
 package com.homeapp.javatraining.util;
 
-import com.homeapp.javatraining.config.hibernate.HibernateUtil;
 import com.homeapp.javatraining.model.Topic;
-import org.hibernate.Session;
+import com.homeapp.javatraining.repository.TopicRepository;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
+@RequiredArgsConstructor
 public class TopicLoader {
 
-    public static List<Topic> loadAllTopics() {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createQuery("FROM Topic", Topic.class).list();
-        }
+    private final TopicRepository topicRepository;
+
+    public List<Topic> loadAllTopics() {
+        return topicRepository.findAll();
     }
 
-    public static Topic findByCode(String code) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createQuery(
-                    "FROM Topic t WHERE t.code = :code", Topic.class)
-                    .setParameter("code", code).uniqueResult();
-        }
+    public Topic findByCode(String code) {
+        return topicRepository.findByCode(code).orElse(null);
     }
 }

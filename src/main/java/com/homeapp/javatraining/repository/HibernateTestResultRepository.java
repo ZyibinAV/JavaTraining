@@ -38,6 +38,7 @@ public class HibernateTestResultRepository implements TestResultRepository {
                 transaction.rollback();
             }
             log.error("Error saving TestResult", e);
+            throw new RuntimeException("Failed to save TestResult", e);
         }
     }
 

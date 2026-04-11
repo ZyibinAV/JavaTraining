@@ -42,13 +42,9 @@ public class User {
 
         this.nickname = username;
         this.about = "";
-        this.avatarPath = "/avatars/default/default.png";
+        this.avatarPath = "/resources/avatars/default/default.png";
         this.createdAt = LocalDateTime.now();
 
-    }
-
-    public void changeRole(Role newRole) {
-        this.role = newRole;
     }
 
 }

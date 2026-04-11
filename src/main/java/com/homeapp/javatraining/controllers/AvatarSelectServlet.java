@@ -14,11 +14,12 @@ import java.util.List;
 @WebServlet("/profile/avatar")
 public class AvatarSelectServlet extends BaseServlet {
 
-    private final AvatarService avatarService = new AvatarService();
+    private AvatarService avatarService;
     private UserRepository userRepository;
 
     @Override
     protected void initializeSpecificServices() {
+        this.avatarService = (AvatarService) getServletContext().getAttribute("avatarService");
         this.userRepository = (UserRepository) getServletContext().getAttribute("userRepository");
     }
 

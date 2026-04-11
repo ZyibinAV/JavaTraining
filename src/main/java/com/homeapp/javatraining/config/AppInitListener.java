@@ -33,6 +33,9 @@ public class AppInitListener implements ServletContextListener {
         context.setAttribute("questionRepository", config.getQuestionRepository());
         log.info("QuestionRepository initialized");
 
+        context.setAttribute("topicRepository", config.getTopicRepository());
+        log.info("TopicRepository initialized");
+
         context.setAttribute("userService", config.getUserService());
         log.info("UserService initialized");
 
@@ -50,6 +53,18 @@ public class AppInitListener implements ServletContextListener {
 
         context.setAttribute("adminStatisticsService", config.getAdminStatisticsService());
         log.info("AdminStatisticsService initialized");
+
+        context.setAttribute("userStatisticsService", config.getUserStatisticsService());
+        log.info("UserStatisticsService initialized");
+
+        context.setAttribute("avatarService", config.getAvatarService());
+        log.info("AvatarService initialized");
+
+        context.setAttribute("adminUserService", config.getAdminUserService());
+        log.info("AdminUserService initialized");
+
+        context.setAttribute("topicLoader", config.getTopicLoader());
+        log.info("TopicLoader initialized");
 
         log.info("Application context initialization completed successfully");
     }

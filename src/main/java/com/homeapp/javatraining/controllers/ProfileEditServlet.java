@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet("/profile/edit")
-public class ProfileEditServer extends BaseServlet {
+public class ProfileEditServlet extends BaseServlet {
 
     @Override
     protected void initializeSpecificServices() {

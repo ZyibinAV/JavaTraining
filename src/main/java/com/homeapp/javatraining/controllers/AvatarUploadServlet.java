@@ -24,7 +24,7 @@ import java.util.UUID;
 
 public class AvatarUploadServlet extends BaseServlet {
 
-    private static final String UPLOAD_DIR = "/uploads/avatars";
+    private static final String UPLOAD_DIR = "/resources/avatars/uploads";
     private UserRepository userRepository;
 
     @Override
