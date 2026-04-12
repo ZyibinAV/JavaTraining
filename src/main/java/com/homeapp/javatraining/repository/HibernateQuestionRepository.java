@@ -21,7 +21,7 @@ public class HibernateQuestionRepository implements QuestionRepository {
     public List<Question> getQuestions(Topic topic) {
         try (Session session = sessionFactory.openSession()) {
             List<Question> questions = session.createQuery(
-                    "FROM Question q WHERE q.topic = :topic", Question.class)
+                    "SELECT DISTINCT q FROM Question q LEFT JOIN FETCH q.topic LEFT JOIN FETCH q.answers WHERE q.topic = :topic", Question.class)
                     .setParameter("topic", topic).list();
 
             log.info("Questions loaded from DB: topic={}, count={}",
@@ -34,7 +34,10 @@ public class HibernateQuestionRepository implements QuestionRepository {
     @Override
     public Optional<Question> findById(Long id) {
         try (Session session = sessionFactory.openSession()) {
-            Question question = session.find(Question.class, id);
+            Question question = session.createQuery(
+                    "SELECT DISTINCT q FROM Question q LEFT JOIN FETCH q.topic LEFT JOIN FETCH q.answers WHERE q.id = :id", Question.class)
+                    .setParameter("id", id)
+                    .uniqueResult();
             return Optional.ofNullable(question);
         }
     }
@@ -42,7 +45,9 @@ public class HibernateQuestionRepository implements QuestionRepository {
     @Override
     public List<Question> findAll() {
         try (Session session = sessionFactory.openSession()) {
-            return  session.createQuery("FROM Question").list();
+            return session.createQuery(
+                    "SELECT DISTINCT q FROM Question q LEFT JOIN FETCH q.topic LEFT JOIN FETCH q.answers", Question.class)
+                    .list();
         }
     }
 

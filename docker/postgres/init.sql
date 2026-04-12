@@ -9,15 +9,25 @@ CREATE TABLE users
     avatar_path   VARCHAR(255),
     role          VARCHAR(20)  NOT NULL,
     created_at    TIMESTAMP    NOT NULL,
-    blocked       BOOLEAN      NOT NULL DEFAULT FALSE
+    blocked       BOOLEAN      NOT NULL DEFAULT FALSE,
+    version       BIGINT       NOT NULL DEFAULT 0
 );
+
+-- Index for User.username (unique constraint already creates index, but explicitly named)
+CREATE INDEX idx_users_username ON users(username);
+-- Index for User.email (unique constraint already creates index, but explicitly named)
+CREATE INDEX idx_users_email ON users(email);
 
 CREATE TABLE topics
 (
     id           BIGSERIAL PRIMARY KEY,
     code         VARCHAR(50)  NOT NULL UNIQUE,
-    display_name VARCHAR(100) NOT NULL
+    display_name VARCHAR(100) NOT NULL,
+    version      BIGINT       NOT NULL DEFAULT 0
 );
+
+-- Index for Topic.code (unique constraint already creates index, but explicitly named)
+CREATE INDEX idx_topics_code ON topics(code);
 
 CREATE TABLE questions
 (
@@ -25,11 +35,15 @@ CREATE TABLE questions
     topic_id             BIGINT NOT NULL,
     question_text        TEXT   NOT NULL,
     correct_answer_index INT    NOT NULL,
+    version              BIGINT NOT NULL DEFAULT 0,
     CONSTRAINT fk_question_topic
         FOREIGN KEY (topic_id)
             REFERENCES topics (id)
             ON DELETE CASCADE
 );
+
+-- Index for Question.topic_id
+CREATE INDEX idx_questions_topic_id ON questions(topic_id);
 
 CREATE TABLE answers
 (
@@ -37,6 +51,7 @@ CREATE TABLE answers
     question_id  BIGINT NOT NULL,
     answer_text  TEXT   NOT NULL,
     answer_index INT    NOT NULL,
+    version      BIGINT NOT NULL DEFAULT 0,
     CONSTRAINT fk_answer_question
         FOREIGN KEY (question_id)
             REFERENCES questions (id)
@@ -52,6 +67,7 @@ CREATE TABLE test_results
     correct_answers INT       NOT NULL,
     passed          BOOLEAN   NOT NULL,
     finished_at     TIMESTAMP NOT NULL,
+    version         BIGINT    NOT NULL DEFAULT 0,
     CONSTRAINT fk_result_user
         FOREIGN KEY (user_id)
             REFERENCES users (id)
@@ -60,6 +76,11 @@ CREATE TABLE test_results
         FOREIGN KEY (topic_id)
             REFERENCES topics (id)
 );
+
+-- Index for TestResult.user_id
+CREATE INDEX idx_test_results_user_id ON test_results(user_id);
+-- Index for TestResult.topic_id
+CREATE INDEX idx_test_results_topic_id ON test_results(topic_id);
 
 INSERT INTO topics (code, display_name)
 VALUES ('java-syntax', 'Java Syntax'),

@@ -46,7 +46,7 @@ public class HibernateTestResultRepository implements TestResultRepository {
     public List<TestResult> findByUserId(long userId) {
         try (Session session = sessionFactory.openSession()) {
             List<TestResult> results = session.createQuery(
-                    "FROM TestResult tr WHERE tr.user.id = :userId", TestResult.class)
+                    "SELECT DISTINCT tr FROM TestResult tr LEFT JOIN FETCH tr.user LEFT JOIN FETCH tr.topic WHERE tr.user.id = :userId", TestResult.class)
                     .setParameter("userId", userId).list();
             log.debug("Loaded {} test results for userId={}", results.size(), userId);
             return  results;
@@ -57,7 +57,7 @@ public class HibernateTestResultRepository implements TestResultRepository {
     public List<TestResult> findAll() {
         try (Session session = sessionFactory.openSession()) {
             List<TestResult> results = session.createQuery(
-                    "FROM TestResult",
+                    "SELECT DISTINCT tr FROM TestResult tr LEFT JOIN FETCH tr.user LEFT JOIN FETCH tr.topic",
                     TestResult.class).list();
             log.debug("Loaded all test results, count={}", results.size());
             return   results;

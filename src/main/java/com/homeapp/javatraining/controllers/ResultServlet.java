@@ -53,7 +53,9 @@ public class ResultServlet extends BaseServlet {
         }
         TestResult result = testResultService.processAndSaveResult(user, interviewState);
 
-        req.setAttribute("topics", result.getTopic().getDisplayName());
+        List<Question> questions = interviewState.getQuestions();
+        Topic topic = questions.get(0).getTopic();
+        req.setAttribute("topics", topic.getDisplayName());
         req.setAttribute("total", result.getTotalQuestions());
         req.setAttribute("correct", result.getCorrectAnswers());
         req.setAttribute("passed", result.isPassed());
