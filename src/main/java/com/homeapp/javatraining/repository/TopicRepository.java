@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface TopicRepository {
     List<Topic> findAll();
     Optional<Topic> findByCode(String code);
+    void save(Topic topic);
+    void delete(Topic topic);
 }

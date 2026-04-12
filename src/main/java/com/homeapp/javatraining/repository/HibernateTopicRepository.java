@@ -35,4 +35,38 @@ public class HibernateTopicRepository implements TopicRepository {
             throw new RuntimeException("Failed to find topic by code: " + code, e);
         }
     }
+
+    @Override
+    public void save(Topic topic) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.persist(topic);
+            transaction.commit();
+            log.info("Topic saved: {}", topic.getCode());
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            log.error("Error saving topic", e);
+            throw new RuntimeException("Failed to save topic", e);
+        }
+    }
+
+    @Override
+    public void delete(Topic topic) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.remove(topic);
+            transaction.commit();
+            log.info("Topic deleted: {}", topic.getCode());
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            log.error("Error deleting topic", e);
+            throw new RuntimeException("Failed to delete topic", e);
+        }
+    }
 }

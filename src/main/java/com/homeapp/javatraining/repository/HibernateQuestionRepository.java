@@ -110,5 +110,22 @@ public class HibernateQuestionRepository implements QuestionRepository {
         }
     }
 
+    @Override
+    public void delete(Question question) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            session.remove(question);
+            transaction.commit();
+            log.info("Question deleted: id={}", question.getId());
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            log.error("Error deleting question", e);
+            throw new RuntimeException("Failed to delete question", e);
+        }
+    }
+
 
 }

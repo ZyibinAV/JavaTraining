@@ -19,4 +19,6 @@ public interface QuestionRepository {
     boolean existsByTextAndTopic(String questionText, Topic topic);
 
     void saveAll(List<Question> questions);
+
+    void delete(Question question);
 }

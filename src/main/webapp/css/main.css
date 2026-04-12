@@ -186,6 +186,29 @@ h3::after {
     text-decoration: none;
 }
 
+.btn-delete {
+    background: white;
+    color: #64748b;
+    border: 2px solid #64748b;
+    padding: 10px 22px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.btn-delete:hover {
+    background: #64748b;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(100, 116, 139, 0.3);
+}
+
 .btn-large {
     padding: 16px 32px;
     font-size: 18px;
@@ -309,7 +332,7 @@ label {
 
 .input-wrapper textarea {
     width: 100% !important;
-    padding: 12px 16px 12px 44px !important;
+    padding: 12px 16px !important;
     border: 2px solid #e2e8f0 !important;
     border-radius: 12px !important;
     font-size: 16px !important;
@@ -318,8 +341,8 @@ label {
     box-sizing: border-box !important;
     font-family: inherit !important;
     color: #2d3748 !important;
-    height: 48px !important;
-    resize: none !important;
+    resize: vertical !important;
+    min-height: 80px !important;
 }
 
 .input-wrapper input:focus,
@@ -1337,6 +1360,146 @@ label {
 .test-settings-header {
     text-align: center;
     margin-bottom: 40px;
+}
+
+.answer-input-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: white;
+    box-sizing: border-box;
+    margin-bottom: 8px;
+}
+
+.answer-input-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* =============================================
+   СТИЛИ ДЛЯ УПРАВЛЕНИЯ ТЕСТАМИ
+   ============================================= */
+
+.question-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+}
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.question-header h4 {
+    margin: 0;
+    color: #2d3748;
+    font-size: 16px;
+}
+
+.badge {
+    background: #e2e8f0;
+    color: #4a5568;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+}
+
+.question-text {
+    color: #2d3748;
+    margin-bottom: 16px;
+    line-height: 1.6;
+}
+
+.answers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.answer-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+}
+
+.answer-item.correct {
+    background: #c6f6d5;
+    border-color: #9ae6b4;
+}
+
+.answer-index {
+    font-weight: 600;
+    color: #667eea;
+}
+
+.correct-badge {
+    margin-left: auto;
+    background: #22543d;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.question-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-sm {
+    padding: 8px 16px;
+    font-size: 14px;
+}
+
+.instructions h4 {
+    color: #2d3748;
+    font-size: 16px;
+    margin-bottom: 8px;
+    margin-top: 16px;
+}
+
+.instructions h4:first-child {
+    margin-top: 0;
+}
+
+.instructions ol {
+    margin-left: 20px;
+    color: #4a5568;
+}
+
+.instructions li {
+    margin-bottom: 4px;
+}
+
+.code-example {
+    background: #1a202c;
+    color: #e2e8f0;
+    padding: 16px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+}
+
+.form-hint {
+    color: #718096;
+    font-size: 12px;
+    display: block;
+    margin-top: 4px;
 }
 
 .test-settings-description {

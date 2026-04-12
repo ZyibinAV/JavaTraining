@@ -69,7 +69,7 @@
                 </div>
             </a>
 
-            <div class="admin-menu-item disabled">
+            <a href="${pageContext.request.contextPath}/admin/tests" class="admin-menu-item">
                 <div class="menu-icon">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
@@ -78,15 +78,15 @@
                 </div>
                 <div class="menu-content">
                     <h4>Управление тестами</h4>
-                    <p>Редактирование вопросов и тем (скоро)</p>
+                    <p>Редактирование вопросов и тем</p>
                 </div>
                 <div class="menu-arrow">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                        <circle cx="12" cy="16" r="1"></circle>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
                     </svg>
                 </div>
-            </div>
+            </a>
 
             <div class="admin-menu-item disabled">
                 <div class="menu-icon">
