@@ -19,7 +19,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
-    private long id;
+    private Long id;
     @Column(nullable = false, unique = true)
     @Index(name = "idx_users_username")
     private String username;

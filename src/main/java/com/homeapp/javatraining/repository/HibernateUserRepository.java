@@ -17,17 +17,46 @@ public class HibernateUserRepository implements UserRepository {
 
     @Override
     public void save(User user) {
+        Session session = null;
         Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()) {
+        try {
+            session = sessionFactory.openSession();
             transaction = session.beginTransaction();
             session.merge(user);
             transaction.commit();
         } catch (Exception e) {
-            if (transaction != null) {
+            if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
             log.error("Error saving user", e);
             throw new RuntimeException(e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
+    @Override
+    public void delete(User user) {
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            session.remove(session.contains(user) ? user : session.merge(user));
+            transaction.commit();
+            log.info("User deleted: {}", user.getUsername());
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            log.error("Error deleting user", e);
+            throw new RuntimeException("Failed to delete user", e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 

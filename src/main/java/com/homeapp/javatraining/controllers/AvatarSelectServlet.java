@@ -28,7 +28,8 @@ public class AvatarSelectServlet extends BaseServlet {
             throws ServletException, IOException {
         log.debug("GET /profile/avatar");
 
-        List<String> avatars = avatarService.getAvailableAvatars();
+        User user = getCurrentUser(req);
+        List<String> avatars = avatarService.getAvailableAvatars(user.getAvatarPath());
         log.debug("Loaded {} available avatars", avatars.size());
 
         req.setAttribute("avatars", avatars);
@@ -44,7 +45,7 @@ public class AvatarSelectServlet extends BaseServlet {
         String selectedAvatar = req.getParameter("avatarPath");
         log.debug("Selected avatar path: {}", selectedAvatar);
 
-        List<String> availableAvatars = avatarService.getAvailableAvatars();
+        List<String> availableAvatars = avatarService.getAvailableAvatars(user.getAvatarPath());
         if (availableAvatars.contains(selectedAvatar)) {
             log.info("User {} changed avatar to {}", user.getUsername(), selectedAvatar);
             user.setAvatarPath(selectedAvatar);

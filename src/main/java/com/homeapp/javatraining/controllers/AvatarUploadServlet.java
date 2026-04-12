@@ -24,7 +24,7 @@ import java.util.UUID;
 
 public class AvatarUploadServlet extends BaseServlet {
 
-    private static final String UPLOAD_DIR = "/resources/avatars/uploads";
+    private static final String UPLOAD_DIR_NAME = "avatar-uploads";
     private UserRepository userRepository;
 
     @Override
@@ -50,8 +50,10 @@ public class AvatarUploadServlet extends BaseServlet {
         String submittedFileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
         String extension = submittedFileName.substring(submittedFileName.lastIndexOf('.'));
         String fileName = UUID.randomUUID() + extension;
-        String uploadPath = getServletContext().getRealPath(UPLOAD_DIR);
-        File uploadDir = new File(uploadPath);
+        
+        // Use external directory outside webapp to persist across Maven clean
+        String userHome = System.getProperty("user.home");
+        File uploadDir = new File(userHome, UPLOAD_DIR_NAME);
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();
         }
@@ -59,7 +61,8 @@ public class AvatarUploadServlet extends BaseServlet {
         File file = new File(uploadDir, fileName);
         filePart.write(file.getAbsolutePath());
 
-        user.setAvatarPath(UPLOAD_DIR + "/" + fileName);
+        // Store relative path for serving via servlet
+        user.setAvatarPath("/uploads/" + fileName);
         userRepository.save(user);
         log.info("User {} successfully uploaded avatar: {}", user.getUsername(), fileName);
         resp.sendRedirect(req.getContextPath() + "/profile");
