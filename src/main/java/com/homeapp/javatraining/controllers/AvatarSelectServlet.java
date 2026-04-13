@@ -41,15 +41,22 @@ public class AvatarSelectServlet extends BaseServlet {
             throws ServletException, IOException {
         log.debug("POST /profile/avatar");
 
-        User user = getCurrentUser(req);
+        User sessionUser = getCurrentUser(req);
         String selectedAvatar = req.getParameter("avatarPath");
         log.debug("Selected avatar path: {}", selectedAvatar);
+
+        // Reload user from database to avoid OptimisticLockException with @Version field
+        User user = userRepository.findById(sessionUser.getId())
+                .orElseThrow(() -> new ServletException("User not found in database"));
 
         List<String> availableAvatars = avatarService.getAvailableAvatars(user.getAvatarPath());
         if (availableAvatars.contains(selectedAvatar)) {
             log.info("User {} changed avatar to {}", user.getUsername(), selectedAvatar);
             user.setAvatarPath(selectedAvatar);
             userRepository.save(user);
+            
+            // Update session with fresh user object
+            setCurrentUser(req, user);
         } else {
             log.warn("User {} attempted to select invalid avatar: {}",
                     user.getUsername(),

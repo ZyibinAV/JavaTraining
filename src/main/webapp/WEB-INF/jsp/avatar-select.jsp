@@ -14,14 +14,23 @@
               action="${pageContext.request.contextPath}/profile/avatar/upload"
               enctype="multipart/form-data">
 
-            <div class="form-group">
+            <div class="form-group-modern">
                 <input type="file"
+                       id="avatarFile"
                        name="avatar"
                        accept="image/*"
-                       required>
+                       required
+                       style="display: none;"
+                       onchange="document.getElementById('fileName').textContent = this.files[0]?.name || ''">
+                
+                <div style="display: flex; gap: 16px; align-items: center;">
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('avatarFile').click()">
+                        Выберите файл
+                    </button>
+                    <span id="fileName" style="color: #718096;"></span>
+                    <button type="submit" class="btn btn-primary">Загрузить</button>
+                </div>
             </div>
-
-            <button type="submit">Загрузить</button>
         </form>
     </div>
 
@@ -44,8 +53,8 @@
             </div>
 
             <div class="avatar-actions">
-                <button type="submit">Сохранить</button>
-                <a href="${pageContext.request.contextPath}/profile">Отмена</a>
+                <button type="submit" class="btn btn-secondary">Сохранить</button>
+                <button type="button" class="btn btn-primary" onclick="window.location.href='${pageContext.request.contextPath}/profile'">Отмена</button>
             </div>
 
         </form>

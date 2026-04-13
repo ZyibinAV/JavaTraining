@@ -4,12 +4,8 @@
 <c:import url="/WEB-INF/jsp/common/header.jsp"/>
 
 <div class="container">
-    <div class="admin-header">
-        <h2>Управление тестами</h2>
-        <p class="admin-description">
-            Редактирование тем, вопросов и вариантов ответов
-        </p>
-    </div>
+
+    <h2>Управление тестами</h2>
 
     <c:if test="${not empty error}">
         <div class="alert alert-error">

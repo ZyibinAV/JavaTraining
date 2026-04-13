@@ -37,8 +37,12 @@ public class AvatarUploadServlet extends BaseServlet {
             throws ServletException, IOException {
         log.debug("POST /profile/avatar/upload");
 
-        User user = getCurrentUser(req);
-        log.debug("User {} initiates avatar upload", user.getUsername());
+        User sessionUser = getCurrentUser(req);
+        log.debug("User {} initiates avatar upload", sessionUser.getUsername());
+
+        // Reload user from database to avoid OptimisticLockException with @Version field
+        User user = userRepository.findById(sessionUser.getId())
+                .orElseThrow(() -> new ServletException("User not found in database"));
 
         Part filePart = req.getPart("avatar");
         if (filePart == null || filePart.getSize() == 0) {
@@ -64,6 +68,10 @@ public class AvatarUploadServlet extends BaseServlet {
         // Store relative path for serving via servlet
         user.setAvatarPath("/uploads/" + fileName);
         userRepository.save(user);
+        
+        // Update session with fresh user object
+        setCurrentUser(req, user);
+        
         log.info("User {} successfully uploaded avatar: {}", user.getUsername(), fileName);
         resp.sendRedirect(req.getContextPath() + "/profile");
     }
