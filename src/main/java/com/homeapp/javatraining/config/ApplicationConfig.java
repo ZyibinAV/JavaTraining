@@ -13,13 +13,11 @@ import lombok.Getter;
 
 @Getter
 public class ApplicationConfig {
-    // ===== Repositories =====
     private final UserRepository userRepository;
     private final TestResultRepository testResultRepository;
     private final QuestionRepository questionRepository;
     private final TopicRepository topicRepository;
 
-    // ===== Services =====
     private final UserService userService;
     private final AuthenticationService authenticationService;
     private final RegistrationService registrationService;

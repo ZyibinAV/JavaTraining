@@ -7,7 +7,6 @@
 
     <session-factory>
 
-        <!-- JDBC connection -->
         <property name="hibernate.connection.driver_class">
             org.postgresql.Driver
         </property>
@@ -24,19 +23,15 @@
             postgres
         </property>
 
-        <!-- SQL dialect -->
         <property name="hibernate.dialect">
             org.hibernate.dialect.PostgreSQLDialect
         </property>
 
-        <!-- Debug SQL -->
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.format_sql">true</property>
 
-        <!-- Schema strategy -->
         <property name="hibernate.hbm2ddl.auto">validate</property>
 
-        <!-- HikariCP Connection Pool -->
         <property name="hibernate.connection.provider_class">org.hibernate.hikaricp.internal.HikariCPConnectionProvider</property>
         <property name="hibernate.hikari.minimumIdle">5</property>
         <property name="hibernate.hikari.maximumPoolSize">20</property>

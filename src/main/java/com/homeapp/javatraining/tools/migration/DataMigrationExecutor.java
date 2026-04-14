@@ -23,39 +23,34 @@ public class DataMigrationExecutor {
         log.info("Starting data migration from JSON to PostgreSQL...");
 
         try {
-            // Initialize application configuration
             log.info("Initializing ApplicationConfig...");
             ApplicationConfig config = new ApplicationConfig();
 
-            // Get required dependencies
             QuestionRepository questionRepository = config.getQuestionRepository();
             TopicLoader topicLoader = config.getTopicLoader();
             JsonQuestionImportSource jsonQuestionImportSource = new JsonQuestionImportSource();
 
-            // Create migration runner
             QuestionMigrationRunner migrationRunner = new QuestionMigrationRunner(
-                questionRepository,
-                jsonQuestionImportSource
+                    questionRepository,
+                    jsonQuestionImportSource
             );
 
-            // Load all topics from database
             log.info("Loading topics from database...");
             List<Topic> topics = topicLoader.loadAllTopics();
-            
+
             if (topics.isEmpty()) {
                 log.error("No topics found in database. Cannot proceed with migration.");
                 System.exit(1);
             }
-            
-            log.info("Found {} topics: {}", topics.size(), 
-                topics.stream().map(Topic::getCode).toList());
-            
-            // Execute migration
+
+            log.info("Found {} topics: {}", topics.size(),
+                    topics.stream().map(Topic::getCode).toList());
+
             log.info("Executing migration...");
             migrationRunner.migrate(topics);
-            
+
             log.info("Data migration completed successfully!");
-            
+
         } catch (Exception e) {
             log.error("Data migration failed", e);
             System.exit(1);

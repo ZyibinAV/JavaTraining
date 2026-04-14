@@ -45,7 +45,6 @@ public class AvatarSelectServlet extends BaseServlet {
         String selectedAvatar = req.getParameter("avatarPath");
         log.debug("Selected avatar path: {}", selectedAvatar);
 
-        // Reload user from database to avoid OptimisticLockException with @Version field
         User user = userRepository.findById(sessionUser.getId())
                 .orElseThrow(() -> new ServletException("User not found in database"));
 
@@ -54,8 +53,7 @@ public class AvatarSelectServlet extends BaseServlet {
             log.info("User {} changed avatar to {}", user.getUsername(), selectedAvatar);
             user.setAvatarPath(selectedAvatar);
             userRepository.save(user);
-            
-            // Update session with fresh user object
+
             setCurrentUser(req, user);
         } else {
             log.warn("User {} attempted to select invalid avatar: {}",

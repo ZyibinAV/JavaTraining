@@ -5,8 +5,6 @@ import com.homeapp.javatraining.model.User;
 import com.homeapp.javatraining.repository.UserRepository;
 import com.homeapp.javatraining.util.PasswordUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Slf4j
 public class UserServiceImpl implements UserService {

@@ -26,7 +26,7 @@ public class Answer {
     @JoinColumn(name = "question_id", nullable = false)
     private Question question;
 
-    public Answer(){
+    public Answer() {
 
     }
 

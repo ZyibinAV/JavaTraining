@@ -28,7 +28,10 @@ public class ProfileEditServlet extends BaseServlet {
             throws ServletException, IOException {
         log.debug("POST /profile/edit");
 
-        User user = getCurrentUser(req);
+        User sessionUser = getCurrentUser(req);
+        User user = userRepository.findById(sessionUser.getId())
+                .orElseThrow(() -> new ServletException("User not found in database"));
+
         String nickname = req.getParameter("nickname");
         String about = req.getParameter("about");
         String currentPassword = req.getParameter("currentPassword");
@@ -38,7 +41,6 @@ public class ProfileEditServlet extends BaseServlet {
         user.setNickname(nickname);
         user.setAbout(about);
 
-        // Handle password change if provided
         if (currentPassword != null && !currentPassword.isEmpty()) {
             String currentPasswordHash = PasswordUtil.hashPassword(currentPassword);
             if (!user.getPasswordHash().equals(currentPasswordHash)) {
@@ -68,6 +70,7 @@ public class ProfileEditServlet extends BaseServlet {
         }
 
         userRepository.save(user);
+        setCurrentUser(req, user);
         log.info("User {} updated profile data", user.getUsername());
 
         resp.sendRedirect(req.getContextPath() + "/profile");

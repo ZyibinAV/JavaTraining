@@ -6,13 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
 public class HibernateTestResultRepository implements TestResultRepository {
@@ -23,8 +18,8 @@ public class HibernateTestResultRepository implements TestResultRepository {
     public void save(TestResult result) {
         Transaction transaction = null;
 
-        try(Session session = sessionFactory.openSession()){
-            transaction= session.beginTransaction();
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
             session.merge(result);
             transaction.commit();
 
@@ -46,10 +41,10 @@ public class HibernateTestResultRepository implements TestResultRepository {
     public List<TestResult> findByUserId(long userId) {
         try (Session session = sessionFactory.openSession()) {
             List<TestResult> results = session.createQuery(
-                    "SELECT DISTINCT tr FROM TestResult tr LEFT JOIN FETCH tr.user LEFT JOIN FETCH tr.topic WHERE tr.user.id = :userId", TestResult.class)
+                            "SELECT DISTINCT tr FROM TestResult tr LEFT JOIN FETCH tr.user LEFT JOIN FETCH tr.topic WHERE tr.user.id = :userId", TestResult.class)
                     .setParameter("userId", userId).list();
             log.debug("Loaded {} test results for userId={}", results.size(), userId);
-            return  results;
+            return results;
         }
     }
 
@@ -60,7 +55,7 @@ public class HibernateTestResultRepository implements TestResultRepository {
                     "SELECT DISTINCT tr FROM TestResult tr LEFT JOIN FETCH tr.user LEFT JOIN FETCH tr.topic",
                     TestResult.class).list();
             log.debug("Loaded all test results, count={}", results.size());
-            return   results;
+            return results;
         }
     }
 }

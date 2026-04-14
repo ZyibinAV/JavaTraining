@@ -1,7 +1,5 @@
 package com.homeapp.javatraining.util;
 
-import com.homeapp.javatraining.model.Topic;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

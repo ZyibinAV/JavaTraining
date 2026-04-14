@@ -1,6 +1,5 @@
 package com.homeapp.javatraining.controllers;
 
-import com.homeapp.javatraining.filter.AuthFilter;
 import com.homeapp.javatraining.handler.RequestHandler;
 import com.homeapp.javatraining.model.Role;
 import com.homeapp.javatraining.model.User;
@@ -16,7 +15,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,16 +69,16 @@ public abstract class BaseServlet extends HttpServlet {
         if (questionRepository == null) {
             throw new ServletException("QuestionRepository not found in ServletContext");
         }
-        if(userService == null) {
+        if (userService == null) {
             throw new ServletException("UserService not found in ServletContext");
         }
-        if(authenticationService == null) {
+        if (authenticationService == null) {
             throw new ServletException("AuthenticationService not found in ServletContext");
         }
-        if(registrationService == null) {
+        if (registrationService == null) {
             throw new ServletException("RegistrationService not found in ServletContext");
         }
-        if(questionService == null) {
+        if (questionService == null) {
             throw new ServletException("QuestionService not found in ServletContext");
         }
         if (requestHandler == null) {

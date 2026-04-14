@@ -5,11 +5,8 @@ import com.homeapp.javatraining.model.Question;
 import com.homeapp.javatraining.model.Topic;
 import com.homeapp.javatraining.repository.QuestionRepository;
 import com.homeapp.javatraining.util.TopicLoader;
-import com.homeapp.javatraining.util.ValidationFactory;
 import com.homeapp.javatraining.validation.QuestionValidator;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,7 +32,7 @@ public class QuestionService {
             Topic topic = topicLoader.findByCode(code);
 
             if (topic == null) {
-                throw  new IllegalArgumentException("Topic not found: " + code);
+                throw new IllegalArgumentException("Topic not found: " + code);
             }
 
             allQuestions.addAll(questionRepository.getQuestions(topic));

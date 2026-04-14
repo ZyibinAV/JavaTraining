@@ -1,7 +1,10 @@
 package com.homeapp.javatraining.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Index;
 
 import java.time.LocalDateTime;

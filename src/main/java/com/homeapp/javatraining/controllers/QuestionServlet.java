@@ -1,8 +1,6 @@
 package com.homeapp.javatraining.controllers;
 
 import com.homeapp.javatraining.model.InterviewState;
-import com.homeapp.javatraining.model.Topic;
-import com.homeapp.javatraining.service.QuestionService;
 import com.homeapp.javatraining.session.SessionUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

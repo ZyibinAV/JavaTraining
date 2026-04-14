@@ -64,9 +64,9 @@ public class HibernateUserRepository implements UserRepository {
     public Optional<User> findByUserName(String username) {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery(
-                    "FROM User u WHERE u.username = :username", User.class)
-                            .setParameter("username", username)
-                            .uniqueResultOptional();
+                            "FROM User u WHERE u.username = :username", User.class)
+                    .setParameter("username", username)
+                    .uniqueResultOptional();
 
         }
     }

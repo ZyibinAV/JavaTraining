@@ -21,7 +21,7 @@ public class HibernateQuestionRepository implements QuestionRepository {
     public List<Question> getQuestions(Topic topic) {
         try (Session session = sessionFactory.openSession()) {
             List<Question> questions = session.createQuery(
-                    "SELECT DISTINCT q FROM Question q LEFT JOIN FETCH q.topic LEFT JOIN FETCH q.answers WHERE q.topic = :topic", Question.class)
+                            "SELECT DISTINCT q FROM Question q LEFT JOIN FETCH q.topic LEFT JOIN FETCH q.answers WHERE q.topic = :topic", Question.class)
                     .setParameter("topic", topic).list();
 
             log.info("Questions loaded from DB: topic={}, count={}",
@@ -35,7 +35,7 @@ public class HibernateQuestionRepository implements QuestionRepository {
     public Optional<Question> findById(Long id) {
         try (Session session = sessionFactory.openSession()) {
             Question question = session.createQuery(
-                    "SELECT DISTINCT q FROM Question q LEFT JOIN FETCH q.topic LEFT JOIN FETCH q.answers WHERE q.id = :id", Question.class)
+                            "SELECT DISTINCT q FROM Question q LEFT JOIN FETCH q.topic LEFT JOIN FETCH q.answers WHERE q.id = :id", Question.class)
                     .setParameter("id", id)
                     .uniqueResult();
             return Optional.ofNullable(question);
@@ -46,7 +46,7 @@ public class HibernateQuestionRepository implements QuestionRepository {
     public List<Question> findAll() {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery(
-                    "SELECT DISTINCT q FROM Question q LEFT JOIN FETCH q.topic LEFT JOIN FETCH q.answers", Question.class)
+                            "SELECT DISTINCT q FROM Question q LEFT JOIN FETCH q.topic LEFT JOIN FETCH q.answers", Question.class)
                     .list();
         }
     }
@@ -72,8 +72,8 @@ public class HibernateQuestionRepository implements QuestionRepository {
     public boolean existsByTextAndTopic(String questionText, Topic topic) {
         try (Session session = sessionFactory.openSession()) {
             Long count = session.createQuery(
-                    "SELECT COUNT(q.id) FROM Question q WHERE q.questionText = :text AND q.topic = :topic",
-                    Long.class)
+                            "SELECT COUNT(q.id) FROM Question q WHERE q.questionText = :text AND q.topic = :topic",
+                            Long.class)
                     .setParameter("text", questionText)
                     .setParameter("topic", topic)
                     .uniqueResult();

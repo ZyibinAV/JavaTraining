@@ -1,8 +1,8 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const passwordToggles = document.querySelectorAll('.password-toggle');
 
     passwordToggles.forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const input = this.previousElementSibling;
             const type = input.type === 'password' ? 'text' : 'password';
             input.type = type;
@@ -13,11 +13,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const inputs = document.querySelectorAll('input[required]');
 
     inputs.forEach(input => {
-        input.addEventListener('blur', function() {
+        input.addEventListener('blur', function () {
             validateField(this);
         });
 
-        input.addEventListener('input', function() {
+        input.addEventListener('input', function () {
             if (this.classList.contains('error')) {
                 validateField(this);
             }

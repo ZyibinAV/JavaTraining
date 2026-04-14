@@ -5,7 +5,6 @@ import com.homeapp.javatraining.repository.TopicRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 public class TopicLoader {

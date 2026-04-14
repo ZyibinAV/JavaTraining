@@ -13,9 +13,7 @@ CREATE TABLE users
     version       BIGINT       NOT NULL DEFAULT 0
 );
 
--- Index for User.username (unique constraint already creates index, but explicitly named)
 CREATE INDEX idx_users_username ON users(username);
--- Index for User.email (unique constraint already creates index, but explicitly named)
 CREATE INDEX idx_users_email ON users(email);
 
 CREATE TABLE topics
@@ -26,7 +24,6 @@ CREATE TABLE topics
     version      BIGINT       NOT NULL DEFAULT 0
 );
 
--- Index for Topic.code (unique constraint already creates index, but explicitly named)
 CREATE INDEX idx_topics_code ON topics(code);
 
 CREATE TABLE questions
@@ -42,7 +39,6 @@ CREATE TABLE questions
             ON DELETE CASCADE
 );
 
--- Index for Question.topic_id
 CREATE INDEX idx_questions_topic_id ON questions(topic_id);
 
 CREATE TABLE answers
@@ -77,9 +73,7 @@ CREATE TABLE test_results
             REFERENCES topics (id)
 );
 
--- Index for TestResult.user_id
 CREATE INDEX idx_test_results_user_id ON test_results(user_id);
--- Index for TestResult.topic_id
 CREATE INDEX idx_test_results_topic_id ON test_results(topic_id);
 
 INSERT INTO topics (code, display_name)

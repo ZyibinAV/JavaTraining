@@ -8,7 +8,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +39,6 @@ public class AvatarUploadServlet extends BaseServlet {
         User sessionUser = getCurrentUser(req);
         log.debug("User {} initiates avatar upload", sessionUser.getUsername());
 
-        // Reload user from database to avoid OptimisticLockException with @Version field
         User user = userRepository.findById(sessionUser.getId())
                 .orElseThrow(() -> new ServletException("User not found in database"));
 
@@ -54,8 +52,7 @@ public class AvatarUploadServlet extends BaseServlet {
         String submittedFileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
         String extension = submittedFileName.substring(submittedFileName.lastIndexOf('.'));
         String fileName = UUID.randomUUID() + extension;
-        
-        // Use external directory outside webapp to persist across Maven clean
+
         String userHome = System.getProperty("user.home");
         File uploadDir = new File(userHome, UPLOAD_DIR_NAME);
         if (!uploadDir.exists()) {
@@ -65,13 +62,11 @@ public class AvatarUploadServlet extends BaseServlet {
         File file = new File(uploadDir, fileName);
         filePart.write(file.getAbsolutePath());
 
-        // Store relative path for serving via servlet
         user.setAvatarPath("/uploads/" + fileName);
         userRepository.save(user);
-        
-        // Update session with fresh user object
+
         setCurrentUser(req, user);
-        
+
         log.info("User {} successfully uploaded avatar: {}", user.getUsername(), fileName);
         resp.sendRedirect(req.getContextPath() + "/profile");
     }

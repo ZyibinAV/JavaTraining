@@ -1,12 +1,10 @@
 package com.homeapp.javatraining.controllers;
 
 import com.homeapp.javatraining.model.User;
-import com.homeapp.javatraining.service.AuthenticationService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 
@@ -34,7 +32,7 @@ public class LoginServlet extends BaseServlet {
         String password = req.getParameter("password");
 
         requestHandler.handleRequest(req, resp, () -> {
-            User user = authenticationService .authenticate(username, password);
+            User user = authenticationService.authenticate(username, password);
 
             setCurrentUser(req, user);
 

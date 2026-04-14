@@ -1,7 +1,5 @@
 package com.homeapp.javatraining.dto;
 
-import com.homeapp.javatraining.model.Topic;
-
 public class TopicStats extends BaseStats {
 
     private final String topicCode;

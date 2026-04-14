@@ -23,7 +23,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+// упростить
 @Slf4j
 @WebServlet("/admin/tests")
 public class AdminTestServlet extends BaseServlet {
