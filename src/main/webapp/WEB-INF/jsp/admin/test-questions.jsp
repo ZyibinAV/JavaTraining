@@ -29,7 +29,7 @@
     <c:if test="${not editMode}">
         <div class="content-card">
             <h3>Загрузить вопросы из JSON файла</h3>
-            <form method="post" action="${pageContext.request.contextPath}/admin/tests" 
+            <form method="post" action="${pageContext.request.contextPath}/admin/tests"
                   enctype="multipart/form-data">
                 <input type="hidden" name="action" value="upload-json">
                 <input type="hidden" name="topicCode" value="${topic.code}">
@@ -41,7 +41,9 @@
                 <button type="submit" class="btn btn-primary">Загрузить JSON</button>
             </form>
         </div>
+    </c:if>
 
+    <c:if test="${not editMode}">
         <div class="content-card">
             <h3>Список вопросов</h3>
             <c:if test="${empty questions}">
@@ -110,9 +112,6 @@
                         <div class="answer-input-group">
                             <input type="text" name="answer2" placeholder="Вариант 2" required>
                         </div>
-                        <div class="answer-input-group">
-                            <input type="text" name="answer3" placeholder="Вариант 3" required>
-                        </div>
                     </div>
                     <button type="button" class="btn btn-sm btn-secondary" onclick="addAnswerField()">+ Добавить вариант</button>
                 </div>
@@ -161,7 +160,7 @@
 </div>
 
 <script>
-let answerCount = ${editMode ? question.answers.size() : 4};
+let answerCount = ${editMode ? question.answers.size() : 3};
 
 function addAnswerField() {
     const container = document.getElementById('answersContainer');

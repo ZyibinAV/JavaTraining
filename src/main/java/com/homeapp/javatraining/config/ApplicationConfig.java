@@ -27,6 +27,7 @@ public class ApplicationConfig {
     private final UserStatisticsService userStatisticsService;
     private final AvatarService avatarService;
     private final AdminUserService adminUserService;
+    private final AdminTestService adminTestService;
     private final TopicLoader topicLoader;
 
     public ApplicationConfig() {
@@ -46,6 +47,7 @@ public class ApplicationConfig {
         this.userStatisticsService = createUserStatisticsService();
         this.avatarService = createAvatarService();
         this.adminUserService = createAdminUserService();
+        this.adminTestService = createAdminTestService();
     }
 
     private AdminStatisticsService createAdminStatisticsService() {
@@ -102,6 +104,10 @@ public class ApplicationConfig {
 
     private AdminUserService createAdminUserService() {
         return new AdminUserService(userRepository);
+    }
+
+    private AdminTestService createAdminTestService() {
+        return new AdminTestService(topicLoader, topicRepository, questionRepository);
     }
 
     private TopicLoader createTopicLoader() {

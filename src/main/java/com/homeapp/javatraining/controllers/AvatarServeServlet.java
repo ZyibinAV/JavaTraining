@@ -2,21 +2,22 @@ package com.homeapp.javatraining.controllers;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-// наследоваться от BaseSevlet
-@Slf4j
+
 @WebServlet("/uploads/*")
-public class AvatarServeServlet extends HttpServlet {
+public class AvatarServeServlet extends BaseServlet {
 
     private static final String UPLOAD_DIR_NAME = "avatar-uploads";
+
+    @Override
+    protected void initializeSpecificServices() {
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)

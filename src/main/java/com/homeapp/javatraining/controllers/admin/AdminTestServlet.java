@@ -1,43 +1,29 @@
 package com.homeapp.javatraining.controllers.admin;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.homeapp.javatraining.controllers.BaseServlet;
-import com.homeapp.javatraining.model.Answer;
 import com.homeapp.javatraining.model.Question;
 import com.homeapp.javatraining.model.Topic;
-import com.homeapp.javatraining.repository.QuestionRepository;
-import com.homeapp.javatraining.repository.TopicRepository;
-import com.homeapp.javatraining.util.TopicLoader;
-import com.homeapp.javatraining.util.ValidationFactory;
-import com.homeapp.javatraining.validation.QuestionValidator;
+import com.homeapp.javatraining.service.AdminTestService;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-// упростить
-@Slf4j
+
 @WebServlet("/admin/tests")
+@MultipartConfig
 public class AdminTestServlet extends BaseServlet {
 
-    private TopicLoader topicLoader;
-    private TopicRepository topicRepository;
-    private QuestionRepository questionRepository;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private AdminTestService adminTestService;
 
     @Override
     protected void initializeSpecificServices() {
-        this.topicLoader = (TopicLoader) getServletContext().getAttribute("topicLoader");
-        this.topicRepository = (TopicRepository) getServletContext().getAttribute("topicRepository");
-        this.questionRepository = (QuestionRepository) getServletContext().getAttribute("questionRepository");
+        this.adminTestService = (AdminTestService) getServletContext().getAttribute("adminTestService");
     }
 
     @Override
@@ -60,9 +46,25 @@ public class AdminTestServlet extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        log.debug("POST /admin/tests");
+        boolean isMultipart = req.getContentType() != null && req.getContentType().contains("multipart/form-data");
 
-        String action = req.getParameter("action");
+        String action;
+        if (isMultipart) {
+            // For multipart requests, extract action from Part
+            try {
+                Part actionPart = req.getPart("action");
+                if (actionPart != null) {
+                    action = new String(actionPart.getInputStream().readAllBytes());
+                } else {
+                    action = null;
+                }
+            } catch (Exception e) {
+                log.error("Error reading action from multipart", e);
+                action = null;
+            }
+        } else {
+            action = req.getParameter("action");
+        }
         if ("add-topic".equals(action)) {
             addTopic(req, resp);
         } else if ("delete-topic".equals(action)) {
@@ -82,7 +84,7 @@ public class AdminTestServlet extends BaseServlet {
 
     private void showTopicsList(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        List<Topic> topics = topicLoader.loadAllTopics();
+        List<Topic> topics = adminTestService.getAllTopics();
         req.setAttribute("topics", topics);
         req.getRequestDispatcher("/WEB-INF/jsp/admin/tests.jsp").forward(req, resp);
     }
@@ -95,17 +97,17 @@ public class AdminTestServlet extends BaseServlet {
             return;
         }
 
-        Topic topic = topicLoader.findByCode(topicCode);
-        if (topic == null) {
+        try {
+            Topic topic = adminTestService.getTopicByCode(topicCode);
+            List<Question> questions = adminTestService.getQuestionsByTopic(topicCode);
+            req.setAttribute("topic", topic);
+            req.setAttribute("questions", questions);
+            req.setAttribute("editMode", false);
+            req.getRequestDispatcher("/WEB-INF/jsp/admin/test-questions.jsp").forward(req, resp);
+        } catch (IllegalArgumentException e) {
             log.error("Topic not found: {}", topicCode);
             resp.sendRedirect(req.getContextPath() + "/admin/tests");
-            return;
         }
-
-        List<Question> questions = questionRepository.getQuestions(topic);
-        req.setAttribute("topic", topic);
-        req.setAttribute("questions", questions);
-        req.getRequestDispatcher("/WEB-INF/jsp/admin/test-questions.jsp").forward(req, resp);
     }
 
     private void showEditQuestionForm(HttpServletRequest req, HttpServletResponse resp)
@@ -120,22 +122,10 @@ public class AdminTestServlet extends BaseServlet {
 
         try {
             Long questionId = Long.parseLong(questionIdStr);
-            Question question = questionRepository.findById(questionId).orElse(null);
+            Question question = adminTestService.getQuestionById(questionId)
+                    .orElseThrow(() -> new IllegalArgumentException("Question not found"));
 
-            if (question == null) {
-                log.error("Question not found: {}", questionId);
-                req.setAttribute("error", "Question not found");
-                showQuestionsList(req, resp);
-                return;
-            }
-
-            Topic topic = topicLoader.findByCode(topicCode);
-            if (topic == null) {
-                log.error("Topic not found: {}", topicCode);
-                resp.sendRedirect(req.getContextPath() + "/admin/tests");
-                return;
-            }
-
+            Topic topic = adminTestService.getTopicByCode(topicCode);
             req.setAttribute("topic", topic);
             req.setAttribute("question", question);
             req.setAttribute("editMode", true);
@@ -144,6 +134,10 @@ public class AdminTestServlet extends BaseServlet {
         } catch (NumberFormatException e) {
             log.error("Invalid question ID", e);
             req.setAttribute("error", "Invalid question ID");
+            showQuestionsList(req, resp);
+        } catch (IllegalArgumentException e) {
+            log.error("Question or topic not found", e);
+            req.setAttribute("error", e.getMessage());
             showQuestionsList(req, resp);
         }
     }
@@ -159,10 +153,8 @@ public class AdminTestServlet extends BaseServlet {
             return;
         }
 
-        Topic topic = new Topic(code.trim(), displayName.trim());
         try {
-            topicRepository.save(topic);
-            log.info("Topic added: {}", code);
+            adminTestService.createTopic(code, displayName);
             resp.sendRedirect(req.getContextPath() + "/admin/tests");
         } catch (Exception e) {
             log.error("Error adding topic", e);
@@ -179,16 +171,11 @@ public class AdminTestServlet extends BaseServlet {
             return;
         }
 
-        Topic topic = topicLoader.findByCode(topicCode);
-        if (topic == null) {
-            log.error("Topic not found: {}", topicCode);
-            resp.sendRedirect(req.getContextPath() + "/admin/tests");
-            return;
-        }
-
         try {
-            topicRepository.delete(topic);
-            log.info("Topic deleted: {}", topicCode);
+            adminTestService.deleteTopic(topicCode);
+            resp.sendRedirect(req.getContextPath() + "/admin/tests");
+        } catch (IllegalArgumentException e) {
+            log.error("Topic not found: {}", topicCode);
             resp.sendRedirect(req.getContextPath() + "/admin/tests");
         } catch (Exception e) {
             log.error("Error deleting topic", e);
@@ -199,15 +186,20 @@ public class AdminTestServlet extends BaseServlet {
 
     private void uploadJson(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        String topicCode = req.getParameter("topicCode");
-        if (topicCode == null) {
-            resp.sendRedirect(req.getContextPath() + "/admin/tests");
-            return;
+        // For multipart requests, use getPart() instead of getParameter()
+        String topicCode = null;
+
+        try {
+            Part topicCodePart = req.getPart("topicCode");
+            if (topicCodePart != null) {
+                topicCode = new String(topicCodePart.getInputStream().readAllBytes());
+            }
+        } catch (Exception e) {
+            log.error("Error reading multipart parameters", e);
         }
 
-        Topic topic = topicLoader.findByCode(topicCode);
-        if (topic == null) {
-            log.error("Topic not found: {}", topicCode);
+        if (topicCode == null) {
+            log.error("topicCode is null, redirecting");
             resp.sendRedirect(req.getContextPath() + "/admin/tests");
             return;
         }
@@ -220,42 +212,15 @@ public class AdminTestServlet extends BaseServlet {
                 return;
             }
 
-            InputStream inputStream = filePart.getInputStream();
-            List<Map<String, Object>> rawQuestions = objectMapper.readValue(
-                    inputStream,
-                    new TypeReference<List<Map<String, Object>>>() {}
-            );
-
-            List<Question> questions = new ArrayList<>();
-            for (Map<String, Object> raw : rawQuestions) {
-                Question question = new Question();
-                question.setQuestionText((String) raw.get("questionText"));
-                question.setCorrectAnswerIndex((Integer) raw.get("correctAnswerIndex"));
-                question.setTopic(topic);
-
-                List<String> rawAnswers = (List<String>) raw.get("answers");
-                List<Answer> answers = new ArrayList<>();
-
-                for (int i = 0; i < rawAnswers.size(); i++) {
-                    Answer answer = new Answer();
-                    answer.setAnswerText(rawAnswers.get(i));
-                    answer.setAnswerIndex(i);
-                    answer.setQuestion(question);
-                    answers.add(answer);
-                }
-                question.setAnswers(answers);
-                questions.add(question);
-            }
-
-            QuestionValidator questionValidator = ValidationFactory.createQuestionValidator();
-            questionValidator.validate(questions);
-
-            questionRepository.saveAll(questions);
-            log.info("JSON file uploaded for topic: {}, questions count: {}", topicCode, questions.size());
+            List<Question> questions = adminTestService.importQuestionsFromJson(
+                    topicCode, filePart.getInputStream());
             req.setAttribute("success", "JSON file uploaded successfully. Added " + questions.size() + " questions.");
             showQuestionsList(req, resp);
 
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
+            log.error("Topic not found: {}", topicCode);
+            resp.sendRedirect(req.getContextPath() + "/admin/tests");
+        } catch (RuntimeException e) {
             log.error("Error uploading JSON", e);
             req.setAttribute("error", "Error uploading JSON: " + e.getMessage());
             showQuestionsList(req, resp);
@@ -274,59 +239,33 @@ public class AdminTestServlet extends BaseServlet {
             return;
         }
 
-        Topic topic = topicLoader.findByCode(topicCode);
-        if (topic == null) {
-            log.error("Topic not found: {}", topicCode);
-            resp.sendRedirect(req.getContextPath() + "/admin/tests");
-            return;
-        }
-
         try {
             int correctAnswerIndex = Integer.parseInt(correctAnswerIndexStr);
-            Question question = new Question();
-            question.setQuestionText(questionText.trim());
-            question.setCorrectAnswerIndex(correctAnswerIndex);
-            question.setTopic(topic);
+            List<String> answerTexts = extractAnswerTexts(req);
 
-            List<Answer> answers = new ArrayList<>();
-            int answerIndex = 0;
-            while (req.getParameter("answer" + answerIndex) != null) {
-                String answerText = req.getParameter("answer" + answerIndex);
-                if (answerText != null && !answerText.trim().isEmpty()) {
-                    Answer answer = new Answer();
-                    answer.setAnswerText(answerText.trim());
-                    answer.setAnswerIndex(answerIndex);
-                    answer.setQuestion(question);
-                    answers.add(answer);
-                }
-                answerIndex++;
-            }
-
-            if (answers.size() < 2) {
+            if (answerTexts.size() < 2) {
                 req.setAttribute("error", "At least 2 answers are required");
                 showQuestionsList(req, resp);
                 return;
             }
 
-            if (correctAnswerIndex >= answers.size()) {
+            if (correctAnswerIndex >= answerTexts.size()) {
                 req.setAttribute("error", "Correct answer index must be less than number of answers");
                 showQuestionsList(req, resp);
                 return;
             }
 
-            question.setAnswers(answers);
-
-            QuestionValidator questionValidator = ValidationFactory.createQuestionValidator();
-            questionValidator.validate(List.of(question));
-
-            questionRepository.save(question);
-            log.info("Question added for topic: {}", topicCode);
+            adminTestService.createQuestion(topicCode, questionText, correctAnswerIndex, answerTexts);
             req.setAttribute("success", "Question added successfully");
             showQuestionsList(req, resp);
 
         } catch (NumberFormatException e) {
             log.error("Invalid correct answer index", e);
             req.setAttribute("error", "Correct answer index must be a number");
+            showQuestionsList(req, resp);
+        } catch (IllegalArgumentException e) {
+            log.error("Topic not found", e);
+            req.setAttribute("error", e.getMessage());
             showQuestionsList(req, resp);
         } catch (Exception e) {
             log.error("Error adding question", e);
@@ -347,23 +286,17 @@ public class AdminTestServlet extends BaseServlet {
 
         try {
             Long questionId = Long.parseLong(questionIdStr);
-            Question question = questionRepository.findById(questionId).orElse(null);
-
-            if (question == null) {
-                log.error("Question not found: {}", questionId);
-                req.setAttribute("error", "Question not found");
-                showQuestionsList(req, resp);
-                return;
-            }
-
-            questionRepository.delete(question);
-            log.info("Question deleted: id={}", questionId);
+            adminTestService.deleteQuestion(questionId);
             req.setAttribute("success", "Question deleted successfully");
             showQuestionsList(req, resp);
 
         } catch (NumberFormatException e) {
             log.error("Invalid question ID", e);
             req.setAttribute("error", "Invalid question ID");
+            showQuestionsList(req, resp);
+        } catch (IllegalArgumentException e) {
+            log.error("Question not found", e);
+            req.setAttribute("error", e.getMessage());
             showQuestionsList(req, resp);
         } catch (Exception e) {
             log.error("Error deleting question", e);
@@ -387,59 +320,22 @@ public class AdminTestServlet extends BaseServlet {
 
         try {
             Long questionId = Long.parseLong(questionIdStr);
-            Question question = questionRepository.findById(questionId).orElse(null);
-
-            if (question == null) {
-                log.error("Question not found: {}", questionId);
-                req.setAttribute("error", "Question not found");
-                showQuestionsList(req, resp);
-                return;
-            }
-
-            Topic topic = topicLoader.findByCode(topicCode);
-            if (topic == null) {
-                log.error("Topic not found: {}", topicCode);
-                resp.sendRedirect(req.getContextPath() + "/admin/tests");
-                return;
-            }
-
             int correctAnswerIndex = Integer.parseInt(correctAnswerIndexStr);
-            question.setQuestionText(questionText.trim());
-            question.setCorrectAnswerIndex(correctAnswerIndex);
+            List<String> answerTexts = extractAnswerTexts(req);
 
-            List<Answer> answers = new ArrayList<>();
-            int answerIndex = 0;
-            while (req.getParameter("answer" + answerIndex) != null) {
-                String answerText = req.getParameter("answer" + answerIndex);
-                if (answerText != null && !answerText.trim().isEmpty()) {
-                    Answer answer = new Answer();
-                    answer.setAnswerText(answerText.trim());
-                    answer.setAnswerIndex(answerIndex);
-                    answer.setQuestion(question);
-                    answers.add(answer);
-                }
-                answerIndex++;
-            }
-
-            if (answers.size() < 2) {
+            if (answerTexts.size() < 2) {
                 req.setAttribute("error", "At least 2 answers are required");
                 showQuestionsList(req, resp);
                 return;
             }
 
-            if (correctAnswerIndex >= answers.size()) {
+            if (correctAnswerIndex >= answerTexts.size()) {
                 req.setAttribute("error", "Correct answer index must be less than number of answers");
                 showQuestionsList(req, resp);
                 return;
             }
 
-            question.setAnswers(answers);
-
-            QuestionValidator questionValidator = ValidationFactory.createQuestionValidator();
-            questionValidator.validate(List.of(question));
-
-            questionRepository.save(question);
-            log.info("Question updated: id={}", questionId);
+            adminTestService.updateQuestion(questionId, topicCode, questionText, correctAnswerIndex, answerTexts);
             req.setAttribute("success", "Question updated successfully");
             showQuestionsList(req, resp);
 
@@ -447,10 +343,27 @@ public class AdminTestServlet extends BaseServlet {
             log.error("Invalid correct answer index or question ID", e);
             req.setAttribute("error", "Invalid number format");
             showQuestionsList(req, resp);
+        } catch (IllegalArgumentException e) {
+            log.error("Question or topic not found", e);
+            req.setAttribute("error", e.getMessage());
+            showQuestionsList(req, resp);
         } catch (Exception e) {
             log.error("Error updating question", e);
             req.setAttribute("error", "Error updating question: " + e.getMessage());
             showQuestionsList(req, resp);
         }
+    }
+
+    private List<String> extractAnswerTexts(HttpServletRequest req) {
+        List<String> answerTexts = new ArrayList<>();
+        int answerIndex = 0;
+        while (req.getParameter("answer" + answerIndex) != null) {
+            String answerText = req.getParameter("answer" + answerIndex);
+            if (answerText != null && !answerText.trim().isEmpty()) {
+                answerTexts.add(answerText.trim());
+            }
+            answerIndex++;
+        }
+        return answerTexts;
     }
 }
