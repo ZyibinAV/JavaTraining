@@ -27,6 +27,7 @@ public class Topic {
     @Column(name = "display_name", nullable = false)
     private String displayName;
 
+
     @Version
     private Long version;
 
