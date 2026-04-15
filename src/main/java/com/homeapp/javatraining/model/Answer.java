@@ -3,11 +3,13 @@ package com.homeapp.javatraining.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
 @Entity
+@NoArgsConstructor
 @Table(name = "answers")
 public class Answer {
     @Id
@@ -26,9 +28,6 @@ public class Answer {
     @JoinColumn(name = "question_id", nullable = false)
     private Question question;
 
-    public Answer() {
-
-    }
 
     @Override
     public boolean equals(Object o) {

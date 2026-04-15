@@ -2,6 +2,7 @@ package com.homeapp.javatraining.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Index;
 
@@ -11,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @Table(name = "questions")
 public class Question {
 
@@ -32,9 +34,6 @@ public class Question {
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Answer> answers = new ArrayList<>();
 
-    public Question() {
-
-    }
 
     public void addAnswer(Answer answer) {
         answers.add(answer);
