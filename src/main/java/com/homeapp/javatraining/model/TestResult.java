@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 @Entity
 @Table(name = "test_results")
 public class TestResult {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
