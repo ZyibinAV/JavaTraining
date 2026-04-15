@@ -1,0 +1,812 @@
+[
+  {
+    "questionText": "Какой из следующих вариантов является правильным объявлением метода main?",
+    "answers": [
+      "public static void main(String[] args)",
+      "static public void start(String args[])",
+      "void Main(String[] arguments)"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой символ используется для однострочного комментария в Java?",
+    "answers": [
+      "//",
+      "/*",
+      "#"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из перечисленных типов не является примитивным в Java?",
+    "answers": [
+      "boolean",
+      "char",
+      "String"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Что будет результатом выражения: 10 / 3 при использовании целочисленного деления?",
+    "answers": [
+      "3.333",
+      "3",
+      "4"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой оператор используется для логического ИЛИ?",
+    "answers": [
+      "&",
+      "||",
+      "OR"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Как правильно объявить константу в Java?",
+    "answers": [
+      "const int MAX = 100;",
+      "final int MAX = 100;",
+      "static int MAX = 100;"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих вариантов НЕ является допустимым именем переменной?",
+    "answers": [
+      "_value",
+      "2ndPlace",
+      "myVar"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой тип данных используется для хранения одиночного символа?",
+    "answers": [
+      "String",
+      "char",
+      "Character"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой оператор используется для присваивания остатка от деления?",
+    "answers": [
+      "/",
+      "%",
+      "\\"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих циклов гарантирует хотя бы одно выполнение тела?",
+    "answers": [
+      "for",
+      "while",
+      "do-while"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Какой ключевой слово используется для немедленного выхода из цикла?",
+    "answers": [
+      "stop",
+      "exit",
+      "break"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Какой из следующих операторов имеет наивысший приоритет?",
+    "answers": [
+      "+",
+      "==",
+      "*"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Как правильно объявить массив целых чисел?",
+    "answers": [
+      "int[] arr;",
+      "int arr[];",
+      "Оба варианта верны"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Что делает оператор '++' перед переменной (например, ++i)?",
+    "answers": [
+      "Сначала возвращает значение, потом увеличивает",
+      "Сначала увеличивает, потом возвращает значение",
+      "Увеличивает значение на 2"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих литералов обозначает число с плавающей точкой?",
+    "answers": [
+      "42",
+      "42L",
+      "42.0"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Какой тип данных может хранить значения true или false?",
+    "answers": [
+      "bool",
+      "boolean",
+      "Boolean"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих операторов проверяет равенство значений объектов?",
+    "answers": [
+      "==",
+      "===",
+      "equals()"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для сравнения ссылок на объекты?",
+    "answers": [
+      "equals()",
+      "==",
+      "compareTo()"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих вариантов — правильный способ объявить пакет?",
+    "answers": [
+      "package com.example;",
+      "import com.example;",
+      "namespace com.example;"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для логического НЕ?",
+    "answers": [
+      "!",
+      "not",
+      "~"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих вариантов вызовет ошибку компиляции?",
+    "answers": [
+      "int x = 5;",
+      "byte b = 200;",
+      "double d = 3.14;"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих символов используется для многострочного комментария?",
+    "answers": [
+      "// ... //",
+      "/* ... */",
+      "&lt;!-- ... --&gt;"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для побитового И?",
+    "answers": [
+      "&&",
+      "&",
+      "||"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих литералов обозначает long-значение?",
+    "answers": [
+      "100",
+      "100L",
+      "100.0"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для тернарного условия?",
+    "answers": [
+      "if-else",
+      "?:",
+      "??"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих вариантов — правильное объявление класса?",
+    "answers": [
+      "class MyClass { }",
+      "Class MyClass { }",
+      "new class MyClass { }"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для инкремента после использования?",
+    "answers": [
+      "i++",
+      "++i",
+      "i += 1"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих типов данных занимает 16 бит?",
+    "answers": [
+      "byte",
+      "short",
+      "int"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для сдвига битов влево?",
+    "answers": [
+      "&lt;&lt;",
+      "&gt;&gt;",
+      "&gt;&gt;&gt;"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для сдвига битов вправо с сохранением знака?",
+    "answers": [
+      "&lt;&lt;",
+      "&gt;&gt;",
+      "&gt;&gt;&gt;"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для сдвига битов вправо без сохранения знака?",
+    "answers": [
+      "&gt;&gt;&gt;",
+      "&gt;&gt;",
+      "&lt;&lt;"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих литералов представляет шестнадцатеричное число?",
+    "answers": [
+      "0x1A",
+      "017",
+      "1A"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих литералов представляет восьмеричное число?",
+    "answers": [
+      "017",
+      "0x17",
+      "17"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов имеет наименьший приоритет?",
+    "answers": [
+      "=",
+      "+",
+      "*"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для объединения строк?",
+    "answers": [
+      "+",
+      "&",
+      "concat"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для присваивания и сложения?",
+    "answers": [
+      "=+",
+      "+=",
+      "++="
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для присваивания и умножения?",
+    "answers": [
+      "*=",
+      "=*",
+      "**="
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для сравнения неравенства?",
+    "answers": [
+      "!=",
+      "&lt;&gt;",
+      "=/="
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для сравнения 'меньше или равно'?",
+    "answers": [
+      "&lt;=",
+      "=&lt;",
+      "le"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для сравнения 'больше или равно'?",
+    "answers": [
+      "=&gt;",
+      "&gt;=",
+      "ge"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для логического И с коротким замыканием?",
+    "answers": [
+      "&",
+      "&&",
+      "and"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для логического ИЛИ с коротким замыканием?",
+    "answers": [
+      "|",
+      "||",
+      "or"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для побитового исключающего ИЛИ?",
+    "answers": [
+      "^",
+      "|",
+      "&"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для побитового НЕ?",
+    "answers": [
+      "!",
+      "~",
+      "^"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для получения остатка от деления?",
+    "answers": [
+      "/",
+      "\\",
+      "%"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для доступа к члену объекта?",
+    "answers": [
+      "-&gt;",
+      ".",
+      "::"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для доступа к статическому члену класса?",
+    "answers": [
+      ".",
+      "::",
+      "-&gt;"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для создания нового объекта?",
+    "answers": [
+      "create",
+      "new",
+      "make"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для приведения типов?",
+    "answers": [
+      "(Type)",
+      "as Type",
+      "cast(Type)"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для проверки типа объекта?",
+    "answers": [
+      "is",
+      "instanceof",
+      "typeof"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для перехода к следующей итерации цикла?",
+    "answers": [
+      "continue",
+      "next",
+      "skip"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для возврата значения из метода?",
+    "answers": [
+      "exit",
+      "return",
+      "back"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для объявления блока кода?",
+    "answers": [
+      "[ ]",
+      "{ }",
+      "( )"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для объявления условного блока?",
+    "answers": [
+      "if (...) { }",
+      "when (...) { }",
+      "case (...) { }"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для множественного выбора?",
+    "answers": [
+      "if-else if",
+      "switch",
+      "match"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для обработки исключений?",
+    "answers": [
+      "try-catch",
+      "handle-error",
+      "on-error"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для выброса исключения?",
+    "answers": [
+      "throw",
+      "throws",
+      "raise"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется в сигнатуре метода для указания возможных исключений?",
+    "answers": [
+      "throw",
+      "throws",
+      "try"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для импорта класса?",
+    "answers": [
+      "include",
+      "import",
+      "using"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для объявления интерфейса?",
+    "answers": [
+      "interface",
+      "protocol",
+      "contract"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для объявления абстрактного класса?",
+    "answers": [
+      "abstract class",
+      "virtual class",
+      "base class"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для наследования класса?",
+    "answers": [
+      "extends",
+      "inherits",
+      "implements"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для реализации интерфейса?",
+    "answers": [
+      "extends",
+      "implements",
+      "uses"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для обращения к родительскому классу?",
+    "answers": [
+      "this",
+      "parent",
+      "super"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для обращения к текущему объекту?",
+    "answers": [
+      "self",
+      "this",
+      "current"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для объявления статического метода?",
+    "answers": [
+      "static void method()",
+      "void static method()",
+      "method static void()"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для объявления финального метода?",
+    "answers": [
+      "final void method()",
+      "void final method()",
+      "method final void()"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для объявления приватного метода?",
+    "answers": [
+      "private void method()",
+      "void private method()",
+      "method private void()"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для объявления защищённого метода?",
+    "answers": [
+      "protected void method()",
+      "void protected method()",
+      "method protected void()"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для объявления публичного метода?",
+    "answers": [
+      "public void method()",
+      "void public method()",
+      "method public void()"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для объявления переменной уровня класса?",
+    "answers": [
+      "вне метода, внутри класса",
+      "внутри метода main",
+      "в блоке try"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для объявления локальной переменной?",
+    "answers": [
+      "внутри метода",
+      "вне класса",
+      "в блоке import"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для объявления параметра метода?",
+    "answers": [
+      "в скобках после имени метода",
+      "перед именем метода",
+      "в теле метода"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для объявления анонимного класса?",
+    "answers": [
+      "new Interface() { }",
+      "class { }",
+      "anonymous class { }"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для объявления лямбда-выражения?",
+    "answers": [
+      "(a) -&gt; a * 2",
+      "lambda a: a * 2",
+      "function(a) { return a * 2; }"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для объявления var-переменной (Java 10+)?",
+    "answers": [
+      "var x = 10;",
+      "auto x = 10;",
+      "let x = 10;"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для текстового блока (Java 15+)?",
+    "answers": [
+      "&quot;&quot;&quot;text&quot;&quot;&quot;",
+      "'''text'''",
+      "`text`"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для switch-выражения (Java 14+)?",
+    "answers": [
+      "int result = switch(day) { case MON -&gt; 1; default -&gt; 0; };",
+      "switch(day) returns int { ... }",
+      "match(day) { ... }"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для объявления записи (record) в Java 14+?",
+    "answers": [
+      "record Point(int x, int y) { }",
+      "data class Point(int x, int y)",
+      "struct Point { int x, y; }"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для yield в switch (Java 13+)?",
+    "answers": [
+      "yield value;",
+      "return value;",
+      "break value;"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для assert-утверждения?",
+    "answers": [
+      "assert condition;",
+      "check condition;",
+      "verify condition;"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для многоточия в параметрах метода (varargs)?",
+    "answers": [
+      "void method(String... args)",
+      "void method(String[] args)",
+      "void method(String* args)"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для инициализации массива при объявлении?",
+    "answers": [
+      "int[] a = {1, 2, 3};",
+      "int[] a = new int[1, 2, 3];",
+      "int[] a = (1, 2, 3);"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для получения длины массива?",
+    "answers": [
+      "array.length()",
+      "array.size()",
+      "array.length"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для сравнения двух строк по содержимому?",
+    "answers": [
+      "str1 == str2",
+      "str1.equals(str2)",
+      "str1.compareTo(str2) == 0"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для сравнения двух строк без учёта регистра?",
+    "answers": [
+      "str1.equalsIgnoreCase(str2)",
+      "str1.equals(str2, true)",
+      "str1.compareIgnoreCase(str2)"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для преобразования строки в целое число?",
+    "answers": [
+      "Integer.parseInt(str)",
+      "str.toInt()",
+      "int(str)"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для преобразования числа в строку?",
+    "answers": [
+      "String.valueOf(num)",
+      "num.toString()",
+      "Оба варианта верны"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для объявления многомерного массива?",
+    "answers": [
+      "int[][] matrix = new int[3][3];",
+      "int[3][3] matrix;",
+      "int matrix[3,3];"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой из следующих операторов используется для объявления перечисления (enum)?",
+    "answers": [
+      "enum Color { RED, GREEN, BLUE }",
+      "enum Color = { RED, GREEN, BLUE };",
+      "enumeration Color { RED, GREEN, BLUE }"
+    ],
+    "correctAnswerIndex": 0
+  }
+]

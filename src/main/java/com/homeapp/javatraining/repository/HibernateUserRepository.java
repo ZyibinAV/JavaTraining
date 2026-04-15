@@ -84,4 +84,13 @@ public class HibernateUserRepository implements UserRepository {
             return session.createQuery("FROM User", User.class).list();
         }
     }
+
+    @Override
+    public Optional<User> findAny() {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("FROM User u", User.class)
+                    .setMaxResults(1)
+                    .uniqueResultOptional();
+        }
+    }
 }

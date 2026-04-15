@@ -34,6 +34,8 @@ class UserServiceImplTest {
         String password = "password123";
         String email = "test@example.com";
 
+        User existingUser = new User("existing", "hash", "existing@example.com", Role.ADMIN);
+        when(userRepository.findAny()).thenReturn(Optional.of(existingUser));
         when(userRepository.findByUserName(username)).thenReturn(Optional.empty());
 
         userServiceImpl = new UserServiceImpl(userRepository);
@@ -54,13 +56,14 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName("Should register admin user when username is 'admin'")
-    void register_withAdminUsername_shouldAssignAdminRole() {
+    @DisplayName("Should register first user with ADMIN role")
+    void register_withFirstUser_shouldAssignAdminRole() {
         // Arrange
-        String username = "admin";
-        String password = "admin123";
-        String email = "admin@example.com";
+        String username = "firstuser";
+        String password = "password123";
+        String email = "first@example.com";
 
+        when(userRepository.findAny()).thenReturn(Optional.empty());
         when(userRepository.findByUserName(username)).thenReturn(Optional.empty());
 
         userServiceImpl = new UserServiceImpl(userRepository);
@@ -74,6 +77,7 @@ class UserServiceImplTest {
         assertThat(result.getRole()).isEqualTo(Role.ADMIN);
         assertThat(result.getEmail()).isEqualTo(email);
 
+        verify(userRepository).findAny();
         verify(userRepository).findByUserName(username);
         verify(userRepository).save(any(User.class));
     }
@@ -108,6 +112,8 @@ class UserServiceImplTest {
         String password = "password123";
         String email = "test@example.com";
 
+        User existingUser = new User("existing", "hash", "existing@example.com", Role.ADMIN);
+        when(userRepository.findAny()).thenReturn(Optional.of(existingUser));
         when(userRepository.findByUserName(username)).thenReturn(Optional.empty());
         userServiceImpl = new UserServiceImpl(userRepository);
         ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
@@ -132,6 +138,8 @@ class UserServiceImplTest {
         String password = "password123";
         String email = "test@example.com";
 
+        User existingUser = new User("existing", "hash", "existing@example.com", Role.ADMIN);
+        when(userRepository.findAny()).thenReturn(Optional.of(existingUser));
         when(userRepository.findByUserName(username)).thenReturn(Optional.empty());
 
         userServiceImpl = new UserServiceImpl(userRepository);
@@ -151,6 +159,8 @@ class UserServiceImplTest {
         String password = "password123";
         String email = "test@example.com";
 
+        User existingUser = new User("existing", "hash", "existing@example.com", Role.ADMIN);
+        when(userRepository.findAny()).thenReturn(Optional.of(existingUser));
         when(userRepository.findByUserName(username)).thenReturn(Optional.empty());
 
         userServiceImpl = new UserServiceImpl(userRepository);
@@ -163,13 +173,15 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName("Should assign USER role for non-admin username")
+    @DisplayName("Should assign USER role when users already exist")
     void register_withNonAdminUsername_shouldAssignUserRole() {
         // Arrange
         String username = "regularuser";
         String password = "password123";
         String email = "test@example.com";
 
+        User existingUser = new User("existing", "hash", "existing@example.com", Role.ADMIN);
+        when(userRepository.findAny()).thenReturn(Optional.of(existingUser));
         when(userRepository.findByUserName(username)).thenReturn(Optional.empty());
 
         userServiceImpl = new UserServiceImpl(userRepository);
@@ -182,13 +194,15 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName("Should handle case-insensitive admin username check")
+    @DisplayName("Should assign USER role when users already exist regardless of username case")
     void register_withAdminInDifferentCase_shouldAssignUserRole() {
         // Arrange
         String username = "Admin"; // Capital A
         String password = "password123";
         String email = "test@example.com";
 
+        User existingUser = new User("existing", "hash", "existing@example.com", Role.ADMIN);
+        when(userRepository.findAny()).thenReturn(Optional.of(existingUser));
         when(userRepository.findByUserName(username)).thenReturn(Optional.empty());
 
         userServiceImpl = new UserServiceImpl(userRepository);
@@ -197,7 +211,7 @@ class UserServiceImplTest {
         User result = userServiceImpl.register(username, password, email);
 
         // Assert
-        // The check is username.equals("admin"), so "Admin" should get USER role
+        // When users already exist, role assignment doesn't depend on username
         assertThat(result.getRole()).isEqualTo(Role.USER);
     }
 
@@ -209,6 +223,8 @@ class UserServiceImplTest {
         String password = "password123";
         String email = "test@example.com";
 
+        User existingUser = new User("existing", "hash", "existing@example.com", Role.ADMIN);
+        when(userRepository.findAny()).thenReturn(Optional.of(existingUser));
         when(userRepository.findByUserName(username)).thenReturn(Optional.empty());
 
         userServiceImpl = new UserServiceImpl(userRepository);

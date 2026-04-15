@@ -6,6 +6,8 @@ import com.homeapp.javatraining.repository.UserRepository;
 import com.homeapp.javatraining.util.PasswordUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Optional;
+
 @Slf4j
 public class UserServiceImpl implements UserService {
 
@@ -20,9 +22,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public User register(String username, String rawPassword, String email) {
         log.info("User registration attempt: username={}", username);
-        Role role = username.equals("admin")
-                ? Role.ADMIN
-                : Role.USER;
+        
+        Role role;
+        Optional<User> existingUser = userRepository.findAny();
+        
+        if (existingUser.isEmpty()) {
+            role = Role.ADMIN;
+            log.info("First user registration - assigning ADMIN role to: {}", username);
+        } else {
+            role = Role.USER;
+        }
+        
         userRepository.findByUserName(username)
                 .ifPresent(u -> {
                     log.warn("Registration failed: username {} already exists", username);

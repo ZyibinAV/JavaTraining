@@ -1,0 +1,542 @@
+[
+  {
+    "questionText": "Что такое Hibernate?",
+    "answers": [
+      "Фреймворк для создания веб-интерфейсов",
+      "ORM-фреймворк для работы с реляционными базами данных",
+      "Инструмент для управления контейнерами"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой интерфейс является основным для взаимодействия с базой данных в Hibernate?",
+    "answers": [
+      "EntityManager",
+      "Session",
+      "Connection"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какой класс отвечает за создание и управление сессиями?",
+    "answers": [
+      "SessionFactory",
+      "SessionManager",
+      "HibernateBuilder"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какая аннотация помечает класс как сущность?",
+    "answers": [
+      "@Entity",
+      "@Table",
+      "@Model"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какая аннотация указывает имя таблицы в БД?",
+    "answers": [
+      "@Table(name = &quot;users&quot;)",
+      "@TableName(&quot;users&quot;)",
+      "@DbTable(&quot;users&quot;)"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какая аннотация определяет первичный ключ?",
+    "answers": [
+      "@PrimaryKey",
+      "@Id",
+      "@Key"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какая стратегия генерации ID использует последовательность БД?",
+    "answers": [
+      "GenerationType.IDENTITY",
+      "GenerationType.SEQUENCE",
+      "GenerationType.TABLE"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какое состояние имеет сущность до сохранения в БД?",
+    "answers": [
+      "Persistent",
+      "Transient",
+      "Detached"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какое состояние имеет сущность, загруженная из БД, но сессия закрыта?",
+    "answers": [
+      "Transient",
+      "Persistent",
+      "Detached"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Какой метод переводит transient-сущность в persistent?",
+    "answers": [
+      "session.update()",
+      "session.save() или session.persist()",
+      "session.merge()"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Что делает метод session.merge()?",
+    "answers": [
+      "Сохраняет detached-сущность, копируя её состояние в persistent-объект",
+      "Удаляет сущность из БД",
+      "Обновляет только кэш"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какая аннотация указывает на связь &quot;многие к одному&quot;?",
+    "answers": [
+      "@OneToMany",
+      "@ManyToOne",
+      "@ManyToMany"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Какая аннотация указывает на связь &quot;один ко многим&quot;?",
+    "answers": [
+      "@OneToOne",
+      "@ManyToOne",
+      "@OneToMany"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Какой параметр @OneToMany позволяет загрузить связанные сущности сразу?",
+    "answers": [
+      "fetch = FetchType.LAZY",
+      "fetch = FetchType.EAGER",
+      "load = LoadType.IMMEDIATE"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Что такое N+1 проблема в Hibernate?",
+    "answers": [
+      "Ошибка при генерации ID",
+      "Выполнение 1 запроса для основной сущности + N запросов для связанных",
+      "Проблема с транзакциями"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Как решить N+1 проблему?",
+    "answers": [
+      "Использовать JOIN FETCH или @EntityGraph",
+      "Отключить кэширование",
+      "Использовать native SQL"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой язык запросов использует Hibernate для объектно-ориентированных запросов?",
+    "answers": [
+      "SQL",
+      "HQL (Hibernate Query Language)",
+      "JPQL"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Чем JPQL отличается от HQL?",
+    "answers": [
+      "HQL использует имена таблиц, JPQL — имена классов",
+      "JPQL — стандарт Jakarta Persistence, HQL — расширение Hibernate",
+      "Ничем, это синонимы"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Как создать параметризованный запрос в Hibernate?",
+    "answers": [
+      "session.createQuery(&quot;FROM User u WHERE u.name = :name&quot;)",
+      "session.createNativeQuery(&quot;SELECT * FROM users&quot;)",
+      "session.execute(&quot;...&quot;)"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой метод выполняет обновление сущности в БД?",
+    "answers": [
+      "session.flush()",
+      "session.update() или автоматическое dirty checking",
+      "session.commit()"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Что такое dirty checking?",
+    "answers": [
+      "Автоматическое отслеживание изменений persistent-объектов и выполнение UPDATE",
+      "Проверка валидации полей",
+      "Очистка кэша"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой метод удаляет сущность из БД?",
+    "answers": [
+      "session.delete()",
+      "session.remove()",
+      "Оба варианта верны"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Какой уровень кэша включён по умолчанию?",
+    "answers": [
+      "L2 Cache",
+      "L1 Cache (Session level)",
+      "Query Cache"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Как включить L2 Cache в Hibernate?",
+    "answers": [
+      "Настроить провайдер (например, Ehcache) и активировать hibernate.cache.use_second_level_cache",
+      "Добавить @Cacheable на класс",
+      "L2 включён автоматически"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какая аннотация указывает, что сущность должна кэшироваться?",
+    "answers": [
+      "@Cacheable",
+      "@Cache",
+      "Обе верны в разных контекстах (JPA vs Hibernate)"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Какой режим блокировки использует Hibernate для предотвращения потерянных обновлений?",
+    "answers": [
+      "Optimistic Locking (@Version)",
+      "Pessimistic Locking (SELECT ... FOR UPDATE)",
+      "Оба варианта"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Что делает аннотация @Version?",
+    "answers": [
+      "Указывает поле для optimistic locking",
+      "Устанавливает версию схемы БД",
+      "Помечает метод как устаревший"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой тип маппинга используется для хранения нескольких значений в одном поле?",
+    "answers": [
+      "@ElementCollection",
+      "@OneToMany",
+      "@ManyToMany"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Что такое @Embeddable?",
+    "answers": [
+      "Класс, который не является сущностью, но может встраиваться в другие сущности",
+      "Интерфейс для плагинов",
+      "Аннотация для DTO"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой файл используется для конфигурации Hibernate (классический)?",
+    "answers": [
+      "hibernate.cfg.xml",
+      "persistence.xml",
+      "Оба варианта"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Что такое Dialect в Hibernate?",
+    "answers": [
+      "Класс, адаптирующий SQL-запросы под конкретную СУБД",
+      "Язык шаблонов",
+      "Настройка кодировки"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой параметр hibernate.hbm2ddl.auto создаёт таблицы при старте?",
+    "answers": [
+      "create",
+      "update",
+      "validate"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой параметр проверяет соответствие схемы, но не изменяет её?",
+    "answers": [
+      "create-drop",
+      "update",
+      "validate"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Как выполнить native SQL-запрос в Hibernate?",
+    "answers": [
+      "session.createNativeQuery(&quot;SELECT * FROM users&quot;)",
+      "session.createSQLQuery(&quot;SELECT * FROM users&quot;)",
+      "Оба варианта (в зависимости от версии)"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Что делает session.clear()?",
+    "answers": [
+      "Очищает L1 кэш (detach всех persistent-объектов)",
+      "Удаляет все данные из БД",
+      "Сбрасывает транзакцию"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой метод принудительно синхронизирует кэш с БД?",
+    "answers": [
+      "session.flush()",
+      "session.commit()",
+      "session.sync()"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой параметр отвечает за размер batch-вставки?",
+    "answers": [
+      "hibernate.jdbc.batch_size",
+      "hibernate.insert.batch",
+      "hibernate.bulk.size"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Что такое Criteria API?",
+    "answers": [
+      "Программный способ построения типобезопасных запросов",
+      "Система валидации",
+      "Инструмент миграции"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой интерфейс используется в Criteria API для условий?",
+    "answers": [
+      "Predicate",
+      "Condition",
+      "Filter"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Как указать внешнюю связь с условием каскадирования?",
+    "answers": [
+      "@JoinColumn(cascade = CascadeType.ALL)",
+      "cascade указывается на самой связи (@OneToMany, @ManyToOne)",
+      "cascade не поддерживается в Hibernate"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "questionText": "Что такое orphanRemoval?",
+    "answers": [
+      "Автоматическое удаление дочерней сущности при удалении ссылки из коллекции",
+      "Удаление сиротских записей в БД",
+      "Очистка кэша"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой режим транзакции рекомендуется в Spring + Hibernate?",
+    "answers": [
+      "RESOURCE_LOCAL",
+      "JTA",
+      "Зависит от архитектуры, но чаще JTA через Spring @Transactional"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Как указать порядок загрузки полей?",
+    "answers": [
+      "Hibernate загружает все поля сразу, порядок не контролируется",
+      "Использовать @OrderBy или @ColumnDefault",
+      "Использовать Lazy Loading для отдельных полей (@Basic(fetch = LAZY))"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Что такое @MappedSuperclass?",
+    "answers": [
+      "Базовый класс, поля которого наследуются дочерними сущностями, но сам не маппится на таблицу",
+      "Интерфейс для маппинга",
+      "Класс для генерации ID"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Как реализовать наследование с одной таблицей для всей иерархии?",
+    "answers": [
+      "@Inheritance(strategy = InheritanceType.SINGLE_TABLE)",
+      "@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)",
+      "@Inheritance(strategy = InheritanceType.JOINED)"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какая стратегия наследования создаёт отдельную таблицу для каждого класса?",
+    "answers": [
+      "SINGLE_TABLE",
+      "JOINED",
+      "TABLE_PER_CLASS"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Как задать кастомный тип для поля?",
+    "answers": [
+      "@Type(&quot;my-custom-type&quot;)",
+      "@Column(type = &quot;custom&quot;)",
+      "Hibernate не поддерживает кастомные типы"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Что такое Interceptor в Hibernate?",
+    "answers": [
+      "Механизм перехвата событий (сохранение, загрузка, обновление) сущностей",
+      "Прокси-сервер",
+      "Фильтр HTTP-запросов"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Как отключить автоматическую генерацию DDL в production?",
+    "answers": [
+      "Установить hibernate.hbm2ddl.auto=none или validate",
+      "Удалить hibernate.cfg.xml",
+      "Это невозможно"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой метод загружает сущность по ID без выполнения запроса к БД (если есть в кэше)?",
+    "answers": [
+      "session.load() (устаревший) или EntityManager.getReference()",
+      "session.get()",
+      "session.find()"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "В чём разница между get() и load()?",
+    "answers": [
+      "get() возвращает null, если не найдено; load() возвращает прокси и бросает исключение при обращении",
+      "load() быстрее, get() безопаснее",
+      "Нет разницы"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Как выполнить пагинацию в HQL?",
+    "answers": [
+      "query.setFirstResult(offset).setMaxResults(limit)",
+      "query.page(offset, limit)",
+      "Hibernate не поддерживает пагинацию"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Что такое EntityGraph?",
+    "answers": [
+      "Механизм явного указания графа загрузки связанных сущностей",
+      "Диаграмма связей",
+      "Инструмент визуализации"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой параметр включает вывод SQL-запросов в консоль?",
+    "answers": [
+      "hibernate.show_sql=true",
+      "hibernate.debug=true",
+      "logging.level.org.hibernate.SQL=DEBUG"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Как форматировать выводимые SQL-запросы?",
+    "answers": [
+      "hibernate.format_sql=true",
+      "hibernate.pretty_print=true",
+      "Это настраивается в логгере"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Что такое StatelessSession?",
+    "answers": [
+      "Сессия без кэша первого уровня и dirty checking, для быстрой пакетной обработки",
+      "Сессия без транзакций",
+      "Сессия только для чтения"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Как указать порядок сортировки в коллекции?",
+    "answers": [
+      "@OrderBy(&quot;fieldName ASC&quot;)",
+      "@Sort",
+      "@Order"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Что делает @JoinTable?",
+    "answers": [
+      "Указывает промежуточную таблицу для связи ManyToMany",
+      "Объединяет два запроса",
+      "Создаёт view"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой тип генерации ID использует UUID?",
+    "answers": [
+      "GenerationType.AUTO",
+      "GenerationType.UUID",
+      "Настройка через @GeneratedValue(strategy = GenerationType.UUID) или @GenericGenerator"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "Как обработать OptimisticLockException?",
+    "answers": [
+      "Повторить транзакцию с обновлёнными данными",
+      "Переключиться на Pessimistic Locking",
+      "Отключить @Version"
+    ],
+    "correctAnswerIndex": 0
+  }
+]
