@@ -25,4 +25,18 @@
 - `docker-compose.yml` — добавлены MinIO, ZooKeeper, Kafka (заготовки)
 - `mvn clean compile` — BUILD SUCCESS (3 модуля)
 
-**Следующая сессия:** 2 — application.yml + Spring Boot config
+**Следующая сессия:** 3 — Spring Data JPA репозитории
+
+## Сессия 2 — application.yml + Spring Boot config
+
+**Дата:** 2026-07-05
+
+**Сделано:**
+- `application.yaml` (datasource, jpa, hikari, logging) — написан пользователем
+- `logback-spring.xml` — создан (console + rolling file, уровни DEBUG/TRACE)
+- `WebApplication.java` — перенесён в пакет `com.homeapp.javatraining`
+- Удалены: `hibernate.cfg.xml`, `HibernateUtil.java`, `CommonApplication.java`, `log4j2.xml`
+- Удалены: `application.properties` (common + web), заменены `.yaml`
+- `mvn clean compile -pl web -am` — BUILD SUCCESS
+
+**Следующая сессия:** 3 — Spring Data JPA репозитории

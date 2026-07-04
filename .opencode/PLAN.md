@@ -35,11 +35,11 @@
 
 ### Фаза 1: Core Migration
 
-#### 🔲 Сессия 2 — application.yml + Spring Boot config
-- [ ] application.yml (datasource, jpa, hikari, logging)
-- [ ] Удаление hibernate.cfg.xml, HibernateUtil
-- [ ] Настройка Logback (замена log4j2.xml)
-- [ ] Spring Boot main class
+#### ✅ Сессия 2 — application.yml + Spring Boot config (2026-07-05)
+- [x] application.yml (datasource, jpa, hikari, logging)
+- [x] Удаление hibernate.cfg.xml, HibernateUtil
+- [x] Настройка Logback (замена log4j2.xml)
+- [x] Spring Boot main class
 
 #### 🔲 Сессия 3 — Spring Data JPA репозитории
 - [ ] UserRepository extends JpaRepository

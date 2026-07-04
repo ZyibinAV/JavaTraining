@@ -1,4 +1,4 @@
-package com.zyibin.app.web;
+package com.homeapp.javatraining;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
