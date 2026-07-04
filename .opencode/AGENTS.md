@@ -1,0 +1,88 @@
+# AGENTS.md — Контекст проекта JavaTraining
+
+## 1. О проекте
+
+Учебное веб-приложение для подготовки к собеседованиям по Java. Пользователи проходят тесты по темам (Java Core, Concurrency и т.д.), получают результаты, администраторы управляют контентом.
+
+**Текущее состояние:** Servlet/JSP + Hibernate монолит  
+**Цель:** Spring Boot монолит → затем микросервисы через Kafka
+
+## 2. Технологический стек (целевой)
+
+| Категория | Технология |
+|-----------|-----------|
+| **Язык** | Java 21 |
+| **Фреймворк** | Spring Boot 3.3.x |
+| **ORM** | Spring Data JPA (Hibernate 6) |
+| **БД** | PostgreSQL 16 (prod), H2/TestContainers (test) |
+| **Security** | Spring Security, JWT, OAuth2 Resource Server, BCrypt |
+| **Web** | Thymeleaf + Layout Dialect (замена JSP) |
+| **DTO** | MapStruct 1.6.x |
+| **Lombok** | 1.18.34 |
+| **Kafka** | Spring Kafka (фаза микросервисов) |
+| **Хранилище** | MinIO (аватары) |
+| **Тесты** | JUnit 5, Mockito, AssertJ, TestContainers, JaCoCo |
+| **Мониторинг** | Spring Actuator, Micrometer, Prometheus (опционально) |
+
+## 3. Доменная модель
+
+```
+User (id, username, passwordHash, email, nickname, about, avatarPath, role, createdAt, blocked, version)
+  └── 1:N → TestResult (id, user, topic, totalQuestions, correctAnswers, passed, finishedAt, version)
+
+Topic (id, code, displayName, version)
+  ├── 1:N → Question (id, questionText, topic, correctAnswerIndex, answers, version)
+  │             └── 1:N → Answer (id, answerText, answerIndex, question, version)
+  └── 1:N → TestResult
+
+InterviewState (session-only, НЕ entity)
+  - topics: Set<Topic>
+  - questions: List<Question>
+  - currentIndex: int
+  - score: int
+  - createdAt: LocalDateTime
+```
+
+## 4. Роли
+
+| Роль | Обязанности |
+|------|------------|
+| **Вы (пользователь)** | Пишете код, принимаете решения, коммитите |
+| **opencode (я)** | Объясняю что/зачем/почему, даю план и инструкции, проверяю |
+
+## 5. Глоссарий
+
+| Термин | Значение |
+|--------|---------|
+| **Monolith First** | Сначала полный Spring Boot монолит, затем выделение микросервисов |
+| **Session (сессия общения)** | Один сеанс работы с opencode. Завершается коммитом и обновлением AGENTS.md |
+| **Этап** | Логическая группа сессий (например, "Core Migration", "Security") |
+| **InterviewState** | Состояние активного теста: текущий вопрос, количество правильных ответов |
+| **Topic** | Тема теста (например, "java-core", "java-concurrency") |
+| **Review issue** | Замечание из code review JSON, которое нужно исправить |
+
+## 6. Правила
+
+- Коммиты именуются `session-N: краткое описание`
+- После каждой сессии обновляется AGENTS.md (раздел "Прогресс")
+- В начале сессии — чтение AGENTS.md + PLAN.md для восстановления контекста
+- **Пишу код самостоятельно ТОЛЬКО для:** файлов `.opencode/*` и фронтенда (Thymeleaf, CSS, JS, HTML). Всю Java-кодовую базу ты пишешь сам по моим инструкциям. Исключение — если ты явно попросишь меня написать что-то.
+- **Завершение сессии:** когда ты говоришь "заканчиваю сессию" (или аналогично), я обновляю AGENTS.md (прогресс), CHANGELOG.md, PLAN.md (статус задач) и пишу промт для быстрого восстановления контекста на следующую сессию.
+
+## 7. Список замечаний ревью (40 шт)
+
+Группировка по severity:
+- **ERROR (13):** PasswordUtil SHA-256, ProfileEditServlet хэш, ResultServlet questions.get(0), AdminChangeRoleServlet valueOf, AvatarUploadServlet substring, AdminBlockUserServlet репозиторий, AdminUserService права, ResultServlet доступ, AdminStatisticsService отсутствие, AdminStatisticsService прямые запросы, остальные ERROR
+- **WARNING (20):** SRP, дублирование, локализация, мёртвый код, лямбды в контроллерах и т.д.
+- **INFO (7):** константы, комментарии, магические числа
+
+Полный список → PLAN.md (чек-лист ревью)
+
+## 8. Прогресс
+
+_Обновляется в конце каждой сессии_
+
+| Сессия | Статус | Дата |
+|--------|--------|------|
+| 0 | ✅ Выполнена | 2026-07-04 |
+| 1 | 🔲 Ожидает | — |
