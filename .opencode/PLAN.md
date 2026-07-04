@@ -25,13 +25,13 @@
 - [x] PLAN.md — этот план
 - [x] CHANGELOG.md — пустой, под записи
 
-#### 🔲 Сессия 1 — POM + модули
-- [ ] parent POM (packaging pom) с spring-boot-starter-parent
-- [ ] Модули: `common` (shared DTO/events), `web` (основное приложение)
-- [ ] Все зависимости: spring-boot-starter-web, data-jpa, security, thymeleaf, validation
-- [ ] Lombok + MapStruct annotation processors
-- [ ] Удаление jakarta-servlet-api, hibernate-core (старый)
-- [ ] Docker compose: PostgreSQL, MinIO (фаза 7), Kafka (фаза микросервисов)
+#### ✅ Сессия 1 — POM + модули (2026-07-05)
+- [x] parent POM (packaging pom) с spring-boot-starter-parent
+- [x] Модули: `common` (shared DTO/events), `web` (основное приложение)
+- [x] Все зависимости: spring-boot-starter-web, data-jpa, security, thymeleaf, validation, actuator
+- [x] Lombok + MapStruct 1.6.3 annotation processors
+- [x] Удаление jakarta-servlet-api, jstl, hibernate-core (старый), log4j2, jackson-databind, h2, HikariCP
+- [x] Docker compose: PostgreSQL, MinIO, Kafka + ZooKeeper
 
 ### Фаза 1: Core Migration
 
