@@ -2,17 +2,18 @@ package com.homeapp.javatraining.service;
 
 import com.homeapp.javatraining.model.Role;
 import com.homeapp.javatraining.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
+@Service
+@RequiredArgsConstructor
 public class AdminUserService {
     private static final Logger log = LoggerFactory.getLogger(AdminUserService.class);
 
     private final UserRepository userRepository;
 
-    public AdminUserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     public void changeUserRole(long adminId, long targetUserId, Role newRole) {
         log.info("Admin {} attempts to change role of user {} to {}",

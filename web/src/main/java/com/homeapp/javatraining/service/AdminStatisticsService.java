@@ -9,12 +9,14 @@ import com.homeapp.javatraining.repository.TestResultRepository;
 import com.homeapp.javatraining.repository.UserRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Service
 @RequiredArgsConstructor
 public class AdminStatisticsService {
 

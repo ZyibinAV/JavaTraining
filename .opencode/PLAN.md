@@ -48,11 +48,11 @@
 - [x] TestResultRepository extends JpaRepository
 - [x] Удаление 5 Hibernate*Repository классов + 4 интерфейсов
 
-#### 🔲 Сессия 4 — @Service + DI
-- [ ] Все сервисы: @Service, @RequiredArgsConstructor
-- [ ] Сервисные интерфейсы @Service (или удаление если 1 impl)
-- [ ] Удаление ApplicationConfig, AppInitListener
-- [ ] Удаление BaseServlet (ручной DI)
+#### ✅ Сессия 4 — @Service + DI (2026-07-05)
+- [x] Все сервисы: @Service, @RequiredArgsConstructor
+- [x] Сервисные интерфейсы @Service (или удаление если 1 impl)
+- [x] Удаление ApplicationConfig, AppInitListener
+- [x] Удаление BaseServlet (ручной DI)
 
 #### 🔲 Сессия 5 — Global Exception Handler
 - [ ] @ControllerAdvice + @ExceptionHandler
@@ -206,18 +206,18 @@
 | 7 | AdminChangeRoleServlet.java | 31 | 13 | 🔲 |
 | 8 | AdminUserService.java | 40 | 8 | 🔲 |
 | 9 | ResultServlet.java | 46 | 12 | 🔲 |
-| 10 | AdminStatisticsService.java | 1 | 4 | 🔲 |
-| 11 | BaseServlet.java | 91 | 4 | 🔲 |
-| 12 | AuthenticationService.java | 1 | 4 | 🔲 |
+| 10 | AdminStatisticsService.java | 1 | 4 | ✅ |
+| 11 | BaseServlet.java | 91 | 4 | ✅ |
+| 12 | AuthenticationService.java | 1 | 4 | ✅ |
 | 13 | AdminStatisticsService.java | 20 | 13 | 🔲 |
 
 ### WARNING (20 шт)
 
 | # | Файл | Строка | Сессия | Статус |
 |---|------|--------|--------|--------|
-| 1 | BaseServlet.java | 24 | 23 | 🔲 |
-| 2 | BaseServlet.java | 45 | 4 | 🔲 |
-| 3 | BaseServlet.java | 62 | 4 | 🔲 |
+| 1 | BaseServlet.java | 24 | 23 | ✅ |
+| 2 | BaseServlet.java | 45 | 4 | ✅ |
+| 3 | BaseServlet.java | 62 | 4 | ✅ |
 | 4 | LoginServlet.java | 34 | 9 | 🔲 |
 | 5 | ProfileEditServlet.java | 48 | 10 | 🔲 |
 | 6 | QuestionServlet.java | 71 | 11 | 🔲 |

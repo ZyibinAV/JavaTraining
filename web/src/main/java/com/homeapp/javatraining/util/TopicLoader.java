@@ -3,9 +3,11 @@ package com.homeapp.javatraining.util;
 import com.homeapp.javatraining.model.Topic;
 import com.homeapp.javatraining.repository.TopicRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 @RequiredArgsConstructor
 public class TopicLoader {
 

@@ -6,9 +6,11 @@ import com.homeapp.javatraining.repository.UserRepository;
 import com.homeapp.javatraining.util.PasswordUtil;
 import com.homeapp.javatraining.util.ValidationFactory;
 import com.homeapp.javatraining.validation.UserValidation;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class AuthenticationService {
 
     private final UserRepository userRepository;
@@ -22,7 +24,7 @@ public class AuthenticationService {
     public User authenticate(String username, String password) {
         userValidator.validateLogin(username, password);
 
-        Optional<User> userOptional = userRepository.findByUserName(username);
+        Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isEmpty()) {
             throw AuthenticationException.userNotFound();
         }

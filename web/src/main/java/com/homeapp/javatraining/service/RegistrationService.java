@@ -3,7 +3,9 @@ package com.homeapp.javatraining.service;
 import com.homeapp.javatraining.model.User;
 import com.homeapp.javatraining.util.ValidationFactory;
 import com.homeapp.javatraining.validation.UserValidation;
+import org.springframework.stereotype.Service;
 
+@Service
 public class RegistrationService {
 
     private final UserService userService;

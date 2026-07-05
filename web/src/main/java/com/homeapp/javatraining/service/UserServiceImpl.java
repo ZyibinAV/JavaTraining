@@ -4,27 +4,28 @@ import com.homeapp.javatraining.model.Role;
 import com.homeapp.javatraining.model.User;
 import com.homeapp.javatraining.repository.UserRepository;
 import com.homeapp.javatraining.util.PasswordUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Slf4j
+@Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
 
     private final UserRepository userRepository;
 
 
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Override
     public User register(String username, String rawPassword, String email) {
         log.info("User registration attempt: username={}", username);
         
         Role role;
-        Optional<User> existingUser = userRepository.findAny();
+        Optional<User> existingUser = userRepository.findFirstBy();
         
         if (existingUser.isEmpty()) {
             role = Role.ADMIN;
@@ -33,7 +34,7 @@ public class UserServiceImpl implements UserService {
             role = Role.USER;
         }
         
-        userRepository.findByUserName(username)
+        userRepository.findByUsername(username)
                 .ifPresent(u -> {
                     log.warn("Registration failed: username {} already exists", username);
                     throw new IllegalStateException("User with this login already exists");

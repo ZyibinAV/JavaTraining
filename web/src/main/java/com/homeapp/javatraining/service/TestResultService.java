@@ -1,19 +1,21 @@
 package com.homeapp.javatraining.service;
 
+import com.homeapp.javatraining.model.*;
 import com.homeapp.javatraining.repository.TestResultRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
+@Service
+@RequiredArgsConstructor
 public class TestResultService {
 
     private final TestResultRepository testResultRepository;
 
-    public TestResultService(TestResultRepository testResultRepository) {
-        this.testResultRepository = testResultRepository;
-    }
 
     public TestResult processAndSaveResult(User user, InterviewState state) {
 

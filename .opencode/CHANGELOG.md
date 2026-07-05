@@ -56,3 +56,22 @@
 - `mvn clean compile -pl web -am` — BUILD SUCCESS
 
 **Следующая сессия:** 4 — @Service + DI
+
+## Сессия 4 — @Service + DI
+
+**Дата:** 2026-07-05
+
+**Сделано:**
+- 10 сервисов перенесены `src/` → `web/.../service/`
+- Добавлены `@Service` всем сервисам, `@RequiredArgsConstructor` (6 explicit constructors → Lombok)
+- `AuthenticationService`, `RegistrationService`, `QuestionService` — `@Service`, explicit constructors оставлены (factory-валидаторы)
+- `TopicLoader` — `@Component` добавлен
+- Перенесены в `web/`: `PasswordUtil`, DTO (4), Exception (2), `ValidationFactory`, `QuestionValidator`, `UserValidation`
+- Исправлены вызовы репозиториев: `findByUserName`→`findByUsername`, `findAny`→`findFirstBy`, `getQuestions`→`findByTopic`
+- Удалены: `ApplicationConfig.java`, `AppInitListener.java`, `BaseServlet.java`
+- `ValidationFactory.createErrorHandler()` удалён (не использовался)
+- `mvn clean compile -pl web -am` — BUILD SUCCESS (24 source files in web)
+
+**Review-фиксы:** #10 (AdminStatisticsService), #11 (BaseServlet), #12 (AuthenticationService)
+
+**Следующая сессия:** 5 — Global Exception Handler

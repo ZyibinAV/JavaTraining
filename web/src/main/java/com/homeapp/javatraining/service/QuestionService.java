@@ -7,12 +7,14 @@ import com.homeapp.javatraining.repository.QuestionRepository;
 import com.homeapp.javatraining.util.TopicLoader;
 import com.homeapp.javatraining.validation.QuestionValidator;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Slf4j
+@Service
 public class QuestionService {
 
     private final QuestionValidator questionValidator;
@@ -35,7 +37,7 @@ public class QuestionService {
                 throw new IllegalArgumentException("Topic not found: " + code);
             }
 
-            allQuestions.addAll(questionRepository.getQuestions(topic));
+            allQuestions.addAll(questionRepository.findByTopic(topic));
         }
         if (allQuestions.size() < questionCount) {
             throw new IllegalStateException("Not enough questions");

@@ -8,9 +8,10 @@ import com.homeapp.javatraining.model.Topic;
 import com.homeapp.javatraining.repository.QuestionRepository;
 import com.homeapp.javatraining.repository.TopicRepository;
 import com.homeapp.javatraining.util.TopicLoader;
-import com.homeapp.javatraining.util.ValidationFactory;
 import com.homeapp.javatraining.validation.QuestionValidator;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -19,20 +20,16 @@ import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
+@Service
+@RequiredArgsConstructor
 public class AdminTestService {
 
     private final TopicLoader topicLoader;
     private final TopicRepository topicRepository;
     private final QuestionRepository questionRepository;
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public AdminTestService(TopicLoader topicLoader, TopicRepository topicRepository, 
-                           QuestionRepository questionRepository) {
-        this.topicLoader = topicLoader;
-        this.topicRepository = topicRepository;
-        this.questionRepository = questionRepository;
-        this.objectMapper = new ObjectMapper();
-    }
+
 
     public List<Topic> getAllTopics() {
         return topicLoader.loadAllTopics();
@@ -63,7 +60,7 @@ public class AdminTestService {
         if (topic == null) {
             throw new IllegalArgumentException("Topic not found: " + topicCode);
         }
-        return questionRepository.getQuestions(topic);
+        return questionRepository.findByTopic(topic);
     }
 
     public Optional<Question> getQuestionById(Long questionId) {
@@ -184,12 +181,10 @@ public class AdminTestService {
     }
 
     private void validateQuestion(Question question) {
-        QuestionValidator questionValidator = ValidationFactory.createQuestionValidator();
-        questionValidator.validate(List.of(question));
+        QuestionValidator.validate(List.of(question));
     }
 
     private void validateQuestions(List<Question> questions) {
-        QuestionValidator questionValidator = ValidationFactory.createQuestionValidator();
-        questionValidator.validate(questions);
+        QuestionValidator.validate(questions);
     }
 }
