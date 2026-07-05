@@ -5,13 +5,14 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Index;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "topics")
+@Table(name = "topics",  indexes = {
+        @Index(name = "idx_topics_code", columnList = "code")
+})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
@@ -22,7 +23,7 @@ public class Topic {
     @Setter(AccessLevel.NONE)
     private Long id;
     @Column(nullable = false, unique = true)
-    @Index(name = "idx_topics_code")
+
     private String code;
     @Column(name = "display_name", nullable = false)
     private String displayName;

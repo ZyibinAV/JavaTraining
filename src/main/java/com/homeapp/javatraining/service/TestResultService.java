@@ -1,6 +1,5 @@
 package com.homeapp.javatraining.service;
 
-import com.homeapp.javatraining.model.*;
 import com.homeapp.javatraining.repository.TestResultRepository;
 import lombok.extern.slf4j.Slf4j;
 

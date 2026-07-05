@@ -1,6 +1,5 @@
 package com.homeapp.javatraining.controllers;
 
-import com.homeapp.javatraining.model.*;
 import com.homeapp.javatraining.service.TestResultService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

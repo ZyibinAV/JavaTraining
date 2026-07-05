@@ -41,12 +41,12 @@
 - [x] Настройка Logback (замена log4j2.xml)
 - [x] Spring Boot main class
 
-#### 🔲 Сессия 3 — Spring Data JPA репозитории
-- [ ] UserRepository extends JpaRepository
-- [ ] QuestionRepository extends JpaRepository
-- [ ] TopicRepository extends JpaRepository
-- [ ] TestResultRepository extends JpaRepository
-- [ ] Удаление 5 Hibernate*Repository классов + 4 интерфейсов
+#### ✅ Сессия 3 — Spring Data JPA репозитории (2026-07-05)
+- [x] UserRepository extends JpaRepository
+- [x] QuestionRepository extends JpaRepository
+- [x] TopicRepository extends JpaRepository
+- [x] TestResultRepository extends JpaRepository
+- [x] Удаление 5 Hibernate*Repository классов + 4 интерфейсов
 
 #### 🔲 Сессия 4 — @Service + DI
 - [ ] Все сервисы: @Service, @RequiredArgsConstructor

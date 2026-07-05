@@ -5,7 +5,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Index;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,7 +12,10 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", indexes = {
+        @Index(name = "idx_users_username", columnList = "username"),
+        @Index(name = "idx_users_email", columnList = "email")
+})
 @Setter
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,12 +26,12 @@ public class User {
     @Setter(AccessLevel.NONE)
     private Long id;
     @Column(nullable = false, unique = true)
-    @Index(name = "idx_users_username")
+
     private String username;
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
     @Column(nullable = false, unique = true)
-    @Index(name = "idx_users_email")
+
     private String email;
     private String nickname;
     @Column(columnDefinition = "TEXT")

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Index;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +12,9 @@ import java.util.List;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "questions")
+@Table(name = "questions", indexes = {
+        @Index(name = "idx_questions_topic_id", columnList = "topic_id")
+})
 public class Question {
 
     @Id
@@ -23,7 +24,7 @@ public class Question {
     private String questionText;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "topic_id", nullable = false)
-    @Index(name = "idx_questions_topic_id")
+
     private Topic topic;
     @Column(name = "correct_answer_index", nullable = false)
     private int correctAnswerIndex;

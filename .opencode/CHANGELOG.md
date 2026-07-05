@@ -25,7 +25,7 @@
 - `docker-compose.yml` — добавлены MinIO, ZooKeeper, Kafka (заготовки)
 - `mvn clean compile` — BUILD SUCCESS (3 модуля)
 
-**Следующая сессия:** 3 — Spring Data JPA репозитории
+**Следующая сессия:** 2 — application.yml + Spring Boot config
 
 ## Сессия 2 — application.yml + Spring Boot config
 
@@ -40,3 +40,19 @@
 - `mvn clean compile -pl web -am` — BUILD SUCCESS
 
 **Следующая сессия:** 3 — Spring Data JPA репозитории
+
+## Сессия 3 — Spring Data JPA репозитории
+
+**Дата:** 2026-07-05
+
+**Сделано:**
+- Entity перенесены в `common` (Answer, Question, Topic, User, TestResult, Role, InterviewState)
+- `org.hibernate.annotations.Index` → `jakarta.persistence.Index` в `@Table` (Hibernate 6 compat)
+- `UserRepository extends JpaRepository` — `findByUsername`, `findFirstBy`
+- `QuestionRepository extends JpaRepository` — `findByTopic`, `findById`, `findAll` с `@EntityGraph`
+- `TopicRepository extends JpaRepository` — `findByCode`
+- `TestResultRepository extends JpaRepository` — `findByUserId`, `findAll` с `@EntityGraph`
+- Удалены 8 старых файлов репозиториев из `src/` (4 интерфейса + 4 Hibernate\*Repository)
+- `mvn clean compile -pl web -am` — BUILD SUCCESS
+
+**Следующая сессия:** 4 — @Service + DI

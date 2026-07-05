@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Index;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,18 +12,21 @@ import java.time.format.DateTimeFormatter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "test_results")
+@Table(name = "test_results", indexes = {
+        @Index(name = "idx_test_results_user_id", columnList = "user_id"),
+        @Index(name = "idx_test_results_topic_id", columnList = "topic_id")
+})
 public class TestResult {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-    @Index(name = "idx_test_results_user_id")
+
     private User user;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "topic_id", nullable = false)
-    @Index(name = "idx_test_results_topic_id")
+
     private Topic topic;
 
     @Version
