@@ -1,5 +1,7 @@
 package com.homeapp.javatraining.service;
 
+import com.homeapp.javatraining.exception.user.DuplicateEmailException;
+import com.homeapp.javatraining.exception.user.DuplicateUsernameException;
 import com.homeapp.javatraining.model.Role;
 import com.homeapp.javatraining.model.User;
 import com.homeapp.javatraining.repository.UserRepository;
@@ -15,31 +17,20 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-
     private final UserRepository userRepository;
-
-
 
     @Override
     public User register(String username, String rawPassword, String email) {
+
         log.info("User registration attempt: username={}", username);
-        
-        Role role;
-        Optional<User> existingUser = userRepository.findFirstBy();
-        
-        if (existingUser.isEmpty()) {
-            role = Role.ADMIN;
-            log.info("First user registration - assigning ADMIN role to: {}", username);
-        } else {
-            role = Role.USER;
-        }
-        
-        userRepository.findByUsername(username)
-                .ifPresent(u -> {
-                    log.warn("Registration failed: username {} already exists", username);
-                    throw new IllegalStateException("User with this login already exists");
-                });
+
+        checkUsernameAvailability(username);
+        checkEmailAvailability(email);
+
+        Role role = determineUserRole();
+
         String passwordHash = PasswordUtil.hashPassword(rawPassword);
+
         User user = new User(
                 username,
                 passwordHash,
@@ -48,12 +39,38 @@ public class UserServiceImpl implements UserService {
         );
 
         userRepository.save(user);
+
         log.info("User registered successfully: id={}, username={}, role={}",
                 user.getId(),
                 user.getUsername(),
-                user.getRole()
-        );
+                user.getRole());
+
         return user;
     }
 
+    private void checkUsernameAvailability(String username) {
+        userRepository.findByUsername(username)
+                .ifPresent(user -> {
+                    log.warn("Registration failed: username {} already exists", username);
+                    throw new DuplicateUsernameException(username);
+                });
+    }
+
+    private void checkEmailAvailability(String email) {
+        userRepository.findByEmail(email)
+                .ifPresent(user -> {
+                    log.warn("Registration failed: email {} already exists", email);
+                    throw new DuplicateEmailException(email);
+                });
+    }
+
+    private Role determineUserRole() {
+
+        if (userRepository.findFirstBy().isEmpty()) {
+            log.info("First user registration - assigning ADMIN role");
+            return Role.ADMIN;
+        }
+
+        return Role.USER;
+    }
 }

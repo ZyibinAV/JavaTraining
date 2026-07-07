@@ -54,11 +54,13 @@
 - [x] Удаление ApplicationConfig, AppInitListener
 - [x] Удаление BaseServlet (ручной DI)
 
-#### 🔲 Сессия 5 — Global Exception Handler
-- [ ] @ControllerAdvice + @ExceptionHandler
-- [ ] ErrorResponse DTO
-- [ ] Удаление ErrorHandler, RequestHandler
-- [ ] Адаптация ValidationException, AuthenticationException
+#### ✅ Сессия 5 — Global Exception Handler (2026-07-07)
+- [x] @ControllerAdvice + @ExceptionHandler
+- [x] ErrorResponse DTO
+- [x] Удаление ErrorHandler, RequestHandler
+- [x] Адаптация ValidationException, AuthenticationException
+- [x] Per-service исключения (user, topic, question packages)
+- [x] ApiException abstract base
 
 ### Фаза 2: Security
 

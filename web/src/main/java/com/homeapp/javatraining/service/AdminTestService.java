@@ -2,6 +2,9 @@ package com.homeapp.javatraining.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.homeapp.javatraining.exception.question.QuestionImportException;
+import com.homeapp.javatraining.exception.question.QuestionNotFoundException;
+import com.homeapp.javatraining.exception.topic.TopicNotFoundException;
 import com.homeapp.javatraining.model.Answer;
 import com.homeapp.javatraining.model.Question;
 import com.homeapp.javatraining.model.Topic;
@@ -49,7 +52,7 @@ public class AdminTestService {
     public void deleteTopic(String topicCode) {
         Topic topic = topicLoader.findByCode(topicCode);
         if (topic == null) {
-            throw new IllegalArgumentException("Topic not found: " + topicCode);
+            throw new TopicNotFoundException(topicCode);
         }
         topicRepository.delete(topic);
         log.info("Topic deleted: {}", topicCode);
@@ -58,7 +61,7 @@ public class AdminTestService {
     public List<Question> getQuestionsByTopic(String topicCode) {
         Topic topic = topicLoader.findByCode(topicCode);
         if (topic == null) {
-            throw new IllegalArgumentException("Topic not found: " + topicCode);
+            throw new TopicNotFoundException(topicCode);
         }
         return questionRepository.findByTopic(topic);
     }
@@ -71,7 +74,7 @@ public class AdminTestService {
                                   int correctAnswerIndex, List<String> answerTexts) {
         Topic topic = topicLoader.findByCode(topicCode);
         if (topic == null) {
-            throw new IllegalArgumentException("Topic not found: " + topicCode);
+            throw new TopicNotFoundException(topicCode);
         }
 
         Question question = new Question();
@@ -98,11 +101,11 @@ public class AdminTestService {
     public void updateQuestion(Long questionId, String topicCode, String questionText,
                               int correctAnswerIndex, List<String> answerTexts) {
         Question question = questionRepository.findById(questionId)
-                .orElseThrow(() -> new IllegalArgumentException("Question not found: " + questionId));
+                .orElseThrow(() -> new QuestionNotFoundException(questionId));
 
         Topic topic = topicLoader.findByCode(topicCode);
         if (topic == null) {
-            throw new IllegalArgumentException("Topic not found: " + topicCode);
+            throw new TopicNotFoundException(topicCode);
         }
 
         question.setQuestionText(questionText.trim());
@@ -126,7 +129,7 @@ public class AdminTestService {
 
     public void deleteQuestion(Long questionId) {
         Question question = questionRepository.findById(questionId)
-                .orElseThrow(() -> new IllegalArgumentException("Question not found: " + questionId));
+                .orElseThrow(() -> new QuestionNotFoundException(questionId));
         questionRepository.delete(question);
         log.info("Question deleted: id={}", questionId);
     }
@@ -134,7 +137,7 @@ public class AdminTestService {
     public List<Question> importQuestionsFromJson(String topicCode, InputStream jsonStream) {
         Topic topic = topicLoader.findByCode(topicCode);
         if (topic == null) {
-            throw new IllegalArgumentException("Topic not found: " + topicCode);
+            throw new TopicNotFoundException(topicCode);
         }
 
         try {
@@ -168,7 +171,7 @@ public class AdminTestService {
                 validateQuestions(questions);
             } catch (Exception e) {
                 log.error("Validation failed for questions", e);
-                throw new RuntimeException("Validation failed: " + e.getMessage(), e);
+                throw new QuestionImportException("Failed to import questions from JSON", e);
             }
             questionRepository.saveAll(questions);
             log.info("JSON imported for topic: {}, questions count: {}", topicCode, questions.size());
@@ -176,7 +179,7 @@ public class AdminTestService {
 
         } catch (Exception e) {
             log.error("Error importing JSON for topic: {}", topicCode, e);
-            throw new RuntimeException("Error importing JSON: " + e.getMessage(), e);
+            throw new QuestionImportException("Failed to import questions from JSON", e);
         }
     }
 

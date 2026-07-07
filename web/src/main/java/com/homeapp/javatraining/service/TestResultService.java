@@ -26,7 +26,7 @@ public class TestResultService {
 
         List<Question> questions = state.getQuestions();
         if (questions.isEmpty()) {
-            throw new IllegalStateException("No questions in interview state");
+            throw new IllegalStateException("InterviewState contains no questions. Unable to save test result.");
         }
         Topic topic = questions.get(0).getTopic();
         TestResult result = new TestResult(

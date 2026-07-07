@@ -74,4 +74,26 @@
 
 **Review-фиксы:** #10 (AdminStatisticsService), #11 (BaseServlet), #12 (AuthenticationService)
 
-**Следующая сессия:** 5 — Global Exception Handler
+## Сессия 5 — Global Exception Handler
+
+**Дата:** 2026-07-07
+
+**Сделано:**
+- `ErrorResponse` record (int status, String error, String message, String field) — создан
+- `ApiException` abstract base class — создан
+- Пакет `exception/user/`: `UserNotFoundException`, `DuplicateUsernameException`, `DuplicateEmailException`, `CannotChangeOwnRoleException` — созданы
+- Пакет `exception/topic/`: `TopicNotFoundException` — создан
+- Пакет `exception/question/`: `QuestionNotFoundException`, `NotEnoughQuestionsException`, `QuestionImportException` — созданы
+- `ValidationException` упрощён (extends ApiException, статические фабрики удалены)
+- `AuthenticationException` удалён из web-модуля
+- `GlobalExceptionHandler` с `@RestControllerAdvice` (6 handler-методов) — создан
+- Сервисы обновлены: `UserServiceImpl`, `AdminUserService`, `QuestionService`, `AdminTestService` — переведены на кастомные исключения
+- Удалены (6 файлов): `ErrorHandler.java`, `RequestHandler.java`, `AuthenticationException.java` (старый), `ValidationException.java` (старый), `ErrorHandlerTest.java`, `RequestHandlerTest.java`
+- `mvn clean compile -pl web -am` — common SUCCESS, web: 27 expected errors (3 intentionally broken files)
+
+**Intentionally broken (ждут Spring Security / Bean Validation):**
+- `AuthenticationService.java` — 3 ошибки (будет переписан в Session 6)
+- `UserValidation.java` — 14 ошибок (будет переписан в Session 15)
+- `QuestionValidator.java` — 10 ошибок (будет переписан в Session 15)
+
+**Следующая сессия:** 6 — BCrypt вместо SHA-256

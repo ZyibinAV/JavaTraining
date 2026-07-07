@@ -1,6 +1,5 @@
 package com.homeapp.javatraining.service;
 
-import com.homeapp.javatraining.exception.AuthenticationException;
 import com.homeapp.javatraining.model.User;
 import com.homeapp.javatraining.repository.UserRepository;
 import com.homeapp.javatraining.util.PasswordUtil;

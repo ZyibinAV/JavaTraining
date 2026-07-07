@@ -1,5 +1,7 @@
 package com.homeapp.javatraining.service;
 
+import com.homeapp.javatraining.exception.question.NotEnoughQuestionsException;
+import com.homeapp.javatraining.exception.topic.TopicNotFoundException;
 import com.homeapp.javatraining.model.InterviewState;
 import com.homeapp.javatraining.model.Question;
 import com.homeapp.javatraining.model.Topic;
@@ -34,13 +36,13 @@ public class QuestionService {
             Topic topic = topicLoader.findByCode(code);
 
             if (topic == null) {
-                throw new IllegalArgumentException("Topic not found: " + code);
+                throw new TopicNotFoundException(code);
             }
 
             allQuestions.addAll(questionRepository.findByTopic(topic));
         }
         if (allQuestions.size() < questionCount) {
-            throw new IllegalStateException("Not enough questions");
+            throw new NotEnoughQuestionsException(questionCount, allQuestions.size());
         }
         Collections.shuffle(allQuestions);
         return allQuestions.subList(0, questionCount);

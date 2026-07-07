@@ -1,0 +1,96 @@
+package com.homeapp.javatraining.exception;
+
+
+import com.homeapp.javatraining.exception.question.NotEnoughQuestionsException;
+import com.homeapp.javatraining.exception.question.QuestionImportException;
+import com.homeapp.javatraining.exception.question.QuestionNotFoundException;
+import com.homeapp.javatraining.exception.topic.TopicNotFoundException;
+import com.homeapp.javatraining.exception.user.CannotChangeOwnRoleException;
+import com.homeapp.javatraining.exception.user.DuplicateEmailException;
+import com.homeapp.javatraining.exception.user.DuplicateUsernameException;
+import com.homeapp.javatraining.exception.user.UserNotFoundException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ErrorResponse> handleValidationException(ValidationException exception) {
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                exception.getMessage(),
+                exception.getField()
+        );
+        return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler({
+            UserNotFoundException.class,
+            TopicNotFoundException.class,
+            QuestionNotFoundException.class
+    })
+    public ResponseEntity<ErrorResponse> handleNotFound(ApiException exception) {
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                exception.getMessage(),
+                null
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler({
+            DuplicateUsernameException.class,
+            DuplicateEmailException.class
+    })
+    public ResponseEntity<ErrorResponse> handleConflict(ApiException exception) {
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                HttpStatus.CONFLICT.getReasonPhrase(),
+                exception.getMessage(),
+                null
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
+    @ExceptionHandler(CannotChangeOwnRoleException.class)
+    public ResponseEntity<ErrorResponse> handleForbidden(ApiException exception) {
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.FORBIDDEN.value(),
+                HttpStatus.FORBIDDEN.getReasonPhrase(),
+                exception.getMessage(),
+                null
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+    }
+
+    @ExceptionHandler({
+            NotEnoughQuestionsException.class,
+            QuestionImportException.class
+    })
+    public ResponseEntity<ErrorResponse> handleBadRequest(ApiException exception) {
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                exception.getMessage(),
+                null
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleUnexpected(Exception exception) {
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                exception.getMessage(),
+                null
+        );
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+    }
+
+}
