@@ -15,7 +15,7 @@
 | **Фреймворк** | Spring Boot 3.3.x |
 | **ORM** | Spring Data JPA (Hibernate 6) |
 | **БД** | PostgreSQL 16 (prod), H2/TestContainers (test) |
-| **Security** | Spring Security, JWT, OAuth2 Resource Server, BCrypt |
+| **Security** | Spring Security, JWT, OAuth2 Resource Server, OAuth2 Client (GitHub), BCrypt |
 | **Web** | Thymeleaf + Layout Dialect (замена JSP) |
 | **DTO** | MapStruct 1.6.x |
 | **Lombok** | 1.18.34 |
@@ -92,3 +92,5 @@ _Обновляется в конце каждой сессии_
 | 3 | ✅ Выполнена | 2026-07-05 |
 | 4 | ✅ Выполнена | 2026-07-05 |
 | 5 | ✅ Выполнена | 2026-07-07 |
+| 6 | ✅ Выполнена | 2026-07-07 |
+| 7 | ✅ Выполнена | 2026-07-07 |

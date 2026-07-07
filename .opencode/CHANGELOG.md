@@ -96,4 +96,25 @@
 - `UserValidation.java` — 14 ошибок (будет переписан в Session 15)
 - `QuestionValidator.java` — 10 ошибок (будет переписан в Session 15)
 
-**Следующая сессия:** 6 — BCrypt вместо SHA-256
+## Сессия 6 — BCrypt вместо SHA-256
+
+**Дата:** 2026-07-07
+
+**Сделано:**
+- `SecurityConfig.java` — создан (@Configuration, @Bean PasswordEncoder → BCryptPasswordEncoder)
+- `UserServiceImpl.java` — `PasswordUtil.hashPassword()` → `passwordEncoder.encode()`, inject `PasswordEncoder`
+- `PasswordUtil.java` — удалён из web-модуля
+- `mvn clean compile -pl web -am` — common SUCCESS, web: 1 expected error (AuthenticationService ищет удалённый PasswordUtil)
+
+## Сессия 7 — JWT Token Provider
+
+**Дата:** 2026-07-07
+
+**Сделано:**
+- `web/pom.xml` — добавлены jjwt-api 0.12.6, jjwt-impl (runtime), jjwt-jackson (runtime)
+- `application.yaml` — добавлены jwt.secret (base64 HMAC-SHA256) и jwt.expiration (24ч)
+- `AuthResponse.java` — record: token, userId, username, role
+- `JwtTokenProvider.java` — @Component с 3 методами: generateToken(), getUserIdFromToken(), validateToken()
+- `mvn clean compile -pl web -am` — common SUCCESS, web: 1 expected error (AuthenticationService)
+
+**Следующая сессия:** 8 — SecurityFilterChain + OAuth2 Resource Server

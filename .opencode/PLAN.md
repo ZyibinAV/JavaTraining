@@ -4,15 +4,15 @@
 
 1. **Фаза 0 (Сессии 0-1):** Инфраструктура, контекст, POM
 2. **Фаза 1 (Сессии 2-5):** Core Migration — Spring Boot, JPA, DI
-3. **Фаза 2 (Сессии 6-8):** Security — JWT, BCrypt, SecurityFilterChain
-4. **Фаза 3 (Сессии 9-13):** REST API — Controllers → @RestController
-5. **Фаза 4 (Сессия 14):** DTO + MapStruct
-6. **Фаза 5 (Сессия 15):** Bean Validation
-7. **Фаза 6 (Сессии 16-18):** Thymeleaf Frontend
-8. **Фаза 7 (Сессия 19):** MinIO + Avatar Storage
-9. **Фаза 8 (Сессии 20-22):** Testing
-10. **Фаза 9 (Сессия 23):** Observability
-11. **Фаза 10 (Сессия 24):** Финальное ревью
+3. **Фаза 2 (Сессии 6-9):** Security — JWT, BCrypt, OAuth2 Resource Server, GitHub OAuth2 Client
+4. **Фаза 3 (Сессии 10-14):** REST API — Controllers → @RestController
+5. **Фаза 4 (Сессия 15):** DTO + MapStruct
+6. **Фаза 5 (Сессия 16):** Bean Validation
+7. **Фаза 6 (Сессии 17-19):** Thymeleaf Frontend
+8. **Фаза 7 (Сессия 20):** MinIO + Avatar Storage
+9. **Фаза 8 (Сессии 21-23):** Testing
+10. **Фаза 9 (Сессия 24):** Observability
+11. **Фаза 10 (Сессия 25):** Финальное ревью
 
 ---
 
@@ -64,52 +64,58 @@
 
 ### Фаза 2: Security
 
-#### 🔲 Сессия 6 — BCrypt вместо SHA-256
-- [ ] BCryptPasswordEncoder bean
-- [ ] UserServiceImpl: BCrypt вместо PasswordUtil
-- [ ] AuthenticationService: BCrypt.verify
-- [ ] Удаление PasswordUtil.java
+#### ✅ Сессия 6 — BCrypt вместо SHA-256 (2026-07-07)
+- [x] BCryptPasswordEncoder bean (SecurityConfig)
+- [x] UserServiceImpl: BCrypt вместо PasswordUtil
+- [x] Удаление PasswordUtil.java из web-модуля
+- [ ] AuthenticationService: BCrypt.verify _(отложено — будет переписан в Spring Security сессиях)_
 
-#### 🔲 Сессия 7 — JWT Token Provider
-- [ ] JwtTokenProvider (генерация, валидация, парсинг)
-- [ ] application.yml: jwt.secret, jwt.expiration
-- [ ] AuthResponse DTO (token, userId, username, role)
+#### ✅ Сессия 7 — JWT Token Provider (2026-07-07)
+- [x] JwtTokenProvider (генерация, валидация, парсинг)
+- [x] application.yml: jwt.secret, jwt.expiration
+- [x] AuthResponse DTO (token, userId, username, role)
 
-#### 🔲 Сессия 8 — SecurityFilterChain
-- [ ] SecurityConfig @Configuration
-- [ ] JwtAuthenticationFilter extends OncePerRequestFilter
-- [ ] PasswordEncoder bean
+#### 🔲 Сессия 8 — SecurityFilterChain + OAuth2 Resource Server
+- [ ] SecurityConfig: `oauth2ResourceServer().jwt()` вместо кастомного JwtAuthenticationFilter
 - [ ] AuthenticationManager bean
-- [ ] Удаление AuthFilter, AdminFilter
 - [ ] @EnableMethodSecurity + @PreAuthorize
+- [ ] application.yml: spring.security.oauth2.resourceserver.jwt
+- [ ] Удаление AuthFilter, AdminFilter
+
+#### 🔲 Сессия 9 — OAuth2 Client (GitHub Login)
+- [ ] spring-boot-starter-oauth2-client
+- [ ] application.yml: spring.security.oauth2.client.registration.github
+- [ ] CustomOAuth2UserService (создание/привязка User к GitHub account)
+- [ ] OAuth2LoginSuccessHandler (выдача JWT после GitHub логина)
+- [ ] Login page: добавлена кнопка "Sign in with GitHub"
 
 ### Фаза 3: REST API
 
-#### 🔲 Сессия 9 — AuthController
+#### 🔲 Сессия 10 — AuthController
 - [ ] POST /api/auth/login
 - [ ] POST /api/auth/register
 - [ ] POST /api/auth/refresh
 - [ ] Удаление LoginServlet, RegistrationServlet, LogoutServlet
 
-#### 🔲 Сессия 10 — ProfileController
+#### 🔲 Сессия 11 — ProfileController
 - [ ] GET /profile
 - [ ] POST /profile/edit
 - [ ] Удаление ProfileServlet, ProfileEditServlet, AvatarSelectServlet
 
-#### 🔲 Сессия 11 — TestController (опрос)
+#### 🔲 Сессия 12 — TestController (опрос)
 - [ ] POST /test/start
 - [ ] GET /question
 - [ ] POST /question (answer)
 - [ ] InterviewState: сессионный пока (HttpSession)
 - [ ] Удаление StartServlet, QuestionServlet (старые)
 
-#### 🔲 Сессия 12 — TestController (результат)
+#### 🔲 Сессия 13 — TestController (результат)
 - [ ] GET /result
 - [ ] TestResultService: разделение process + save
 - [ ] Агрегация тем (fix мультитемных тестов)
 - [ ] Удаление ResultServlet
 
-#### 🔲 Сессия 13 — AdminControllers
+#### 🔲 Сессия 14 — AdminControllers
 - [ ] AdminUserController (CRUD, block, role)
 - [ ] AdminTestController (topics CRUD, questions CRUD, JSON import)
 - [ ] AdminStatisticsController
@@ -117,7 +123,7 @@
 
 ### Фаза 4: DTO + MapStruct
 
-#### 🔲 Сессия 14 — DTO + Mappers
+#### 🔲 Сессия 15 — DTO + Mappers
 - [ ] UserDTO, QuestionDTO, TopicDTO, AnswerDTO, TestResultDTO
 - [ ] RegisterRequest, LoginRequest, AuthResponse
 - [ ] ProfileDTO, StatsDTO
@@ -126,7 +132,7 @@
 
 ### Фаза 5: Validation
 
-#### 🔲 Сессия 15 — Bean Validation
+#### 🔲 Сессия 16 — Bean Validation
 - [ ] @Valid + jakarta.validation на DTO
 - [ ] MessageSource (русские/английские сообщения)
 - [ ] Кастомные валидаторы
@@ -134,25 +140,25 @@
 
 ### Фаза 6: Thymeleaf
 
-#### 🔲 Сессия 16 — Layout + Auth templates
+#### 🔲 Сессия 17 — Layout + Auth templates
 - [ ] thymeleaf-layout-dialect
 - [ ] layout.html (header + footer)
 - [ ] login.html, register.html
 - [ ] ViewController для простых страниц
 
-#### 🔲 Сессия 17 — Main templates
+#### 🔲 Сессия 18 — Main templates
 - [ ] home.html, profile.html, profile-edit.html
 - [ ] avatar-select.html, test-settings.html
 - [ ] question.html, result.html
 
-#### 🔲 Сессия 18 — Admin templates
+#### 🔲 Сессия 19 — Admin templates
 - [ ] admin.html, users.html, tests.html
 - [ ] test-questions.html, statistics.html
 - [ ] CSS адаптация
 
 ### Фаза 7: MinIO
 
-#### 🔲 Сессия 19 — MinIO storage
+#### 🔲 Сессия 20 — MinIO storage
 - [ ] MinIO в docker-compose.yml
 - [ ] MinIOAdapter/AvatarStorageService
 - [ ] AvatarUploadController (Multipart → MinIO)
@@ -161,24 +167,24 @@
 
 ### Фаза 8: Testing
 
-#### 🔲 Сессия 20 — Unit tests
+#### 🔲 Сессия 21 — Unit tests
 - [ ] Сервисные тесты: @ExtendWith(MockitoExtension)
 - [ ] Контроллер тесты: @WebMvcTest
 - [ ] Util тесты
 
-#### 🔲 Сессия 21 — Integration + TestContainers
+#### 🔲 Сессия 22 — Integration + TestContainers
 - [ ] @SpringBootTest + TestContainers PostgreSQL
 - [ ] Repository integration tests
-- [ ] Security tests (JWT)
+- [ ] Security tests (JWT, OAuth2)
 - [ ] MockMvc
 
-#### 🔲 Сессия 22 — Coverage
+#### 🔲 Сессия 23 — Coverage
 - [ ] JaCoCo настройка
 - [ ] Достижение >80% service layer
 
 ### Фаза 9: Observability
 
-#### 🔲 Сессия 23 — Actuator + MDC
+#### 🔲 Сессия 24 — Actuator + MDC
 - [ ] spring-boot-starter-actuator
 - [ ] Health indicators (db, minio, redis)
 - [ ] Micrometer метрики
@@ -186,7 +192,7 @@
 
 ### Фаза 10: Финальное ревью
 
-#### 🔲 Сессия 24 — Финальная проверка
+#### 🔲 Сессия 25 — Финальная проверка
 - [ ] Чек-лист 40 review issues
 - [ ] mvn clean verify — зелёный билд
 - [ ] Обновление README
@@ -199,56 +205,56 @@
 
 | # | Файл | Строка | Сессия | Статус |
 |---|------|--------|--------|--------|
-| 1 | PasswordUtil.java | 15 | 6 | 🔲 |
-| 2 | ProfileEditServlet.java | 44 | 10 | 🔲 |
-| 3 | ProfileEditServlet.java | 45 | 10 | 🔲 |
-| 4 | ResultServlet.java | 55 | 12 | 🔲 |
-| 5 | AvatarUploadServlet.java | 52 | 19 | 🔲 |
-| 6 | AdminBlockUserServlet.java | 27 | 13 | 🔲 |
-| 7 | AdminChangeRoleServlet.java | 31 | 13 | 🔲 |
+| 1 | PasswordUtil.java | 15 | 6 | ✅ |
+| 2 | ProfileEditServlet.java | 44 | 11 | 🔲 |
+| 3 | ProfileEditServlet.java | 45 | 11 | 🔲 |
+| 4 | ResultServlet.java | 55 | 13 | 🔲 |
+| 5 | AvatarUploadServlet.java | 52 | 20 | 🔲 |
+| 6 | AdminBlockUserServlet.java | 27 | 14 | 🔲 |
+| 7 | AdminChangeRoleServlet.java | 31 | 14 | 🔲 |
 | 8 | AdminUserService.java | 40 | 8 | 🔲 |
-| 9 | ResultServlet.java | 46 | 12 | 🔲 |
+| 9 | ResultServlet.java | 46 | 13 | 🔲 |
 | 10 | AdminStatisticsService.java | 1 | 4 | ✅ |
 | 11 | BaseServlet.java | 91 | 4 | ✅ |
 | 12 | AuthenticationService.java | 1 | 4 | ✅ |
-| 13 | AdminStatisticsService.java | 20 | 13 | 🔲 |
+| 13 | AdminStatisticsService.java | 20 | 14 | 🔲 |
 
 ### WARNING (20 шт)
 
 | # | Файл | Строка | Сессия | Статус |
 |---|------|--------|--------|--------|
-| 1 | BaseServlet.java | 24 | 23 | ✅ |
+| 1 | BaseServlet.java | 24 | 24 | ✅ |
 | 2 | BaseServlet.java | 45 | 4 | ✅ |
 | 3 | BaseServlet.java | 62 | 4 | ✅ |
-| 4 | LoginServlet.java | 34 | 9 | 🔲 |
-| 5 | ProfileEditServlet.java | 48 | 10 | 🔲 |
-| 6 | QuestionServlet.java | 71 | 11 | 🔲 |
-| 7 | QuestionServlet.java | 79 | 11 | 🔲 |
-| 8 | ResultServlet.java | 62 | 12 | 🔲 |
-| 9 | AvatarUploadServlet.java | 56 | 19 | 🔲 |
-| 10 | AdminUserServlet.java | 82 | 13 | 🔲 |
-| 11 | AdminTestServlet.java | 262 | 13 | 🔲 |
-| 12 | QuestionService.java | 45 | 11 | 🔲 |
-| 13 | TestResultService.java | 30 | 12 | 🔲 |
-| 14 | StartServlet.java | 46 | 11 | 🔲 |
-| 15 | QuestionValidator.java | 36 | 15 | 🔲 |
-| 16 | QuestionServlet.java | 35 | 11 | 🔲 |
-| 17 | AdminUserServlet.java | 56 | 13 | 🔲 |
-| 18 | AvatarSelectServlet.java | 51 | 19 | 🔲 |
-| 19 | ProfileEditServlet.java | 44 (old) | 10 | 🔲 |
-| 20 | AdminUserServlet.java | 82 (duplicate) | 13 | 🔲 |
+| 4 | LoginServlet.java | 34 | 10 | 🔲 |
+| 5 | ProfileEditServlet.java | 48 | 11 | 🔲 |
+| 6 | QuestionServlet.java | 71 | 12 | 🔲 |
+| 7 | QuestionServlet.java | 79 | 12 | 🔲 |
+| 8 | ResultServlet.java | 62 | 13 | 🔲 |
+| 9 | AvatarUploadServlet.java | 56 | 20 | 🔲 |
+| 10 | AdminUserServlet.java | 82 | 14 | 🔲 |
+| 11 | AdminTestServlet.java | 262 | 14 | 🔲 |
+| 12 | QuestionService.java | 45 | 12 | 🔲 |
+| 13 | TestResultService.java | 30 | 13 | 🔲 |
+| 14 | StartServlet.java | 46 | 12 | 🔲 |
+| 15 | QuestionValidator.java | 36 | 16 | 🔲 |
+| 16 | QuestionServlet.java | 35 | 12 | 🔲 |
+| 17 | AdminUserServlet.java | 56 | 14 | 🔲 |
+| 18 | AvatarSelectServlet.java | 51 | 20 | 🔲 |
+| 19 | ProfileEditServlet.java | 44 (old) | 11 | 🔲 |
+| 20 | AdminUserServlet.java | 82 (duplicate) | 14 | 🔲 |
 
 ### INFO (7 шт)
 
 | # | Файл | Строка | Сессия | Статус |
 |---|------|--------|--------|--------|
-| 1 | UserValidation.java | 19 | 15 | 🔲 |
-| 2 | BaseStatsTest.java | 208 | 21 | 🔲 |
-| 3 | ErrorHandlerTest.java | 90 | 20 | 🔲 |
-| 4 | RequestHandlerTest.java | 55 | 20 | 🔲 |
-| 5 | DtoStatsTest.java | 70 | 20 | 🔲 |
-| 6 | SessionUtils.java | 10 | 11 | 🔲 |
-| 7 | UserValidation.java | class | 15 | 🔲 |
+| 1 | UserValidation.java | 19 | 16 | 🔲 |
+| 2 | BaseStatsTest.java | 208 | 22 | 🔲 |
+| 3 | ErrorHandlerTest.java | 90 | — | ✅ (удалён в S5) |
+| 4 | RequestHandlerTest.java | 55 | — | ✅ (удалён в S5) |
+| 5 | DtoStatsTest.java | 70 | 21 | 🔲 |
+| 6 | SessionUtils.java | 10 | 12 | 🔲 |
+| 7 | UserValidation.java | class | 16 | 🔲 |
 
 ---
 

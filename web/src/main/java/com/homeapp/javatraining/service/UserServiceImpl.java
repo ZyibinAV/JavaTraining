@@ -5,9 +5,9 @@ import com.homeapp.javatraining.exception.user.DuplicateUsernameException;
 import com.homeapp.javatraining.model.Role;
 import com.homeapp.javatraining.model.User;
 import com.homeapp.javatraining.repository.UserRepository;
-import com.homeapp.javatraining.util.PasswordUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -18,6 +18,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public User register(String username, String rawPassword, String email) {
@@ -29,7 +30,7 @@ public class UserServiceImpl implements UserService {
 
         Role role = determineUserRole();
 
-        String passwordHash = PasswordUtil.hashPassword(rawPassword);
+        String passwordHash = passwordEncoder.encode(rawPassword);
 
         User user = new User(
                 username,
