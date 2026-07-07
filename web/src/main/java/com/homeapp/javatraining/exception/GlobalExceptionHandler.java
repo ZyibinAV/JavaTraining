@@ -8,6 +8,8 @@ import com.homeapp.javatraining.exception.topic.TopicNotFoundException;
 import com.homeapp.javatraining.exception.user.CannotChangeOwnRoleException;
 import com.homeapp.javatraining.exception.user.DuplicateEmailException;
 import com.homeapp.javatraining.exception.user.DuplicateUsernameException;
+import com.homeapp.javatraining.exception.user.InvalidCredentialsException;
+import com.homeapp.javatraining.exception.user.InvalidRefreshTokenException;
 import com.homeapp.javatraining.exception.user.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,6 +57,20 @@ public class GlobalExceptionHandler {
                 null
         );
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
+    @ExceptionHandler({
+            InvalidCredentialsException.class,
+            InvalidRefreshTokenException.class
+    })
+    public ResponseEntity<ErrorResponse> handleUnauthorized(ApiException exception) {
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                HttpStatus.UNAUTHORIZED.getReasonPhrase(),
+                exception.getMessage(),
+                null
+        );
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
     @ExceptionHandler(CannotChangeOwnRoleException.class)

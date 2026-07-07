@@ -1,42 +1,28 @@
 package com.homeapp.javatraining.service;
 
+import com.homeapp.javatraining.exception.user.InvalidCredentialsException;
 import com.homeapp.javatraining.model.User;
 import com.homeapp.javatraining.repository.UserRepository;
-import com.homeapp.javatraining.util.ValidationFactory;
-import com.homeapp.javatraining.validation.UserValidation;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
+@RequiredArgsConstructor
 public class AuthenticationService {
 
     private final UserRepository userRepository;
-    private final UserValidation userValidator;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthenticationService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-        this.userValidator = ValidationFactory.createUserValidator();
-    }
 
     public User authenticate(String username, String password) {
-        userValidator.validateLogin(username, password);
-
-        Optional<User> userOptional = userRepository.findByUsername(username);
-        if (userOptional.isEmpty()) {
-            throw AuthenticationException.userNotFound();
+        User user = userRepository.findByUsername(username).orElseThrow(InvalidCredentialsException::new);
+        if (!passwordEncoder.matches(password, user.getPasswordHash())) {
+            throw new InvalidCredentialsException();
         }
-
-        User user = userOptional.get();
-
-        if (!PasswordUtil.verifyPassword(password, user.getPasswordHash())) {
-            throw AuthenticationException.invalidCredentials();
-        }
-
         if (user.isBlocked()) {
-            throw AuthenticationException.userBlocked();
+            throw new IllegalStateException("User is blocked");
         }
-
         return user;
     }
 }

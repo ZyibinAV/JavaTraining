@@ -136,8 +136,6 @@
 - `UserValidation.java` — 14 ошибок (Session 16)
 - `QuestionValidator.java` — 10 ошибок (Session 16)
 
-**Следующая сессия:** 10 — AuthController
-
 ## Сессия 9 — OAuth2 Client (GitHub Login)
 
 **Дата:** 2026-07-07
@@ -152,3 +150,31 @@
 - `config/SecurityConfig.java` — добавлен oauth2Login() с userService + successHandler, CookieBearerTokenResolver (читает jwt из cookie при отсутствии Authorization header), WebMvcConfigurer для /login → login.html, permit /login/** и /oauth2/**
 - `templates/login.html` — создан (кнопка "Sign in with GitHub")
 - `mvn clean compile -pl web -am` — common SUCCESS, web: 28 errors (3 intentionally broken файла)
+
+## Сессия 10 — AuthController + Two-Token Pattern
+
+**Дата:** 2026-07-07
+
+**Сделано:**
+- `LoginRequest.java` — record (String username, String password)
+- `RegisterRequest.java` — record (String username, String password, String email)
+- `InvalidCredentialsException.java` — extends ApiException, HTTP 401
+- `GlobalExceptionHandler.java` — добавлен handleUnauthorized (InvalidCredentialsException → 401)
+- `AuthenticationService.java` — переписан: BCrypt verify, InvalidCredentialsException, @RequiredArgsConstructor
+- `AuthController.java` — @RestController:
+  - POST /api/auth/login → 200 + access token (JSON) + refresh token (HttpOnly cookie)
+  - POST /api/auth/register → 201 + access token (JSON) + refresh token (HttpOnly cookie)
+  - POST /api/auth/refresh → 200 + новый access token + rotated refresh token (cookie)
+- `RefreshToken.java` — entity (id, user, token UUID, expiresAt, revoked)
+- `RefreshTokenRepository.java` — findByToken, findByUser, deleteByUser
+- `RefreshTokenService.java` — createRefreshToken, validateAndRotate (revoke old → return User), revokeAllForUser
+- `InvalidRefreshTokenException.java` — extends ApiException, HTTP 401
+- `application.yaml` — jwt.expiration: 86400000 → 900000 (15min), + jwt.refresh-expiration: 2592000000 (30d)
+- Удалены из src/: LoginServlet.java, RegistrationServlet, LogoutServlet.java
+- `mvn clean compile -pl web -am` — common SUCCESS (13 files), web: 24 errors (2 intentionally broken файла)
+
+**Intentionally broken (ждут будущих сессий):**
+- `UserValidation.java` — 14 ошибок (Session 16)
+- `QuestionValidator.java` — 10 ошибок (Session 16)
+
+**Следующая сессия:** 11 — ProfileController

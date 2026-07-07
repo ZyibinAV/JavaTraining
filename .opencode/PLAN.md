@@ -91,11 +91,15 @@
 
 ### Фаза 3: REST API
 
-#### 🔲 Сессия 10 — AuthController
-- [ ] POST /api/auth/login
-- [ ] POST /api/auth/register
-- [ ] POST /api/auth/refresh
-- [ ] Удаление LoginServlet, RegistrationServlet, LogoutServlet
+#### ✅ Сессия 10 — AuthController + Two-Token Pattern (2026-07-07)
+- [x] POST /api/auth/login (access token JSON + refresh token HttpOnly cookie)
+- [x] POST /api/auth/register (access token JSON + refresh token HttpOnly cookie)
+- [x] POST /api/auth/refresh (cookie → validate+rotate → новый access + refresh)
+- [x] RefreshToken entity + repository (common module)
+- [x] RefreshTokenService (create, validateAndRotate с token rotation)
+- [x] InvalidRefreshTokenException → GlobalExceptionHandler (401)
+- [x] application.yaml: access 15min, refresh 30d
+- [x] Удаление LoginServlet, RegistrationServlet, LogoutServlet
 
 #### 🔲 Сессия 11 — ProfileController
 - [ ] GET /profile
@@ -226,7 +230,7 @@
 | 1 | BaseServlet.java | 24 | 24 | ✅ |
 | 2 | BaseServlet.java | 45 | 4 | ✅ |
 | 3 | BaseServlet.java | 62 | 4 | ✅ |
-| 4 | LoginServlet.java | 34 | 10 | 🔲 |
+| 4 | LoginServlet.java | 34 | 10 | ✅ |
 | 5 | ProfileEditServlet.java | 48 | 11 | 🔲 |
 | 6 | QuestionServlet.java | 71 | 12 | 🔲 |
 | 7 | QuestionServlet.java | 79 | 12 | 🔲 |
