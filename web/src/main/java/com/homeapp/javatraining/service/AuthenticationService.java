@@ -2,7 +2,6 @@ package com.homeapp.javatraining.service;
 
 import com.homeapp.javatraining.model.User;
 import com.homeapp.javatraining.repository.UserRepository;
-import com.homeapp.javatraining.util.PasswordUtil;
 import com.homeapp.javatraining.util.ValidationFactory;
 import com.homeapp.javatraining.validation.UserValidation;
 import org.springframework.stereotype.Service;

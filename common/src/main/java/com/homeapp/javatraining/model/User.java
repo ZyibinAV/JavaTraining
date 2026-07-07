@@ -33,6 +33,8 @@ public class User {
     @Column(nullable = false, unique = true)
 
     private String email;
+    @Column(name = "github_id", unique = true)
+    private String githubId;
     private String nickname;
     @Column(columnDefinition = "TEXT")
     private String about;

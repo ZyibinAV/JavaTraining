@@ -117,4 +117,38 @@
 - `JwtTokenProvider.java` — @Component с 3 методами: generateToken(), getUserIdFromToken(), validateToken()
 - `mvn clean compile -pl web -am` — common SUCCESS, web: 1 expected error (AuthenticationService)
 
-**Следующая сессия:** 8 — SecurityFilterChain + OAuth2 Resource Server
+**Следующая сессия:** 9 — OAuth2 Client (GitHub Login)
+
+## Сессия 8 — SecurityFilterChain + OAuth2 Resource Server
+
+**Дата:** 2026-07-07
+
+**Сделано:**
+- `web/pom.xml` — добавлен spring-boot-starter-oauth2-resource-server
+- `SecurityConfig.java` — переписан: @EnableMethodSecurity, SecurityFilterChain (whitelist /api/auth/**, /admin/** → ADMIN, rest authenticated), oauth2ResourceServer().jwt(), JwtDecoder (NimbusJwtDecoder через SecretKey от JwtTokenProvider), AuthenticationManager bean
+- `JwtTokenProvider.java` — добавлен getSecretKey() геттер
+- `application.yaml` — добавлен spring.security.oauth2.resourceserver.jwt (пустой jwk-set-uri)
+- `AuthFilter.java`, `AdminFilter.java` — удалены из src/
+- `mvn clean compile -pl web -am` — common SUCCESS, web: 28 errors (3 intentionally broken files: AuthenticationService, UserValidation, QuestionValidator)
+
+**Intentionally broken (ждают будущих сессий):**
+- `AuthenticationService.java` — 4 ошибки (Session 10)
+- `UserValidation.java` — 14 ошибок (Session 16)
+- `QuestionValidator.java` — 10 ошибок (Session 16)
+
+**Следующая сессия:** 10 — AuthController
+
+## Сессия 9 — OAuth2 Client (GitHub Login)
+
+**Дата:** 2026-07-07
+
+**Сделано:**
+- `web/pom.xml` — добавлен spring-boot-starter-oauth2-client
+- `common/.../model/User.java` — добавлено поле githubId (@Column, unique)
+- `common/.../repository/UserRepository.java` — добавлен findByGithubId
+- `application.yaml` — добавлен spring.security.oauth2.client.registration.github (client-id/secret из переменных окружения, scope read:user + user:email)
+- `config/oauth2/CustomOAuth2UserService.java` — создан (поиск/создание User по githubId или email, сохранение appUserId в атрибуты)
+- `config/oauth2/OAuth2LoginSuccessHandler.java` — создан (генерация JWT, установка в HttpOnly cookie jwt, редирект на /)
+- `config/SecurityConfig.java` — добавлен oauth2Login() с userService + successHandler, CookieBearerTokenResolver (читает jwt из cookie при отсутствии Authorization header), WebMvcConfigurer для /login → login.html, permit /login/** и /oauth2/**
+- `templates/login.html` — создан (кнопка "Sign in with GitHub")
+- `mvn clean compile -pl web -am` — common SUCCESS, web: 28 errors (3 intentionally broken файла)

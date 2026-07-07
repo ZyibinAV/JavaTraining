@@ -75,19 +75,19 @@
 - [x] application.yml: jwt.secret, jwt.expiration
 - [x] AuthResponse DTO (token, userId, username, role)
 
-#### 🔲 Сессия 8 — SecurityFilterChain + OAuth2 Resource Server
-- [ ] SecurityConfig: `oauth2ResourceServer().jwt()` вместо кастомного JwtAuthenticationFilter
-- [ ] AuthenticationManager bean
-- [ ] @EnableMethodSecurity + @PreAuthorize
-- [ ] application.yml: spring.security.oauth2.resourceserver.jwt
-- [ ] Удаление AuthFilter, AdminFilter
+#### ✅ Сессия 8 — SecurityFilterChain + OAuth2 Resource Server (2026-07-07)
+- [x] SecurityConfig: `oauth2ResourceServer().jwt()` вместо кастомного JwtAuthenticationFilter
+- [x] AuthenticationManager bean
+- [x] @EnableMethodSecurity + @PreAuthorize
+- [x] application.yml: spring.security.oauth2.resourceserver.jwt
+- [x] Удаление AuthFilter, AdminFilter
 
-#### 🔲 Сессия 9 — OAuth2 Client (GitHub Login)
-- [ ] spring-boot-starter-oauth2-client
-- [ ] application.yml: spring.security.oauth2.client.registration.github
-- [ ] CustomOAuth2UserService (создание/привязка User к GitHub account)
-- [ ] OAuth2LoginSuccessHandler (выдача JWT после GitHub логина)
-- [ ] Login page: добавлена кнопка "Sign in with GitHub"
+#### ✅ Сессия 9 — OAuth2 Client (GitHub Login) (2026-07-07)
+- [x] spring-boot-starter-oauth2-client
+- [x] application.yml: spring.security.oauth2.client.registration.github
+- [x] CustomOAuth2UserService (создание/привязка User к GitHub account)
+- [x] OAuth2LoginSuccessHandler (выдача JWT после GitHub логина)
+- [x] Login page: добавлена кнопка "Sign in with GitHub"
 
 ### Фаза 3: REST API
 

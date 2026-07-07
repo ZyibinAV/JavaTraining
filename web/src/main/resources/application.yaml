@@ -23,6 +23,18 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: Ov23liytKsZK32FpzXSQ
+            client-secret: eca2384a102c0ad5778e1d7125d9dce7bf2fd533
+            scope: read:user, user:email
+      resourceserver:
+        jwt:
+          jwk-set-uri:
+
 logging:
   level:
     com.homeapp.javatraining: DEBUG
