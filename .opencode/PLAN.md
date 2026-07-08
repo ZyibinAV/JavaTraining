@@ -101,10 +101,17 @@
 - [x] application.yaml: access 15min, refresh 30d
 - [x] Удаление LoginServlet, RegistrationServlet, LogoutServlet
 
-#### 🔲 Сессия 11 — ProfileController
-- [ ] GET /profile
-- [ ] POST /profile/edit
-- [ ] Удаление ProfileServlet, ProfileEditServlet, AvatarSelectServlet
+#### ✅ Сессия 11 — ProfileController + Code Improvements (2026-07-08)
+- [x] GET /api/profile (ProfileResponse + UserMapper)
+- [x] POST /api/profile (update nickname/about)
+- [x] POST /api/profile/password (BCrypt change password, confirmPassword validation)
+- [x] userRepository.save() removal + @Transactional on write methods
+- [x] UserRepository out of controller → UserService.getProfile()
+- [x] CurrentUserService (userId from JWT, DRY)
+- [x] Business checks moved from controller to service layer
+- [x] handleUnexpected → "Internal server error" (no leak)
+- [x] User.equals/hashCode on id (instead of username)
+- [x] Удаление ProfileServlet, ProfileEditServlet, AvatarSelectServlet
 
 #### 🔲 Сессия 12 — TestController (опрос)
 - [ ] POST /test/start
@@ -210,8 +217,8 @@
 | # | Файл | Строка | Сессия | Статус |
 |---|------|--------|--------|--------|
 | 1 | PasswordUtil.java | 15 | 6 | ✅ |
-| 2 | ProfileEditServlet.java | 44 | 11 | 🔲 |
-| 3 | ProfileEditServlet.java | 45 | 11 | 🔲 |
+| 2 | ProfileEditServlet.java | 44 | 11 | ✅ |
+| 3 | ProfileEditServlet.java | 45 | 11 | ✅ |
 | 4 | ResultServlet.java | 55 | 13 | 🔲 |
 | 5 | AvatarUploadServlet.java | 52 | 20 | 🔲 |
 | 6 | AdminBlockUserServlet.java | 27 | 14 | 🔲 |
@@ -245,7 +252,7 @@
 | 16 | QuestionServlet.java | 35 | 12 | 🔲 |
 | 17 | AdminUserServlet.java | 56 | 14 | 🔲 |
 | 18 | AvatarSelectServlet.java | 51 | 20 | 🔲 |
-| 19 | ProfileEditServlet.java | 44 (old) | 11 | 🔲 |
+| 19 | ProfileEditServlet.java | 44 (old) | 11 | ✅ |
 | 20 | AdminUserServlet.java | 82 (duplicate) | 14 | 🔲 |
 
 ### INFO (7 шт)

@@ -80,12 +80,12 @@ public class User {
         if (this == o) return true;
         if (!(o instanceof User)) return false;
         User user = (User) o;
-        return username != null && username.equals(user.username);
+        return id != null && id.equals(user.id);
     }
 
     @Override
     public int hashCode() {
-        return username != null ? username.hashCode() : 0;
+        return id != null ? id.hashCode() : 0;
     }
 
 }

@@ -177,4 +177,34 @@
 - `UserValidation.java` — 14 ошибок (Session 16)
 - `QuestionValidator.java` — 10 ошибок (Session 16)
 
-**Следующая сессия:** 11 — ProfileController
+## Сессия 11 — ProfileController + Code Improvements
+
+**Дата:** 2026-07-08
+
+**Сделано — Profile REST API:**
+- `ProfileResponse.java` — record (id, username, email, nickname, about, avatarPath, role, createdAt)
+- `ProfileUpdateRequest.java` — record (nickname, about)
+- `PasswordChangeRequest.java` — record (currentPassword, newPassword, confirmPassword)
+- `UserMapper.java` — MapStruct interface (componentModel = spring)
+- `UserService.java` — +updateProfile(), +changePassword(), +getProfile()
+- `UserServiceImpl.java` — реализация updateProfile (set nickname/about), changePassword (BCrypt verify via PasswordEncoder)
+- `ProfileController.java` — @RestController:
+  - GET /api/profile → 200 + ProfileResponse
+  - POST /api/profile → 200 + ProfileResponse (update nickname/about)
+  - POST /api/profile/password → 200 (validate confirmPassword, BCrypt verify)
+- Удалены из src/: ProfileServlet.java, ProfileEditServlet.java, AvatarSelectServlet.java
+
+**Сделано — Code Improvements:**
+- **#1 @Transactional + убрать save()** — @Transactional на write-методы, Hibernate Dirty Checking вместо явных save()
+- **#2 UserRepository из контроллера** — вынесен в UserService.getProfile()
+- **#3 CurrentUserService** — новый компонент для извлечения userId из JWT (DRY)
+- **#5 Бизнес-проверки в сервис** — проверка confirmPassword перенесена из контроллера в UserServiceImpl.changePassword()
+- **#6 Internal error → generic** — handleUnexpected() возвращает "Internal server error" вместо exception.getMessage()
+- **#7 equals/hashCode на id** — User.equals() и hashCode() переведены с username на id (Hibernate best practice)
+- `mvn clean compile -pl web -am` — common SUCCESS (13 files), web: 24 errors (2 intentionally broken файла)
+
+**Intentionally broken (ждут будущих сессий):**
+- `UserValidation.java` — 14 ошибок (Session 16)
+- `QuestionValidator.java` — 10 ошибок (Session 16)
+
+**Следующая сессия:** 12 — TestController (опрос)
