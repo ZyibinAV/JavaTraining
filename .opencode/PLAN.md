@@ -113,12 +113,16 @@
 - [x] User.equals/hashCode on id (instead of username)
 - [x] Удаление ProfileServlet, ProfileEditServlet, AvatarSelectServlet
 
-#### 🔲 Сессия 12 — TestController (опрос)
-- [ ] POST /test/start
-- [ ] GET /question
-- [ ] POST /question (answer)
-- [ ] InterviewState: сессионный пока (HttpSession)
-- [ ] Удаление StartServlet, QuestionServlet (старые)
+#### ✅ Сессия 12 — TestController (опрос) (2026-07-08)
+- [x] POST /api/test/start (TestStartRequest → TestService.startTest → InterviewState в HttpSession)
+- [x] GET /api/test/question (InterviewState из сессии → QuestionResponse)
+- [x] POST /api/test/question (AnswerRequest → TestService.processAnswer → AnswerResultResponse с nextQuestion)
+- [x] InterviewState: сессионный пока (HttpSession, IF_REQUIRED в SecurityConfig)
+- [x] TestService — выделение бизнес-логики из контроллера
+- [x] SecurityConfig: sessionCreationPolicy STATELESS → IF_REQUIRED
+- [x] TopicLoader.findByCode: orElse(null) → orElseThrow(TopicNotFoundException) (фикс #14)
+- [x] Удаление StartServlet, QuestionServlet (старые)
+- [x] DTO: TestStartRequest, AnswerRequest, AnswerItem, QuestionResponse, AnswerResultResponse, AnswerResult
 
 #### 🔲 Сессия 13 — TestController (результат)
 - [ ] GET /result
@@ -239,21 +243,22 @@
 | 3 | BaseServlet.java | 62 | 4 | ✅ |
 | 4 | LoginServlet.java | 34 | 10 | ✅ |
 | 5 | ProfileEditServlet.java | 48 | 11 | 🔲 |
-| 6 | QuestionServlet.java | 71 | 12 | 🔲 |
-| 7 | QuestionServlet.java | 79 | 12 | 🔲 |
+| 6 | QuestionServlet.java | 71 | 12 | ✅ (файл удалён) |
+| 7 | QuestionServlet.java | 79 | 12 | ✅ (файл удалён) |
 | 8 | ResultServlet.java | 62 | 13 | 🔲 |
 | 9 | AvatarUploadServlet.java | 56 | 20 | 🔲 |
 | 10 | AdminUserServlet.java | 82 | 14 | 🔲 |
 | 11 | AdminTestServlet.java | 262 | 14 | 🔲 |
 | 12 | QuestionService.java | 45 | 12 | 🔲 |
 | 13 | TestResultService.java | 30 | 13 | 🔲 |
-| 14 | StartServlet.java | 46 | 12 | 🔲 |
+| 14 | StartServlet.java | 46 | 12 | ✅ (файл удалён, логика в TopicLoader.findByCode → orElseThrow) |
 | 15 | QuestionValidator.java | 36 | 16 | 🔲 |
-| 16 | QuestionServlet.java | 35 | 12 | 🔲 |
+| 16 | QuestionServlet.java | 35 | 12 | ✅ (файл удалён) |
 | 17 | AdminUserServlet.java | 56 | 14 | 🔲 |
 | 18 | AvatarSelectServlet.java | 51 | 20 | 🔲 |
 | 19 | ProfileEditServlet.java | 44 (old) | 11 | ✅ |
 | 20 | AdminUserServlet.java | 82 (duplicate) | 14 | 🔲 |
+| 21 | TopicLoader.java | 21 | 12 | ✅ (orElse(null) → orElseThrow) |
 
 ### INFO (7 шт)
 

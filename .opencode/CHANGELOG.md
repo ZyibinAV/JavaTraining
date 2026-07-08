@@ -207,4 +207,40 @@
 - `UserValidation.java` — 14 ошибок (Session 16)
 - `QuestionValidator.java` — 10 ошибок (Session 16)
 
-**Следующая сессия:** 12 — TestController (опрос)
+## Сессия 12 — TestController (опрос)
+
+**Дата:** 2026-07-08
+
+**Сделано — Test REST API:**
+- `TestStartRequest.java` — record (List topics, int questionCount)
+- `AnswerRequest.java` — record (int answerIndex)
+- `AnswerItem.java` — record (int index, String text) — без correctAnswerIndex
+- `QuestionResponse.java` — record (questionId, questionText, answers, questionNumber, totalQuestions, score, finished)
+- `AnswerResultResponse.java` — record (correct, correctAnswerIndex, finished, score, totalQuestions, nextQuestion)
+- `AnswerResult.java` — record (correct, correctAnswerIndex, finished, score, totalQuestions) — внутренний DTO
+- `TestService.java` — @Service: startTest(TestStartRequest → InterviewState), processAnswer(InterviewState, int → AnswerResult)
+- `TestController.java` — @RestController:
+  - POST /api/test/start → 200 + QuestionResponse (первый вопрос)
+  - GET /api/test/question → 200 + QuestionResponse (текущий вопрос) или 204 (нет теста)
+  - POST /api/test/question → 200 + AnswerResultResponse (статус + следующий вопрос)
+
+**Сделано — изменения:**
+- `SecurityConfig.java` — sessionCreationPolicy: STATELESS → IF_REQUIRED (для HttpSession)
+- `TopicLoader.java:21` — orElse(null) → orElseThrow(TopicNotFoundException) (фикс review #14)
+
+**Удалено из src/:**
+- `StartServlet.java` — полностью заменён TestController.startTest()
+- `QuestionServlet.java` — полностью заменён TestController.getQuestion() + answerQuestion()
+
+**Review-фиксы:**
+- #6 QuestionServlet.java:71 — ✅ (файл удалён)
+- #7 QuestionServlet.java:79 — ✅ (файл удалён)
+- #14 StartServlet.java:46 — ✅ (файл удалён, логика в TopicLoader.findByCode с orElseThrow)
+- #16 QuestionServlet.java:35 — ✅ (файл удалён)
+- #21 TopicLoader.java:21 — ✅ (orElseThrow вместо null)
+
+**Intentionally broken (ждут будущих сессий):**
+- `UserValidation.java` — 14 ошибок (Session 16)
+- `QuestionValidator.java` — 10 ошибок (Session 16)
+
+**Следующая сессия:** 13 — TestController (результат)

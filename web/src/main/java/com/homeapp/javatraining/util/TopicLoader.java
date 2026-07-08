@@ -1,5 +1,6 @@
 package com.homeapp.javatraining.util;
 
+import com.homeapp.javatraining.exception.topic.TopicNotFoundException;
 import com.homeapp.javatraining.model.Topic;
 import com.homeapp.javatraining.repository.TopicRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ public class TopicLoader {
     }
 
     public Topic findByCode(String code) {
-        return topicRepository.findByCode(code).orElse(null);
+        return topicRepository.findByCode(code)
+                .orElseThrow(() -> new TopicNotFoundException(code));
     }
 }
