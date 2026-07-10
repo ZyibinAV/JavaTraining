@@ -124,11 +124,11 @@
 - [x] Удаление StartServlet, QuestionServlet (старые)
 - [x] DTO: TestStartRequest, AnswerRequest, AnswerItem, QuestionResponse, AnswerResultResponse, AnswerResult
 
-#### 🔲 Сессия 13 — TestController (результат)
-- [ ] GET /result
-- [ ] TestResultService: разделение process + save
-- [ ] Агрегация тем (fix мультитемных тестов)
-- [ ] Удаление ResultServlet
+#### ✅ Сессия 13 — TestController (результат) (2026-07-10)
+- [x] GET /api/test/result
+- [x] TestResultService: разделение processResult + saveResult
+- [x] Агрегация тем (@ManyToMany Set<Topic>, fix #4)
+- [x] Удаление ResultServlet
 
 #### 🔲 Сессия 14 — AdminControllers
 - [ ] AdminUserController (CRUD, block, role)
@@ -223,12 +223,12 @@
 | 1 | PasswordUtil.java | 15 | 6 | ✅ |
 | 2 | ProfileEditServlet.java | 44 | 11 | ✅ |
 | 3 | ProfileEditServlet.java | 45 | 11 | ✅ |
-| 4 | ResultServlet.java | 55 | 13 | 🔲 |
+| 4 | ResultServlet.java | 55 | 13 | ✅ |
 | 5 | AvatarUploadServlet.java | 52 | 20 | 🔲 |
 | 6 | AdminBlockUserServlet.java | 27 | 14 | 🔲 |
 | 7 | AdminChangeRoleServlet.java | 31 | 14 | 🔲 |
 | 8 | AdminUserService.java | 40 | 8 | 🔲 |
-| 9 | ResultServlet.java | 46 | 13 | 🔲 |
+| 9 | ResultServlet.java | 46 | 13 | ✅ |
 | 10 | AdminStatisticsService.java | 1 | 4 | ✅ |
 | 11 | BaseServlet.java | 91 | 4 | ✅ |
 | 12 | AuthenticationService.java | 1 | 4 | ✅ |
@@ -245,12 +245,12 @@
 | 5 | ProfileEditServlet.java | 48 | 11 | 🔲 |
 | 6 | QuestionServlet.java | 71 | 12 | ✅ (файл удалён) |
 | 7 | QuestionServlet.java | 79 | 12 | ✅ (файл удалён) |
-| 8 | ResultServlet.java | 62 | 13 | 🔲 |
+| 8 | ResultServlet.java | 62 | 13 | ✅ (файл удалён) |
 | 9 | AvatarUploadServlet.java | 56 | 20 | 🔲 |
 | 10 | AdminUserServlet.java | 82 | 14 | 🔲 |
 | 11 | AdminTestServlet.java | 262 | 14 | 🔲 |
 | 12 | QuestionService.java | 45 | 12 | 🔲 |
-| 13 | TestResultService.java | 30 | 13 | 🔲 |
+| 13 | TestResultService.java | 30 | 13 | ✅ (split process+save) |
 | 14 | StartServlet.java | 46 | 12 | ✅ (файл удалён, логика в TopicLoader.findByCode → orElseThrow) |
 | 15 | QuestionValidator.java | 36 | 16 | 🔲 |
 | 16 | QuestionServlet.java | 35 | 12 | ✅ (файл удалён) |

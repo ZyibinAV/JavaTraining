@@ -28,12 +28,12 @@
 
 ```
 User (id, username, passwordHash, email, nickname, about, avatarPath, role, createdAt, blocked, version)
-  └── 1:N → TestResult (id, user, topic, totalQuestions, correctAnswers, passed, finishedAt, version)
+  └── 1:N → TestResult (id, user, topics M:N, totalQuestions, correctAnswers, passed, finishedAt, version)
 
 Topic (id, code, displayName, version)
   ├── 1:N → Question (id, questionText, topic, correctAnswerIndex, answers, version)
   │             └── 1:N → Answer (id, answerText, answerIndex, question, version)
-  └── 1:N → TestResult
+  └── M:N → TestResult (through test_results_topics join table)
 
 InterviewState (session-only, НЕ entity)
   - topics: Set<Topic>
@@ -71,13 +71,14 @@ InterviewState (session-only, НЕ entity)
 - **Объяснение изменений:** каждое изменение должно сопровождаться пояснением: *зачем* оно нужно (какую проблему решает), *где* именно сделано (файл + строка/секция), *почему* выбран именно такой подход, и *какую пользу* это приносит проекту (упрощение, безопасность, производительность, подготовка к следующему шагу).
 - **Завершение сессии:** когда ты говоришь "заканчиваю сессию" (или аналогично), я обновляю AGENTS.md (прогресс), CHANGELOG.md, PLAN.md (статус задач) и пишу промт для быстрого восстановления контекста на следующую сессию.
 
-## 7. Список замечаний ревью (40 шт)
+## 7. Список замечаний ревью (37 шт)
 
 Группировка по severity:
-- **ERROR (13):** PasswordUtil SHA-256, ProfileEditServlet хэш, ResultServlet questions.get(0), AdminChangeRoleServlet valueOf, AvatarUploadServlet substring, AdminBlockUserServlet репозиторий, AdminUserService права, ResultServlet доступ, AdminStatisticsService отсутствие, AdminStatisticsService прямые запросы, остальные ERROR
-- **WARNING (20):** SRP, дублирование, локализация, мёртвый код, лямбды в контроллерах и т.д.
+- **ERROR (12):** PasswordUtil SHA-256, ProfileEditServlet хэш, AdminChangeRoleServlet valueOf, AvatarUploadServlet substring, AdminBlockUserServlet репозиторий, AdminUserService права, AdminStatisticsService отсутствие, AdminStatisticsService прямые запросы, остальные ERROR
+- **WARNING (18):** SRP, дублирование, локализация, мёртвый код, лямбды в контроллерах и т.д.
 - **INFO (7):** константы, комментарии, магические числа
 
+Решённые в Session 13: #4 (ERROR ResultServlet questions.get(0) — @ManyToMany), #8 (WARNING ResultServlet:62 — файл удалён), #13 (WARNING TestResultService:30 — split process + save)
 Полный список → PLAN.md (чек-лист ревью)
 
 ## 8. Прогресс
@@ -99,3 +100,4 @@ _Обновляется в конце каждой сессии_
 | 10 | ✅ Выполнена | 2026-07-07 |
 | 11 | ✅ Выполнена | 2026-07-08 |
 | 12 | ✅ Выполнена | 2026-07-08 |
+| 13 | ✅ Выполнена | 2026-07-10 |

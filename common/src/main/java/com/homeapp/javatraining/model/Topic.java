@@ -7,10 +7,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name = "topics",  indexes = {
+@Table(name = "topics", indexes = {
         @Index(name = "idx_topics_code", columnList = "code")
 })
 @Getter
@@ -34,8 +36,8 @@ public class Topic {
     @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Question> questions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "topic", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    private List<TestResult> testResults = new ArrayList<>();
+    @ManyToMany(mappedBy = "topics", fetch = FetchType.LAZY)
+    private Set<TestResult> testResults = new HashSet<>();
 
     public Topic(String code, String displayName) {
         this.code = code;
@@ -54,7 +56,12 @@ public class Topic {
 
     public void addTestResult(TestResult result) {
         testResults.add(result);
-        result.setTopic(this);
+        result.getTopics().add(this);
+    }
+
+    public void removeTestResult(TestResult result) {
+        testResults.remove(result);
+        result.getTopics().remove(this);
     }
 
     @Override

@@ -10,9 +10,9 @@ import java.util.List;
 @Repository
 public interface TestResultRepository extends JpaRepository<TestResult, Long> {
 
-    @EntityGraph(attributePaths = {"user", "topic"})
+    @EntityGraph(attributePaths = {"user", "topics"})
     List<TestResult> findByUserId(Long userId);
 
-    @EntityGraph(attributePaths = {"user", "topic"})
+    @EntityGraph(attributePaths = {"user", "topics"})
     List<TestResult> findAll();
 }

@@ -11,10 +11,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -54,18 +51,18 @@ public class AdminStatisticsService {
         Map<String, TopicStats> topicStats = new HashMap<>();
 
         for (TestResult r : results) {
-            if (r.getTopic() == null) continue;
+            Set<Topic> topics = r.getTopics();
+            if (topics == null || topics.isEmpty()) continue;
 
-            Topic topic = r.getTopic();
-
-            TopicStats stats = topicStats.computeIfAbsent(
-                    topic.getCode(),
-                    code -> new TopicStats(code, topic.getDisplayName())
-            );
-
-            stats.incrementTotal();
-            if (r.isPassed()) {
-                stats.incrementPassed();
+            for (Topic topic : topics) {
+                TopicStats stats = topicStats.computeIfAbsent(
+                        topic.getCode(),
+                        code -> new TopicStats(code, topic.getDisplayName())
+                );
+                stats.incrementTotal();
+                if (r.isPassed()) {
+                    stats.incrementPassed();
+                }
             }
         }
 

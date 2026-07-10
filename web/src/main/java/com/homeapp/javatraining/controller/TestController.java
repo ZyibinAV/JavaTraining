@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.homeapp.javatraining.dto.TestResultResponse;
+import com.homeapp.javatraining.model.User;
+import com.homeapp.javatraining.service.TestResultService;
+import com.homeapp.javatraining.service.UserService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +34,8 @@ public class TestController {
 
     private final TestService testService;
     private final CurrentUserService currentUserService;
+    private final TestResultService testResultService;
+    private final  UserService userService;
 
     private static final String SESSION_ATTR = "interviewState";
 
@@ -92,6 +98,25 @@ public class TestController {
         );
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/result")
+    public ResponseEntity<TestResultResponse> getResult(@AuthenticationPrincipal Jwt jwt, HttpSession session) {
+        log.debug("GET /api/test/result by user {}", currentUserService.getCurrentUserId(jwt));
+        InterviewState state = getState(session);
+        if (state == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        if (!state.isFinished()) {
+            return  ResponseEntity.badRequest().build();
+        }
+
+        User user = userService.getProfile(currentUserService.getCurrentUserId(jwt));
+        testResultService.saveResult(user, state);
+        TestResultResponse response = testResultService.processResult(state);
+        session.removeAttribute(SESSION_ATTR);
+        log.debug("Test completed, result: {}", response);
+        return  ResponseEntity.ok(response);
     }
 
     private QuestionResponse toQuestionResponse(InterviewState state) {

@@ -4,9 +4,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -14,20 +16,21 @@ import java.time.format.DateTimeFormatter;
 @Entity
 @Table(name = "test_results", indexes = {
         @Index(name = "idx_test_results_user_id", columnList = "user_id"),
-        @Index(name = "idx_test_results_topic_id", columnList = "topic_id")
 })
 public class TestResult {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-
     private User user;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "topic_id", nullable = false)
 
-    private Topic topic;
+    @ManyToMany
+    @JoinTable(name = "test_results_topics",
+    joinColumns = @JoinColumn(name = "test_result_id"),
+    inverseJoinColumns = @JoinColumn(name = "topic_id"))
+    private Set<Topic> topics = new HashSet<>();
 
     @Version
     private Long version;
@@ -42,22 +45,23 @@ public class TestResult {
     private LocalDateTime finishedAt;
 
     public TestResult(User user,
-                      Topic topic,
+                      Set<Topic> topics,
                       int totalQuestions,
                       int correctAnswers,
                       boolean passed,
                       LocalDateTime finishedAt) {
         this.user = user;
-        this.topic = topic;
+        this.topics = topics;
         this.totalQuestions = totalQuestions;
         this.correctAnswers = correctAnswers;
         this.passed = passed;
         this.finishedAt = finishedAt;
-
     }
 
     public String getTopicDisplayName() {
-        return topic.getDisplayName();
+        return topics.stream()
+                .map(Topic::getDisplayName)
+                .collect(Collectors.joining(", "));
     }
 
     public String getFormattedFinishedAt() {

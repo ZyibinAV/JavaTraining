@@ -243,4 +243,36 @@
 - `UserValidation.java` — 14 ошибок (Session 16)
 - `QuestionValidator.java` — 10 ошибок (Session 16)
 
-**Следующая сессия:** 13 — TestController (результат)
+## Session 13 — TestController (результат) | 2026-07-10
+
+**Сделано — Test REST API:**
+- `TestResultResponse.java` — record (correctAnswers, totalQuestions, passed, score) с компактным конструктором для процента
+- `GET /api/test/result` — достаёт InterviewState из сессии, проверяет isExpired/isFinished, вызывает `saveResult()` + `processResult()`, очищает сессию
+
+**Сделано — Доменная модель M:N:**
+- `TestResult.java` — `@ManyToOne Topic` → `@ManyToMany Set<Topic>` с join table `test_results_topics` (review #4)
+- `Topic.java` — `@OneToMany List<TestResult>` → `@ManyToMany(mappedBy="topics") Set<TestResult>`
+- Конструктор TestResult: `Topic topic` → `Set<Topic> topics`
+- `TestResultRepository.java` — EntityGraph: `"topic"` → `"topics"`
+
+**Сделано — Split TestResultService:**
+- `processAndSaveResult` разделён на `processResult(InterviewState)` (только вычисления) и `saveResult(User, InterviewState)` (только БД)
+- Topics из `state.getTopics()` вместо `questions.get(0).getTopic()` (fix #4)
+
+**Адаптированы под Set:**
+- `AdminStatisticsService.java` — итерация по `r.getTopics()`
+- `UserStatisticsServiceImpl.java` — итерация по `result.getTopics()`
+
+**Удалено из src/:**
+- `ResultServlet.java` — весь функционал перенесён в REST endpoint
+
+**Review-фиксы:**
+- #4 (ERROR) — ResultServlet questions.get(0) — @ManyToMany Set<Topic>
+- #8 (WARNING) — ResultServlet:62 — файл удалён
+- #13 (WARNING) — TestResultService:30 — split process + save
+
+**Intentionally broken (ждут будущих сессий):**
+- `UserValidation.java` — 14 ошибок (Session 16)
+- `QuestionValidator.java` — 10 ошибок (Session 16)
+
+**Следующая сессия:** 14 — AdminControllers
