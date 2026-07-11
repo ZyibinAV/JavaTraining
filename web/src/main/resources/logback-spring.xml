@@ -1,5 +1,5 @@
 <configuration>
-    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%t] %c{1.} - %msg%n"/>
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%t] %logger{36} - %msg%n"/>
     <property name="LOG_DIR" value="${LOG_DIR:-logs}"/>
 
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">

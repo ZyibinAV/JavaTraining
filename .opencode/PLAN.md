@@ -158,11 +158,12 @@
 
 ### Фаза 6: Thymeleaf
 
-#### 🔲 Сессия 17 — Layout + Auth templates
-- [ ] thymeleaf-layout-dialect
-- [ ] layout.html (header + footer)
-- [ ] login.html, register.html
-- [ ] ViewController для простых страниц
+#### ✅ Сессия 17 — Layout + Auth templates (2026-07-11)
+- [x] thymeleaf-layout-dialect + thymeleaf-extras-springsecurity6
+- [x] layout.html (header + footer с навигацией)
+- [x] login.html (форма + GitHub OAuth2), register.html
+- [x] ViewController (login, register GET/POST) + CustomUserDetailsService + FormLoginSuccessHandler
+- [x] SecurityConfig: formLogin, logout, permitAll /register/** /css/**
 
 #### 🔲 Сессия 18 — Main templates
 - [ ] home.html, profile.html, profile-edit.html

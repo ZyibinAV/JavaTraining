@@ -389,3 +389,29 @@
 **Build:** BUILD SUCCESS, 0 errors ✅
 
 **Следующая сессия:** 17 — Thymeleaf Frontend
+
+## Session 17 — Layout + Auth templates | 2026-07-11
+
+**Сделано — Зависимости:**
+- `web/pom.xml` — добавлены `thymeleaf-layout-dialect`, `thymeleaf-extras-springsecurity6`
+
+**Сделано — Security (Java, пользователь):**
+- `config/CustomUserDetailsService.java` — UserDetailsService для form login (загрузка User из БД, authorities по роли)
+- `config/FormLoginSuccessHandler.java` — AuthenticationSuccessHandler: генерация JWT + HttpOnly cookie `jwt` + редирект на `/`
+- `config/SecurityConfig.java` — formLogin() с кастомной страницей `/login`, logout (чистка cookie `jwt`), permitAll для `/register/**`, `/css/**`
+
+**Сделано — Frontend:**
+- `templates/layout.html` — Layout Dialect decorator с навигацией (авторизован/нет, ADMIN)
+- `templates/login.html` — расширен: форма username+password, GitHub OAuth2, error/logout сообщения, использует layout
+- `templates/register.html` — форма регистрации (username, email, password) с валидацией HTML5
+- `static/css/style.css` — базовая стилизация (CSS vars, navbar, cards, формы, кнопки, таблицы, адаптивность)
+
+**Сделано — ViewController (Java, пользователь):**
+- `controller/ViewController.java` — @Controller:
+  - GET /login, GET /register → возвращают template
+  - POST /register → RegistrationService.registerUser() + JWT cookie + redirect
+- `config/SecurityConfig.java` — дублирование `/login` убрано (WebMvcConfigurer → ViewController)
+
+**Build:** `mvn clean compile -pl web -am` — BUILD SUCCESS ✅
+
+**Следующая сессия:** 18 — Main templates (home, profile, test pages)
