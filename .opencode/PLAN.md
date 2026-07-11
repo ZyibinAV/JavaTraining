@@ -130,11 +130,11 @@
 - [x] Агрегация тем (@ManyToMany Set<Topic>, fix #4)
 - [x] Удаление ResultServlet
 
-#### 🔲 Сессия 14 — AdminControllers
-- [ ] AdminUserController (CRUD, block, role)
-- [ ] AdminTestController (topics CRUD, questions CRUD, JSON import)
-- [ ] AdminStatisticsController
-- [ ] Удаление 6 admin-сервлетов
+#### ✅ Сессия 14 — AdminControllers (2026-07-11)
+- [x] AdminUserController (CRUD, block, role)
+- [x] AdminTopicController (topics CRUD, questions CRUD, JSON import)
+- [x] AdminStatisticsController
+- [x] Удаление 6 admin-сервлетов
 
 ### Фаза 4: DTO + MapStruct
 
@@ -225,9 +225,9 @@
 | 3 | ProfileEditServlet.java | 45 | 11 | ✅ |
 | 4 | ResultServlet.java | 55 | 13 | ✅ |
 | 5 | AvatarUploadServlet.java | 52 | 20 | 🔲 |
-| 6 | AdminBlockUserServlet.java | 27 | 14 | 🔲 |
-| 7 | AdminChangeRoleServlet.java | 31 | 14 | 🔲 |
-| 8 | AdminUserService.java | 40 | 8 | 🔲 |
+| 6 | AdminBlockUserServlet.java | 27 | 14 | ✅ (сервлет удалён, логика в AdminUserService.toggleBlockUser) |
+| 7 | AdminChangeRoleServlet.java | 31 | 14 | ✅ (сервлет удалён, Role.valueOf в контроллере) |
+| 8 | AdminUserService.java | 40 | 14 | ✅ (@Transactional + dirty checking вместо save()) |
 | 9 | ResultServlet.java | 46 | 13 | ✅ |
 | 10 | AdminStatisticsService.java | 1 | 4 | ✅ |
 | 11 | BaseServlet.java | 91 | 4 | ✅ |
@@ -247,17 +247,17 @@
 | 7 | QuestionServlet.java | 79 | 12 | ✅ (файл удалён) |
 | 8 | ResultServlet.java | 62 | 13 | ✅ (файл удалён) |
 | 9 | AvatarUploadServlet.java | 56 | 20 | 🔲 |
-| 10 | AdminUserServlet.java | 82 | 14 | 🔲 |
-| 11 | AdminTestServlet.java | 262 | 14 | 🔲 |
+| 10 | AdminUserServlet.java | 82 | 14 | ✅ (файл удалён) |
+| 11 | AdminTestServlet.java | 262 | 14 | ✅ (файл удалён) |
 | 12 | QuestionService.java | 45 | 12 | 🔲 |
 | 13 | TestResultService.java | 30 | 13 | ✅ (split process+save) |
 | 14 | StartServlet.java | 46 | 12 | ✅ (файл удалён, логика в TopicLoader.findByCode → orElseThrow) |
 | 15 | QuestionValidator.java | 36 | 16 | 🔲 |
 | 16 | QuestionServlet.java | 35 | 12 | ✅ (файл удалён) |
-| 17 | AdminUserServlet.java | 56 | 14 | 🔲 |
+| 17 | AdminUserServlet.java | 56 | 14 | ✅ (файл удалён) |
 | 18 | AvatarSelectServlet.java | 51 | 20 | 🔲 |
 | 19 | ProfileEditServlet.java | 44 (old) | 11 | ✅ |
-| 20 | AdminUserServlet.java | 82 (duplicate) | 14 | 🔲 |
+| 20 | AdminUserServlet.java | 82 (duplicate) | 14 | ✅ (файл удалён) |
 | 21 | TopicLoader.java | 21 | 12 | ✅ (orElse(null) → orElseThrow) |
 
 ### INFO (7 шт)

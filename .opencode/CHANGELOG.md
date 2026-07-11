@@ -275,4 +275,47 @@
 - `UserValidation.java` — 14 ошибок (Session 16)
 - `QuestionValidator.java` — 10 ошибок (Session 16)
 
-**Следующая сессия:** 14 — AdminControllers
+## Session 14 — AdminControllers | 2026-07-11
+
+**Сделано — Admin REST API (3 контроллера):**
+
+**AdminUserController** (`/api/admin/users`):
+- `GET /` — список пользователей
+- `GET /{id}` — пользователь по ID
+- `DELETE /{id}` — удалить пользователя
+- `POST /{id}/block` — toggle block
+- `PUT /{id}/role` — смена роли
+
+**AdminTopicController** (`/api/admin/topics`):
+- `GET /`, `POST /`, `DELETE /{code}` — CRUD тем
+- `GET /{code}/questions`, `POST /{code}/questions`, `PUT /{code}/questions/{id}`, `DELETE /{code}/questions/{id}` — CRUD вопросов
+- `POST /{code}/import` — JSON import (MultipartFile)
+
+**AdminStatisticsController** (`/api/admin/statistics`):
+- `GET /` — статистика (totalTests, passedTests, userStats, topicStats)
+
+**Сделано — изменения:**
+- `AdminUserService.java` — @Transactional, новые методы (getAllUsers, getUserById, deleteUser, toggleBlockUser), cleanup save() → dirty checking
+- `SecurityConfig.java` — добавлен `.requestMatchers("/api/admin/**").hasRole(Role.ADMIN.name())`
+- `AdminTestService.java` — убран мёртвый null-check в deleteTopic()
+
+**DTO (4 новых):**
+- `RoleUpdateRequest`, `TopicRequest`, `QuestionCreateRequest`, `QuestionUpdateRequest`
+
+**Удалено из src/:**
+- `AdminServlet.java`, `AdminUserServlet.java`, `AdminBlockUserServlet.java`, `AdminChangeRoleServlet.java`, `AdminTestServlet.java`, `AdminStatisticsServlet.java`
+
+**Review-фиксы:**
+- #6 (ERROR) — AdminBlockUserServlet:27 → ✅ (сервлет удалён)
+- #7 (ERROR) — AdminChangeRoleServlet:31 → ✅ (сервлет удалён)
+- #8 (ERROR) — AdminUserService:40 → ✅ (@Transactional + dirty checking)
+- #10 (WARNING) — AdminUserServlet:82 → ✅ (файл удалён)
+- #11 (WARNING) — AdminTestServlet:262 → ✅ (файл удалён)
+- #17 (WARNING) — AdminUserServlet:56 → ✅ (файл удалён)
+- #20 (WARNING) — AdminUserServlet:82 dup → ✅ (файл удалён)
+
+**Intentionally broken (ждут будущих сессий):**
+- `UserValidation.java` — 14 ошибок (Session 16)
+- `QuestionValidator.java` — 10 ошибок (Session 16)
+
+**Следующая сессия:** 15 — DTO + Mappers

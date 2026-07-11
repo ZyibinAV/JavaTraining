@@ -10,9 +10,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AdminUserService {
 
     private final UserRepository userRepository;
@@ -38,11 +43,34 @@ public class AdminUserService {
         }
 
         user.setRole(newRole);
-        userRepository.save(user);
 
         log.info("User {} role changed to {} by admin {}",
                 targetUserId,
                 newRole,
                 adminId);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public User getUserById(long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+    }
+
+    public void deleteUser(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+        userRepository.delete(user);
+    }
+
+    public void toggleBlockUser(long adminId, long targetUserId) {
+        User user = userRepository.findById(targetUserId)
+                .orElseThrow(() -> new UserNotFoundException(targetUserId));
+        if (user.getId() == adminId) {
+            throw new CannotChangeOwnRoleException();
+        }
+        user.setBlocked(!user.isBlocked());
     }
 }

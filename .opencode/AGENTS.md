@@ -71,14 +71,15 @@ InterviewState (session-only, НЕ entity)
 - **Объяснение изменений:** каждое изменение должно сопровождаться пояснением: *зачем* оно нужно (какую проблему решает), *где* именно сделано (файл + строка/секция), *почему* выбран именно такой подход, и *какую пользу* это приносит проекту (упрощение, безопасность, производительность, подготовка к следующему шагу).
 - **Завершение сессии:** когда ты говоришь "заканчиваю сессию" (или аналогично), я обновляю AGENTS.md (прогресс), CHANGELOG.md, PLAN.md (статус задач) и пишу промт для быстрого восстановления контекста на следующую сессию.
 
-## 7. Список замечаний ревью (37 шт)
+## 7. Список замечаний ревью (30 шт)
 
 Группировка по severity:
 - **ERROR (12):** PasswordUtil SHA-256, ProfileEditServlet хэш, AdminChangeRoleServlet valueOf, AvatarUploadServlet substring, AdminBlockUserServlet репозиторий, AdminUserService права, AdminStatisticsService отсутствие, AdminStatisticsService прямые запросы, остальные ERROR
 - **WARNING (18):** SRP, дублирование, локализация, мёртвый код, лямбды в контроллерах и т.д.
 - **INFO (7):** константы, комментарии, магические числа
 
-Решённые в Session 13: #4 (ERROR ResultServlet questions.get(0) — @ManyToMany), #8 (WARNING ResultServlet:62 — файл удалён), #13 (WARNING TestResultService:30 — split process + save)
+Решённые в Session 13: #4 (ERROR — @ManyToMany), #8 (WARNING — ResultServlet удалён), #13 (WARNING — split process+save)
+Решённые в Session 14: #6 (ERROR AdminBlockUserServlet), #7 (ERROR AdminChangeRoleServlet valueOf), #8 (ERROR AdminUserService save), #10 (WARNING AdminUserServlet:82), #11 (WARNING AdminTestServlet:262), #17 (WARNING AdminUserServlet:56), #20 (WARNING AdminUserServlet:82 dup)
 Полный список → PLAN.md (чек-лист ревью)
 
 ## 8. Прогресс
@@ -101,3 +102,4 @@ _Обновляется в конце каждой сессии_
 | 11 | ✅ Выполнена | 2026-07-08 |
 | 12 | ✅ Выполнена | 2026-07-08 |
 | 13 | ✅ Выполнена | 2026-07-10 |
+| 14 | ✅ Выполнена | 2026-07-11 |

@@ -51,9 +51,7 @@ public class AdminTestService {
 
     public void deleteTopic(String topicCode) {
         Topic topic = topicLoader.findByCode(topicCode);
-        if (topic == null) {
-            throw new TopicNotFoundException(topicCode);
-        }
+
         topicRepository.delete(topic);
         log.info("Topic deleted: {}", topicCode);
     }
