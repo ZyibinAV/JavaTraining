@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout}">
+<head>
+    <title>Результат теста</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="card result-card">
+            <h1 class="card-title">Тест завершён!</h1>
+            <div th:class="'result-score ' + (${result.passed()} ? 'passed' : 'failed')" th:text="${#numbers.formatDecimal(result.score(), 1, 1)} + '%'">75%</div>
+            <p class="result-detail" th:text="${result.correctAnswers()} + ' из ' + ${result.totalQuestions()} + ' правильных'">5 из 10</p>
+            <span th:if="${result.passed()}" class="badge badge-passed" style="font-size:1rem;padding:4px 16px;">Тест пройден</span>
+            <span th:if="${!result.passed()}" class="badge badge-failed" style="font-size:1rem;padding:4px 16px;">Тест не пройден</span>
+            <div class="result-actions">
+                <a href="/test/settings" class="btn btn-primary">Пройти ещё раз</a>
+                <a href="/" class="btn btn-link">На главную</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout}">
+<head>
+    <title>Админ-панель</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="page-header">
+            <h1 class="page-title">Панель администратора</h1>
+        </div>
+        <div class="admin-grid">
+            <a href="/admin/users" class="card admin-card">
+                <div class="stat-value" th:text="${statistics.totalTests}">0</div>
+                <div class="stat-label">Всего тестов</div>
+            </a>
+            <a href="/admin/users" class="card admin-card">
+                <div class="stat-value" th:text="${statistics.passedTests}">0</div>
+                <div class="stat-label">Пройдено тестов</div>
+            </a>
+            <a href="/admin/tests" class="card admin-card">
+                <div class="stat-value" th:text="${#lists.size(statistics.topicStats)}">0</div>
+                <div class="stat-label">Тем</div>
+            </a>
+            <a href="/admin/users" class="card admin-card">
+                <div class="stat-value" th:text="${#lists.size(statistics.userStats)}">0</div>
+                <div class="stat-label">Пользователей</div>
+            </a>
+        </div>
+        <div class="grid grid-3">
+            <a href="/admin/users" class="card admin-card">
+                <h2 class="card-title" style="font-size:1.2rem;">Пользователи</h2>
+                <p class="text-muted">Управление пользователями, блокировка, смена ролей</p>
+            </a>
+            <a href="/admin/tests" class="card admin-card">
+                <h2 class="card-title" style="font-size:1.2rem;">Тесты</h2>
+                <p class="text-muted">Управление темами и вопросами</p>
+            </a>
+            <a href="/admin/statistics" class="card admin-card">
+                <h2 class="card-title" style="font-size:1.2rem;">Статистика</h2>
+                <p class="text-muted">Детальная статистика по пользователям и темам</p>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

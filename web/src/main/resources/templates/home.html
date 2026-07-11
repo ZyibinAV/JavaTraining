@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}">
+<head>
+    <title>Главная</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="page-header">
+            <h1 class="page-title">Добро пожаловать, <span th:text="${profile.nickname() != null ? profile.nickname() : profile.username()}">User</span>!</h1>
+        </div>
+        <div class="grid grid-2">
+            <a href="/profile" class="card" style="text-decoration:none;color:inherit;display:block;">
+                <h2 class="card-title" style="font-size:1.2rem;">Мой профиль</h2>
+                <p style="color:var(--color-text-secondary);">Просмотр и редактирование профиля, смена аватара</p>
+            </a>
+            <a href="/test/settings" class="card" style="text-decoration:none;color:inherit;display:block;">
+                <h2 class="card-title" style="font-size:1.2rem;">Пройти тест</h2>
+                <p style="color:var(--color-text-secondary);">Выберите темы и проверьте свои знания Java</p>
+            </a>
+            <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" href="/admin" class="card" style="text-decoration:none;color:inherit;display:block;">
+                <h2 class="card-title" style="font-size:1.2rem;">Панель администратора</h2>
+                <p style="color:var(--color-text-secondary);">Управление пользователями, темами и статистикой</p>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

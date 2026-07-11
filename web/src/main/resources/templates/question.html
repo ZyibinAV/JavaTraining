@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout}">
+<head>
+    <title>Вопрос <span th:text="${question.questionNumber()} + ' из ' + ${question.totalQuestions()}">1 из 10</span></title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="question-card">
+            <div class="page-header">
+                <h1 class="page-title">Тест</h1>
+                <span class="badge badge-user" th:text="'Счёт: ' + ${question.score()}">0</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-bar-fill" th:style="'width:' + (${question.questionNumber()} * 100 / ${question.totalQuestions()}) + '%'"></div>
+            </div>
+            <p class="progress-text" th:text="'Вопрос ' + ${question.questionNumber()} + ' из ' + ${question.totalQuestions()}">1 из 10</p>
+
+            <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+            <h2 style="font-size:1.15rem;font-weight:600;margin-bottom:20px;line-height:1.5;" th:text="${question.questionText()}">Question text</h2>
+
+            <form th:action="@{/test/question}" method="post" class="form">
+                <div class="answers-group">
+                    <label th:each="answer : ${question.answers()}" class="answer-label">
+                        <input type="radio" th:name="answerIndex" th:value="${answer.index()}" required>
+                        <span th:text="${answer.text()}">Answer text</span>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Ответить</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

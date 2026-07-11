@@ -414,4 +414,42 @@
 
 **Build:** `mvn clean compile -pl web -am` — BUILD SUCCESS ✅
 
-**Следующая сессия:** 18 — Main templates (home, profile, test pages)
+## Session 18 — Main templates (home, profile, test pages) | 2026-07-11
+
+**Сделано — Frontend (opencode):**
+- `static/css/style.css` — +150 строк CSS (профиль, аватары, прогресс-бар, тест, результат)
+- `templates/home.html` — главная с приветствием и карточками-ссылками
+- `templates/profile.html` — отображение профиля (аватар, поля, роль, дата)
+- `templates/profile-edit.html` — форма nickname + about
+- `templates/avatar-select.html` — сетка 12 аватаров
+- `templates/test-settings.html` — чекбоксы тем + выбор кол-ва вопросов
+- `templates/question.html` — прогресс-бар, текст вопроса, radio-ответы
+- `templates/result.html` — счёт, процент, badge passed/failed
+
+**Сделано — Java (пользователь):**
+- `controller/ViewController.java` — +6 методов для `/`, `/profile`, `/profile/edit`, `/profile/avatar`
+- `controller/TestViewController.java` — новый @Controller с 5 методами для test flow
+
+**Build:** `mvn clean compile -pl web -am` — BUILD SUCCESS ✅ (75 source files)
+
+## Session 19 — Admin templates | 2026-07-11
+
+**Сделано — Java (opencode):**
+- `controller/admin/AdminViewController.java` — новый @Controller с 10 методами:
+  - GET /admin — дашборд
+  - GET/POST /admin/users, /admin/users/{id}/block, /admin/users/{id}/role, /admin/users/{id}/delete
+  - GET/POST /admin/tests, /admin/tests/create, /admin/tests/{code}/delete
+  - GET /admin/tests/{code}/questions, POST /admin/tests/{code}/questions/{id}/delete
+  - GET /admin/statistics
+
+**Сделано — Frontend (opencode):**
+- `templates/admin.html` — дашборд со статистикой и карточками-ссылками
+- `templates/users.html` — таблица пользователей с блокировкой/ролью/удалением
+- `templates/tests.html` — список тем + форма создания
+- `templates/test-questions.html` — вопросы темы с подсветкой правильного ответа
+- `templates/statistics.html` — статистика по пользователям и темам
+- `static/css/style.css` — + CSS (admin-grid, admin-card, admin-toolbar, table-actions, form-inline, form-select, text-muted/success/error)
+
+**Build:** `mvn clean compile -pl web -am` — BUILD SUCCESS ✅ (76 source files)
+
+**Следующая сессия:** 20 — MinIO

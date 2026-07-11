@@ -165,15 +165,19 @@
 - [x] ViewController (login, register GET/POST) + CustomUserDetailsService + FormLoginSuccessHandler
 - [x] SecurityConfig: formLogin, logout, permitAll /register/** /css/**
 
-#### 🔲 Сессия 18 — Main templates
-- [ ] home.html, profile.html, profile-edit.html
-- [ ] avatar-select.html, test-settings.html
-- [ ] question.html, result.html
+#### ✅ Сессия 18 — Main templates (2026-07-11)
+- [x] home.html, profile.html, profile-edit.html
+- [x] avatar-select.html, test-settings.html
+- [x] question.html, result.html
+- [x] Java: ViewController (+6 routes) + TestViewController (new, 5 routes)
+- [x] CSS: profile, avatar grid, progress bar, question, result styles
 
-#### 🔲 Сессия 19 — Admin templates
-- [ ] admin.html, users.html, tests.html
-- [ ] test-questions.html, statistics.html
-- [ ] CSS адаптация
+#### ✅ Сессия 19 — Admin templates (2026-07-11)
+- [x] admin.html, users.html, tests.html
+- [x] test-questions.html, statistics.html
+- [x] CSS адаптация (admin-grid, admin-card, form-inline, form-select, table-actions)
+- [x] AdminViewController.java (Java, 10 методов)
+- [x] Полный CRUD для пользователей, тем, вопросов + статистика
 
 ### Фаза 7: MinIO
 

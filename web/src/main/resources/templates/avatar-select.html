@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout}">
+<head>
+    <title>Выбор аватара</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="page-header">
+            <h1 class="page-title">Выбор аватара</h1>
+        </div>
+        <div class="card" style="max-width:600px;">
+            <p style="margin-bottom:20px;color:var(--color-text-secondary);">Выберите новый аватар:</p>
+            <div class="avatar-grid">
+                <form th:each="i : ${#numbers.sequence(1, 12)}" th:action="@{/profile/avatar}" method="post" class="inline-form">
+                    <input type="hidden" name="avatar" th:value="'/img/avatars/' + ${i} + '.svg'">
+                    <button type="submit" class="avatar-option" th:classappend="${currentAvatar == '/img/avatars/' + i + '.svg' ? 'selected' : ''}">
+                        <img th:src="@{'/img/avatars/' + ${i} + '.svg'}" th:alt="'Avatar ' + ${i}">
+                        <span style="font-size:.8rem;color:var(--color-text-secondary);" th:text="'#' + ${i}">#1</span>
+                    </button>
+                </form>
+            </div>
+            <div class="text-center">
+                <a href="/profile" class="btn btn-link">Назад к профилю</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

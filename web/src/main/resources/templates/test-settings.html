@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout}">
+<head>
+    <title>Настройки теста</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="page-header">
+            <h1 class="page-title">Настройки теста</h1>
+        </div>
+        <div class="card" style="max-width:500px;">
+            <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+            <form th:action="@{/test/settings}" method="post" class="form">
+                <div class="form-group">
+                    <label class="form-label">Выберите темы</label>
+                    <div class="checkbox-group">
+                        <label th:each="topic : ${topics}" class="checkbox-label">
+                            <input type="checkbox" th:name="topics" th:value="${topic.code()}" checked>
+                            <span th:text="${topic.displayName()}">Topic</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="questionCount" class="form-label">Количество вопросов</label>
+                    <select id="questionCount" name="questionCount" class="form-input">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Начать тест</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
