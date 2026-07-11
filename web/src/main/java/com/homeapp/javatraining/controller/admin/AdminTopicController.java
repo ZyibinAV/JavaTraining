@@ -1,7 +1,8 @@
 package com.homeapp.javatraining.controller.admin;
 
 import com.homeapp.javatraining.dto.*;
-import com.homeapp.javatraining.model.Answer;
+import com.homeapp.javatraining.dto.mapper.QuestionMapper;
+import com.homeapp.javatraining.dto.mapper.TopicMapper;
 import com.homeapp.javatraining.model.Question;
 import com.homeapp.javatraining.model.Topic;
 import com.homeapp.javatraining.service.AdminTestService;
@@ -14,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/admin/topics")
@@ -23,11 +23,14 @@ import java.util.stream.Collectors;
 public class AdminTopicController {
 
     private final AdminTestService adminTestService;
+    private final TopicMapper topicMapper;
+    private final QuestionMapper questionMapper;
 
     @GetMapping
-    public ResponseEntity<List<Topic>> getAllTopics() {
+    public ResponseEntity<List<TopicDTO>> getAllTopics() {
         log.debug("GET /api/admin/topics");
-        return ResponseEntity.ok(adminTestService.getAllTopics());
+        List<Topic> topics = adminTestService.getAllTopics();
+        return ResponseEntity.ok(topicMapper.toTopicDTOList(topics));
     }
 
     @PostMapping
@@ -45,12 +48,12 @@ public class AdminTopicController {
     }
 
     @GetMapping("/{code}/questions")
-    public ResponseEntity<List<QuestionResponse>> getQuestions(@PathVariable String code) {
+    public ResponseEntity<List<QuestionDTO>> getQuestions(@PathVariable String code) {
         log.debug("GET /api/admin/topics/{}/questions", code);
         List<Question> questions = adminTestService.getQuestionsByTopic(code);
-        List<QuestionResponse> response = questions.stream()
-                .map(this::toQuestionResponse)
-                .collect(Collectors.toList());
+        List<QuestionDTO> response = questions.stream()
+                .map(questionMapper::toQuestionDTO)
+                .toList();
         return ResponseEntity.ok(response);
     }
 
@@ -80,20 +83,5 @@ public class AdminTopicController {
         log.debug("POST /api/admin/topics/{}/import", code);
         List<Question> questions = adminTestService.importQuestionsFromJson(code, file.getInputStream());
         return ResponseEntity.ok(questions);
-    }
-
-    private QuestionResponse toQuestionResponse(Question q) {
-        return new QuestionResponse(
-                q.getId(),
-                q.getQuestionText(),
-                toAnswerItems(q.getAnswers()),
-                0, 0, 0, false
-        );
-    }
-
-    private List<AnswerItem> toAnswerItems(List<Answer> answers) {
-        return answers.stream()
-                .map(a -> new AnswerItem(a.getAnswerIndex(), a.getAnswerText()))
-                .collect(Collectors.toList());
     }
 }

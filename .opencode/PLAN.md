@@ -138,12 +138,15 @@
 
 ### Фаза 4: DTO + MapStruct
 
-#### 🔲 Сессия 15 — DTO + Mappers
-- [ ] UserDTO, QuestionDTO, TopicDTO, AnswerDTO, TestResultDTO
-- [ ] RegisterRequest, LoginRequest, AuthResponse
-- [ ] ProfileDTO, StatsDTO
-- [ ] UserMapper, QuestionMapper, TestResultMapper
-- [ ] Интеграция в контроллеры
+#### ✅ Сессия 15 — DTO + Mappers (2026-07-11)
+- [x] UserDTO, TopicDTO, AnswerDTO, QuestionDTO, TestResultDTO
+- [x] TopicMapper, AnswerMapper, QuestionMapper, TestResultMapper
+- [x] UserMapper дополнен (toUserDTO)
+- [x] AdminUserController — User → UserDTO
+- [x] AdminTopicController — GET endpoints → TopicDTO/QuestionDTO
+- [x] QuestionResponse — AnswerItem → AnswerDTO
+- [x] TestController — AnswerItem → AnswerDTO
+- [x] AnswerItem.java удалён
 
 ### Фаза 5: Validation
 

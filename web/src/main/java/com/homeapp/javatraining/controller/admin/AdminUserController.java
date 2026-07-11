@@ -2,6 +2,8 @@ package com.homeapp.javatraining.controller.admin;
 
 
 import com.homeapp.javatraining.dto.RoleUpdateRequest;
+import com.homeapp.javatraining.dto.UserDTO;
+import com.homeapp.javatraining.dto.mapper.UserMapper;
 import com.homeapp.javatraining.model.Role;
 import com.homeapp.javatraining.model.User;
 import com.homeapp.javatraining.service.AdminUserService;
@@ -21,17 +23,22 @@ import java.util.List;
 public class AdminUserController {
 
     private final AdminUserService adminUserService;
+    private final UserMapper userMapper;
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
         log.debug("GET /api/admin/users");
-        return  ResponseEntity.ok(adminUserService.getAllUsers());
+        List<UserDTO> users = adminUserService.getAllUsers().stream()
+                .map(userMapper::toUserDTO)
+                .toList();
+        return ResponseEntity.ok(users);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
         log.debug("GET /api/admin/users/{}", id);
-        return ResponseEntity.ok(adminUserService.getUserById(id));
+        User user = adminUserService.getUserById(id);
+        return ResponseEntity.ok(userMapper.toUserDTO(user));
     }
 
     @DeleteMapping("/{id}")

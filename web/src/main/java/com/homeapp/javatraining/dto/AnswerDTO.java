@@ -1,6 +1,6 @@
 package com.homeapp.javatraining.dto;
 
-public record AnswerItem(
+public record AnswerDTO(
         int index,
         String text
 ) {

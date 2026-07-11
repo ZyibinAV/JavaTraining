@@ -5,7 +5,7 @@ import java.util.List;
 public record QuestionResponse(
         Long questionId,
         String questionText,
-        List<AnswerItem> answers,
+        List<AnswerDTO> answers,
         int questionNumber,
         int totalQuestions,
         int score,

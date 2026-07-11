@@ -318,4 +318,33 @@
 - `UserValidation.java` — 14 ошибок (Session 16)
 - `QuestionValidator.java` — 10 ошибок (Session 16)
 
-**Следующая сессия:** 15 — DTO + Mappers
+## Session 15 — DTO + MapStruct | 2026-07-11
+
+**Сделано — DTO (5 новых records):**
+- `UserDTO.java` — id, username, email, nickname, about, avatarPath, role, createdAt, blocked
+- `TopicDTO.java` — code, displayName
+- `AnswerDTO.java` — index, text (замена AnswerItem)
+- `QuestionDTO.java` — id, questionText, correctAnswerIndex, topicCode, answers
+- `TestResultDTO.java` — id, userId, topicCodes, totalQuestions, correctAnswers, passed, finishedAt
+
+**Сделано — Mappers (4 новых + 1 дополнен):**
+- `AnswerMapper.java` — toAnswerDTO, toAnswerDTOList (mapping answerIndex→index, answerText→text)
+- `TopicMapper.java` — toTopicDTO, toTopicDTOList
+- `QuestionMapper.java` — toQuestionDTO (uses AnswerMapper, topic.code→topicCode)
+- `TestResultMapper.java` — toTestResultDTO (user.id→userId, Set<Topic>→Set<String> via @Named)
+- `UserMapper.java` — добавлен toUserDTO(User)
+
+**Сделано — Контроллеры:**
+- `AdminUserController.java` — getAllUsers/getUserById возвращают UserDTO вместо User (через UserMapper)
+- `AdminTopicController.java` — getAllTopics → List<TopicDTO>, getQuestions → List<QuestionDTO>; удалены toQuestionResponse/toAnswerItems
+- `QuestionResponse.java` — List&lt;AnswerItem&gt; → List&lt;AnswerDTO&gt;
+- `TestController.java` — toAnswerItems создаёт AnswerDTO вместо AnswerItem
+
+**Удалено:**
+- `AnswerItem.java` — заменён на AnswerDTO (поля идентичны: index, text)
+
+**Review-фиксы:** нет (решались архитектурные issues из review не затрагивались)
+
+**Build:** 24 expected errors (14 UserValidation + 10 QuestionValidator)
+
+**Следующая сессия:** 16 — Bean Validation

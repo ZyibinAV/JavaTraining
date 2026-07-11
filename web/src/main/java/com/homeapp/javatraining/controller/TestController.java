@@ -24,7 +24,6 @@ import com.homeapp.javatraining.service.TestResultService;
 import com.homeapp.javatraining.service.UserService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/test")
@@ -136,10 +135,10 @@ public class TestController {
         );
     }
 
-    private List<AnswerItem> toAnswerItems(List<Answer> answers) {
+    private List<AnswerDTO> toAnswerItems(List<Answer> answers) {
         return answers.stream()
-                .map(a -> new AnswerItem(a.getAnswerIndex(), a.getAnswerText()))
-                .collect(Collectors.toList());
+                .map(a -> new AnswerDTO(a.getAnswerIndex(), a.getAnswerText()))
+                .toList();
     }
 
     private InterviewState getState(HttpSession session) {
