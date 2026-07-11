@@ -2,6 +2,7 @@ package com.homeapp.javatraining.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.homeapp.javatraining.exception.ValidationException;
 import com.homeapp.javatraining.exception.question.QuestionImportException;
 import com.homeapp.javatraining.exception.question.QuestionNotFoundException;
 import com.homeapp.javatraining.exception.topic.TopicNotFoundException;
@@ -11,7 +12,6 @@ import com.homeapp.javatraining.model.Topic;
 import com.homeapp.javatraining.repository.QuestionRepository;
 import com.homeapp.javatraining.repository.TopicRepository;
 import com.homeapp.javatraining.util.TopicLoader;
-import com.homeapp.javatraining.validation.QuestionValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -182,10 +182,20 @@ public class AdminTestService {
     }
 
     private void validateQuestion(Question question) {
-        QuestionValidator.validate(List.of(question));
+        if (question.getQuestionText() == null || question.getQuestionText().isBlank()) {
+            throw new ValidationException("Question text cannot be blank", "questionText");
+        }
+        if (question.getAnswers() == null || question.getAnswers().isEmpty()) {
+            throw new ValidationException("Answers list cannot be empty", "answers");
+        }
+        if (question.getCorrectAnswerIndex() < 0 || question.getCorrectAnswerIndex() >= question.getAnswers().size()) {
+            throw new ValidationException("Invalid correct answer index", "correctAnswerIndex");
+        }
     }
 
     private void validateQuestions(List<Question> questions) {
-        QuestionValidator.validate(questions);
+        for (Question q : questions) {
+            validateQuestion(q);
+        }
     }
 }

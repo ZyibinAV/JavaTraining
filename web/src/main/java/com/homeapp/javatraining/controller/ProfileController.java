@@ -7,6 +7,7 @@ import com.homeapp.javatraining.dto.mapper.UserMapper;
 import com.homeapp.javatraining.model.User;
 import com.homeapp.javatraining.service.CurrentUserService;
 import com.homeapp.javatraining.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -32,7 +33,7 @@ public class ProfileController {
     @PostMapping
     public ResponseEntity<ProfileResponse> updateProfile(
             @AuthenticationPrincipal Jwt jwt,
-            @RequestBody ProfileUpdateRequest request) {
+            @Valid @RequestBody ProfileUpdateRequest request) {
         Long userId = currentUserService.getCurrentUserId(jwt);
         User user = userService.updateProfile(userId, request.nickname(), request.about());
         return ResponseEntity.ok(userMapper.toProfileResponse(user));
@@ -41,7 +42,7 @@ public class ProfileController {
     @PostMapping("/password")
     public ResponseEntity<Void> changePassword(
             @AuthenticationPrincipal Jwt jwt,
-            @RequestBody PasswordChangeRequest request) {
+            @Valid @RequestBody PasswordChangeRequest request) {
         Long userId = currentUserService.getCurrentUserId(jwt);
         userService.changePassword(userId, request.currentPassword(),
                 request.newPassword(), request.confirmPassword());

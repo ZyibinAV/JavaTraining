@@ -7,6 +7,7 @@ import com.homeapp.javatraining.model.Question;
 import com.homeapp.javatraining.service.CurrentUserService;
 import com.homeapp.javatraining.service.TestService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -41,7 +42,7 @@ public class TestController {
     @PostMapping("/start")
     public ResponseEntity<QuestionResponse> startTest(
             @AuthenticationPrincipal Jwt jwt,
-            @RequestBody TestStartRequest request,
+            @Valid @RequestBody TestStartRequest request,
             HttpSession session) {
 
         log.debug("POST /api/test/start by user {}", currentUserService.getCurrentUserId(jwt));
@@ -70,7 +71,7 @@ public class TestController {
     @PostMapping("/question")
     public ResponseEntity<AnswerResultResponse> answerQuestion(
             @AuthenticationPrincipal Jwt jwt,
-            @RequestBody AnswerRequest request,
+            @Valid @RequestBody AnswerRequest request,
             HttpSession session) {
 
         log.debug("POST /api/test/question by user {}", currentUserService.getCurrentUserId(jwt));

@@ -13,8 +13,11 @@ import com.homeapp.javatraining.exception.user.InvalidRefreshTokenException;
 import com.homeapp.javatraining.exception.user.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.Objects;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -26,6 +29,21 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 exception.getMessage(),
                 exception.getField()
+        );
+        return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException exception) {
+        String field = Objects.requireNonNull(
+                exception.getBindingResult().getFieldError()).getField();
+        String message = Objects.requireNonNull(
+                exception.getBindingResult().getFieldError()).getDefaultMessage();
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                message,
+                field
         );
         return ResponseEntity.badRequest().body(response);
     }

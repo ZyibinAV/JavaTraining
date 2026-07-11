@@ -6,6 +6,7 @@ import com.homeapp.javatraining.dto.mapper.TopicMapper;
 import com.homeapp.javatraining.model.Question;
 import com.homeapp.javatraining.model.Topic;
 import com.homeapp.javatraining.service.AdminTestService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,7 @@ public class AdminTopicController {
     }
 
     @PostMapping
-    public ResponseEntity<Topic> createTopic(@RequestBody TopicRequest request) {
+    public ResponseEntity<Topic> createTopic(@Valid @RequestBody TopicRequest request) {
         log.debug("POST /api/admin/topics: {} - {}", request.code(), request.displayName());
         Topic topic = adminTestService.createTopic(request.code(), request.displayName());
         return ResponseEntity.status(HttpStatus.CREATED).body(topic);
@@ -58,14 +59,14 @@ public class AdminTopicController {
     }
 
     @PostMapping("/{code}/questions")
-    public ResponseEntity<Question> createQuestion(@PathVariable String code, @RequestBody QuestionCreateRequest request) {
+    public ResponseEntity<Question> createQuestion(@PathVariable String code, @Valid @RequestBody QuestionCreateRequest request) {
         log.debug("POST /api/admin/topics/{}/questions", code);
         Question question = adminTestService.createQuestion(code, request.questionText(), request.correctAnswerIndex(), request.answers());
         return ResponseEntity.status(HttpStatus.CREATED).body(question);
     }
 
     @PutMapping("/{code}/questions/{id}")
-    public ResponseEntity<Void> updateQuestion(@PathVariable String code, @PathVariable Long id, @RequestBody QuestionUpdateRequest request) {
+    public ResponseEntity<Void> updateQuestion(@PathVariable String code, @PathVariable Long id, @Valid @RequestBody QuestionUpdateRequest request) {
         log.debug("PUT /api/admin/topics/{}/questions/{}", code, id);
         adminTestService.updateQuestion(id, code, request.questionText(), request.correctAnswerIndex(), request.answers());
         return ResponseEntity.ok().build();

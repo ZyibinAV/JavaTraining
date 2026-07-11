@@ -347,4 +347,45 @@
 
 **Build:** 24 expected errors (14 UserValidation + 10 QuestionValidator)
 
-**Следующая сессия:** 16 — Bean Validation
+## Session 16 — Bean Validation | 2026-07-11
+
+**Сделано — Jakarta Validation на request DTO (9 файлов):**
+| DTO | Аннотации |
+|-----|-----------|
+| `RegisterRequest` | `@NotBlank @Size(min=3,max=20) @Pattern` username; `@NotBlank @Size(min=6,max=100)` password; `@NotBlank @Email @Size(max=100)` email |
+| `LoginRequest` | `@NotBlank` username, password |
+| `ProfileUpdateRequest` | `@Size(max=50)` nickname; `@Size(max=500)` about |
+| `PasswordChangeRequest` | `@NotBlank` currentPassword, confirmPassword; `@NotBlank @Size(min=6,max=100)` newPassword |
+| `TestStartRequest` | `@NotEmpty` topics; `@Min(1)` questionCount |
+| `AnswerRequest` | `@Min(0)` answerIndex |
+| `RoleUpdateRequest` | `@NotBlank` role |
+| `TopicRequest` | `@NotBlank @Size(max=50)` code; `@NotBlank @Size(max=100)` displayName |
+| `QuestionCreateRequest` + `QuestionUpdateRequest` | `@NotBlank` questionText; `@Min(0)` correctAnswerIndex; `@NotEmpty @Size(min=2)` answers |
+
+**Сделано — @Valid на контроллеры (5 файлов):**
+- AuthController: login/register
+- ProfileController: updateProfile/changePassword
+- TestController: startTest/answerQuestion
+- AdminUserController: changeRole
+- AdminTopicController: createTopic/createQuestion/updateQuestion
+
+**Сделано — GlobalExceptionHandler:**
+- `handleMethodArgumentNotValid` — перехват `MethodArgumentNotValidException` → `ErrorResponse` (400 + field + message)
+
+**Сделано — MessageSource:**
+- `application.yaml`: `spring.messages.basename=messages`
+- `messages.properties`: русские/английские сообщения для constraint violations
+
+**Удалено (3 файла):**
+- `UserValidation.java` — 14 ошибок, заменён DTO-аннотациями
+- `QuestionValidator.java` — 10 ошибок, заменён inline-валидацией в AdminTestService
+- `ValidationFactory.java` — больше не нужен
+
+**Обновлены сервисы:**
+- `RegistrationService.java` — удалён UserValidation + ValidationFactory
+- `QuestionService.java` — удалён QuestionValidator, inline answerIndex validation
+- `AdminTestService.java` — QuestionValidator.validate → inline ValidationException
+
+**Build:** BUILD SUCCESS, 0 errors ✅
+
+**Следующая сессия:** 17 — Thymeleaf Frontend

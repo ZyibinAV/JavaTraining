@@ -35,6 +35,10 @@ spring:
         jwt:
           jwk-set-uri:
 
+  messages:
+    basename: messages
+    encoding: UTF-8
+
 logging:
   level:
     com.homeapp.javatraining: DEBUG

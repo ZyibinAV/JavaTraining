@@ -7,6 +7,7 @@ import com.homeapp.javatraining.dto.mapper.UserMapper;
 import com.homeapp.javatraining.model.Role;
 import com.homeapp.javatraining.model.User;
 import com.homeapp.javatraining.service.AdminUserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -57,7 +58,7 @@ public class AdminUserController {
     }
 
     @PutMapping("/{id}/role")
-    public ResponseEntity<Void> changeRole(@AuthenticationPrincipal Jwt jwt, @PathVariable Long id, @RequestBody RoleUpdateRequest request) {
+    public ResponseEntity<Void> changeRole(@AuthenticationPrincipal Jwt jwt, @PathVariable Long id, @Valid @RequestBody RoleUpdateRequest request) {
         Long adminId = Long.parseLong(jwt.getSubject());
         log.debug("PUT /api/admin/users/{}/role by admin {} -> {}", id, adminId, request.role());
         adminUserService.changeUserRole(adminId, id, Role.valueOf(request.role()));

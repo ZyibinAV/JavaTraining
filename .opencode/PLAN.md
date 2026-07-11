@@ -150,11 +150,11 @@
 
 ### Фаза 5: Validation
 
-#### 🔲 Сессия 16 — Bean Validation
-- [ ] @Valid + jakarta.validation на DTO
-- [ ] MessageSource (русские/английские сообщения)
-- [ ] Кастомные валидаторы
-- [ ] Удаление ValidationFactory
+#### ✅ Сессия 16 — Bean Validation (2026-07-11)
+- [x] @Valid + jakarta.validation на DTO (9 request DTO)
+- [x] MessageSource (messages.properties + application.yaml)
+- [x] Кастомные валидаторы — не понадобились (cross-field в сервисах)
+- [x] Удаление UserValidation.java, QuestionValidator.java, ValidationFactory.java
 
 ### Фаза 6: Thymeleaf
 
