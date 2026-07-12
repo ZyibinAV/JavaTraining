@@ -14,6 +14,7 @@
             <p style="margin-bottom:20px;color:var(--color-text-secondary);">Выберите новый аватар:</p>
             <div class="avatar-grid">
                 <form th:each="i : ${#numbers.sequence(1, 12)}" th:action="@{/profile/avatar}" method="post" class="inline-form">
+                    <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                     <input type="hidden" name="avatar" th:value="'/img/avatars/' + ${i} + '.svg'">
                     <button type="submit" class="avatar-option" th:classappend="${currentAvatar == '/img/avatars/' + i + '.svg' ? 'selected' : ''}">
                         <img th:src="@{'/img/avatars/' + ${i} + '.svg'}" th:alt="'Avatar ' + ${i}">

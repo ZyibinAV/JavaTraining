@@ -737,3 +737,42 @@ tr:hover td {
 .text-center {
     text-align: center;
 }
+
+.navbar-auth {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.navbar-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--color-text);
+    padding: 4px 8px;
+    border-radius: var(--radius);
+    transition: background .15s;
+}
+
+.user-badge:hover {
+    background: var(--color-bg);
+}
+
+.user-avatar-small {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-name {
+    font-size: .9rem;
+    font-weight: 500;
+}

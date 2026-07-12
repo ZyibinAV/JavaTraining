@@ -28,8 +28,8 @@ spring:
       client:
         registration:
           github:
-            client-id: Ov23liytKsZK32FpzXSQ
-            client-secret: eca2384a102c0ad5778e1d7125d9dce7bf2fd533
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_CLIENT_SECRET}
             scope: read:user, user:email
       resourceserver:
         jwt:
@@ -49,3 +49,6 @@ jwt:
   secret: "dGhpcyBpcyBhIHNlY3JldCBrZXkgZm9yIEphdmFUcmFpbmluZyBhcHBsaWNhdGlvbiBmb3IgSldUIHRva2VuIGdlbmVyYXRpb24="
   expiration: 900000
   refresh-expiration: 2592000000
+
+cookie:
+  secure: false

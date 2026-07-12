@@ -35,6 +35,9 @@ public class AuthController {
     @Value("${jwt.refresh-expiration}")
     private long refreshExpirationMs;
 
+    @Value("${cookie.secure:false}")
+    private boolean cookieSecure;
+
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request,
                                               HttpServletResponse response) {
@@ -69,7 +72,7 @@ public class AuthController {
     private void setRefreshTokenCookie(HttpServletResponse response, String token) {
         Cookie cookie = new Cookie("refreshToken", token);
         cookie.setHttpOnly(true);
-        cookie.setSecure(false);
+        cookie.setSecure(cookieSecure);
         cookie.setPath("/api/auth/refresh");
         cookie.setMaxAge((int) (refreshExpirationMs / 1000));
         response.addCookie(cookie);

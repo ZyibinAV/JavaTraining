@@ -7,12 +7,12 @@ import com.homeapp.javatraining.dto.mapper.UserMapper;
 import com.homeapp.javatraining.model.Role;
 import com.homeapp.javatraining.model.User;
 import com.homeapp.javatraining.service.AdminUserService;
+import com.homeapp.javatraining.service.CurrentUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +25,7 @@ public class AdminUserController {
 
     private final AdminUserService adminUserService;
     private final UserMapper userMapper;
+    private final CurrentUserService currentUserService;
 
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAllUsers() {
@@ -50,16 +51,16 @@ public class AdminUserController {
     }
 
     @PostMapping("/{id}/block")
-    public ResponseEntity<Void> toggleBlock(@AuthenticationPrincipal Jwt jwt, @PathVariable Long id) {
-        Long adminId = Long.parseLong(jwt.getSubject());
+    public ResponseEntity<Void> toggleBlock(Authentication authentication, @PathVariable Long id) {
+        Long adminId = currentUserService.getCurrentUserId(authentication);
         log.debug("POST /api/admin/users/{}/block by admin {}", id, adminId);
         adminUserService.toggleBlockUser(adminId, id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}/role")
-    public ResponseEntity<Void> changeRole(@AuthenticationPrincipal Jwt jwt, @PathVariable Long id, @Valid @RequestBody RoleUpdateRequest request) {
-        Long adminId = Long.parseLong(jwt.getSubject());
+    public ResponseEntity<Void> changeRole(Authentication authentication, @PathVariable Long id, @Valid @RequestBody RoleUpdateRequest request) {
+        Long adminId = currentUserService.getCurrentUserId(authentication);
         log.debug("PUT /api/admin/users/{}/role by admin {} -> {}", id, adminId, request.role());
         adminUserService.changeUserRole(adminId, id, Role.valueOf(request.role()));
         return ResponseEntity.ok().build();

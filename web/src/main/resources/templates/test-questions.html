@@ -11,6 +11,23 @@
             <h1 class="page-title">Вопросы: <span th:text="${topicCode}">java-core</span></h1>
             <a href="/admin/tests" class="btn btn-link">К темам</a>
         </div>
+        <div class="card mb-4">
+            <h2 class="card-title" style="font-size:1.1rem;">Добавить вопрос</h2>
+            <form th:action="@{'/admin/tests/' + ${topicCode} + '/questions/create'}" method="post" class="form-inline">
+                <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <div class="form-group" style="flex:2;min-width:200px;">
+                    <input type="text" name="questionText" class="form-input" placeholder="Текст вопроса" required>
+                </div>
+                <div class="form-group" style="flex:1;min-width:120px;">
+                    <input type="text" name="answers" class="form-input" placeholder="Ответ 1 | Ответ 2 | ..." required>
+                </div>
+                <div class="form-group" style="flex:0 0 auto;">
+                    <input type="number" name="correctAnswerIndex" class="form-input" placeholder="Индекс (0)" min="0" value="0" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Создать</button>
+            </form>
+            <p class="text-muted" style="font-size:.85rem;margin-top:8px;">Ответы разделяйте символом |. Индекс правильного ответа начинается с 0.</p>
+        </div>
         <div th:if="${#lists.isEmpty(questions)}" class="card text-center">
             <p class="text-muted">Вопросов пока нет.</p>
         </div>
@@ -27,6 +44,7 @@
                         </ul>
                     </div>
                     <form th:action="@{'/admin/tests/' + ${topicCode} + '/questions/' + ${question.id()} + '/delete'}" method="post" class="inline-form" onsubmit="return confirm('Удалить вопрос?')">
+                        <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                         <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
                     </form>
                 </div>

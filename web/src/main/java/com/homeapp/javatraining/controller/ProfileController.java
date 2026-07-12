@@ -10,8 +10,7 @@ import com.homeapp.javatraining.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,26 +23,26 @@ public class ProfileController {
     private final CurrentUserService currentUserService;
 
     @GetMapping
-    public ResponseEntity<ProfileResponse> getProfile(@AuthenticationPrincipal Jwt jwt) {
-        Long userId = currentUserService.getCurrentUserId(jwt);
+    public ResponseEntity<ProfileResponse> getProfile(Authentication authentication) {
+        Long userId = currentUserService.getCurrentUserId(authentication);
         User user = userService.getProfile(userId);
         return ResponseEntity.ok(userMapper.toProfileResponse(user));
     }
 
     @PostMapping
     public ResponseEntity<ProfileResponse> updateProfile(
-            @AuthenticationPrincipal Jwt jwt,
+            Authentication authentication,
             @Valid @RequestBody ProfileUpdateRequest request) {
-        Long userId = currentUserService.getCurrentUserId(jwt);
+        Long userId = currentUserService.getCurrentUserId(authentication);
         User user = userService.updateProfile(userId, request.nickname(), request.about());
         return ResponseEntity.ok(userMapper.toProfileResponse(user));
     }
 
     @PostMapping("/password")
     public ResponseEntity<Void> changePassword(
-            @AuthenticationPrincipal Jwt jwt,
+            Authentication authentication,
             @Valid @RequestBody PasswordChangeRequest request) {
-        Long userId = currentUserService.getCurrentUserId(jwt);
+        Long userId = currentUserService.getCurrentUserId(authentication);
         userService.changePassword(userId, request.currentPassword(),
                 request.newPassword(), request.confirmPassword());
         return ResponseEntity.ok().build();

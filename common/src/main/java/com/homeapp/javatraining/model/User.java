@@ -60,7 +60,7 @@ public class User {
 
         this.nickname = username;
         this.about = "";
-        this.avatarPath = "/resources/avatars/default/default.png";
+        this.avatarPath = "/img/avatars/1.svg";
         this.createdAt = LocalDateTime.now();
 
     }

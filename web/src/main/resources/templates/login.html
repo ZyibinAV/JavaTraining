@@ -18,7 +18,10 @@
                     Вы вышли из системы.
                 </div>
 
+                <p class="text-muted" style="margin-bottom:20px;text-align:center;">Введите логин и пароль от вашей учётной записи</p>
+
                 <form th:action="@{/login}" method="post" class="form">
+                    <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                     <div class="form-group">
                         <label for="username" class="form-label">Имя пользователя</label>
                         <input type="text" id="username" name="username" class="form-input" required autofocus>

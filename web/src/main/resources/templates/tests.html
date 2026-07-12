@@ -14,6 +14,7 @@
         <div class="card mb-4">
             <h2 class="card-title" style="font-size:1.1rem;">Добавить тему</h2>
             <form th:action="@{/admin/tests/create}" method="post" class="form-inline">
+                <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                 <div class="form-group">
                     <input type="text" name="code" class="form-input" placeholder="Код (напр. java-core)" required>
                 </div>
@@ -41,6 +42,7 @@
                                 <div class="table-actions">
                                     <a th:href="@{'/admin/tests/' + ${topic.code()} + '/questions'}" class="btn btn-sm btn-primary">Вопросы</a>
                                     <form th:action="@{'/admin/tests/' + ${topic.code()} + '/delete'}" method="post" class="inline-form" onsubmit="return confirm('Удалить тему ' + '${topic.displayName()}' + '?')">
+                                        <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                                         <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
                                     </form>
                                 </div>

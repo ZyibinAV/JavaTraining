@@ -8,13 +8,14 @@ import com.homeapp.javatraining.model.Role;
 import com.homeapp.javatraining.service.AdminStatisticsService;
 import com.homeapp.javatraining.service.AdminTestService;
 import com.homeapp.javatraining.service.AdminUserService;
+import com.homeapp.javatraining.service.CurrentUserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -28,6 +29,7 @@ public class AdminViewController {
     private final UserMapper userMapper;
     private final TopicMapper topicMapper;
     private final QuestionMapper questionMapper;
+    private final CurrentUserService currentUserService;
 
     @GetMapping
     public String dashboard(Model model) {
@@ -45,17 +47,17 @@ public class AdminViewController {
     }
 
     @PostMapping("/users/{id}/block")
-    public String toggleBlock(@AuthenticationPrincipal Jwt jwt, @PathVariable Long id) {
-        Long adminId = Long.parseLong(jwt.getSubject());
+    public String toggleBlock(Authentication authentication, @PathVariable Long id) {
+        Long adminId = currentUserService.getCurrentUserId(authentication);
         adminUserService.toggleBlockUser(adminId, id);
         return "redirect:/admin/users";
     }
 
     @PostMapping("/users/{id}/role")
-    public String changeRole(@AuthenticationPrincipal Jwt jwt,
+    public String changeRole(Authentication authentication,
                              @PathVariable Long id,
                              @RequestParam String role) {
-        Long adminId = Long.parseLong(jwt.getSubject());
+        Long adminId = currentUserService.getCurrentUserId(authentication);
         adminUserService.changeUserRole(adminId, id, Role.valueOf(role));
         return "redirect:/admin/users";
     }
@@ -106,5 +108,18 @@ public class AdminViewController {
     public String statistics(Model model) {
         model.addAttribute("statistics", adminStatisticsService.getStatistics());
         return "statistics";
+    }
+
+    @PostMapping("/tests/{code}/questions/create")
+    public String createQuestion(@PathVariable String code,
+                                 @RequestParam String questionText,
+                                 @RequestParam String answers,
+                                 @RequestParam(defaultValue = "0") int correctAnswerIndex) {
+        List<String> answerList = Arrays.stream(answers.split("\\|"))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .toList();
+        adminTestService.createQuestion(code, questionText, correctAnswerIndex, answerList);
+        return "redirect:/admin/tests/" + code + "/questions";
     }
 }

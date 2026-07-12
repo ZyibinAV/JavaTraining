@@ -9,8 +9,7 @@ import com.homeapp.javatraining.model.User;
 import com.homeapp.javatraining.service.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -77,7 +76,7 @@ public class TestViewController {
     }
 
     @GetMapping("/result")
-    public String showResult(@AuthenticationPrincipal Jwt jwt,
+    public String showResult(Authentication authentication,
                              HttpSession session, Model model) {
         InterviewState state = getState(session);
         if (state == null) {
@@ -86,7 +85,7 @@ public class TestViewController {
         if (!state.isFinished()) {
             return "redirect:/test/question";
         }
-        User user = userService.getProfile(currentUserService.getCurrentUserId(jwt));
+        User user = userService.getProfile(currentUserService.getCurrentUserId(authentication));
         testResultService.saveResult(user, state);
         TestResultResponse result = testResultService.processResult(state);
         session.removeAttribute(SESSION_ATTR);

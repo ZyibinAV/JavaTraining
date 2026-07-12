@@ -12,8 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,11 +40,11 @@ public class TestController {
 
     @PostMapping("/start")
     public ResponseEntity<QuestionResponse> startTest(
-            @AuthenticationPrincipal Jwt jwt,
+            Authentication authentication,
             @Valid @RequestBody TestStartRequest request,
             HttpSession session) {
 
-        log.debug("POST /api/test/start by user {}", currentUserService.getCurrentUserId(jwt));
+        log.debug("POST /api/test/start by user {}", currentUserService.getCurrentUserId(authentication));
 
         InterviewState state = testService.startTest(request);
         session.setAttribute(SESSION_ATTR, state);
@@ -55,10 +54,10 @@ public class TestController {
 
     @GetMapping("/question")
     public ResponseEntity<QuestionResponse> getQuestion(
-            @AuthenticationPrincipal Jwt jwt,
+            Authentication authentication,
             HttpSession session) {
 
-        log.debug("GET /api/test/question by user {}", currentUserService.getCurrentUserId(jwt));
+        log.debug("GET /api/test/question by user {}", currentUserService.getCurrentUserId(authentication));
 
         InterviewState state = getState(session);
         if (state == null) {
@@ -70,11 +69,11 @@ public class TestController {
 
     @PostMapping("/question")
     public ResponseEntity<AnswerResultResponse> answerQuestion(
-            @AuthenticationPrincipal Jwt jwt,
+            Authentication authentication,
             @Valid @RequestBody AnswerRequest request,
             HttpSession session) {
 
-        log.debug("POST /api/test/question by user {}", currentUserService.getCurrentUserId(jwt));
+        log.debug("POST /api/test/question by user {}", currentUserService.getCurrentUserId(authentication));
 
         InterviewState state = getState(session);
         if (state == null) {
@@ -101,8 +100,8 @@ public class TestController {
     }
 
     @GetMapping("/result")
-    public ResponseEntity<TestResultResponse> getResult(@AuthenticationPrincipal Jwt jwt, HttpSession session) {
-        log.debug("GET /api/test/result by user {}", currentUserService.getCurrentUserId(jwt));
+    public ResponseEntity<TestResultResponse> getResult(Authentication authentication, HttpSession session) {
+        log.debug("GET /api/test/result by user {}", currentUserService.getCurrentUserId(authentication));
         InterviewState state = getState(session);
         if (state == null) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -111,7 +110,7 @@ public class TestController {
             return  ResponseEntity.badRequest().build();
         }
 
-        User user = userService.getProfile(currentUserService.getCurrentUserId(jwt));
+        User user = userService.getProfile(currentUserService.getCurrentUserId(authentication));
         testResultService.saveResult(user, state);
         TestResultResponse response = testResultService.processResult(state);
         session.removeAttribute(SESSION_ATTR);

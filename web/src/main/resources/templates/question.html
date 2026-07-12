@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org"
       layout:decorate="~{layout}">
 <head>
-    <title>Вопрос <span th:text="${question.questionNumber()} + ' из ' + ${question.totalQuestions()}">1 из 10</span></title>
+    <title th:text="'Вопрос ' + ${question.questionNumber()} + ' из ' + ${question.totalQuestions()}">Вопрос 1 из 10</title>
 </head>
 <body>
     <div layout:fragment="content">
@@ -22,6 +22,7 @@
             <h2 style="font-size:1.15rem;font-weight:600;margin-bottom:20px;line-height:1.5;" th:text="${question.questionText()}">Question text</h2>
 
             <form th:action="@{/test/question}" method="post" class="form">
+                <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                 <div class="answers-group">
                     <label th:each="answer : ${question.answers()}" class="answer-label">
                         <input type="radio" th:name="answerIndex" th:value="${answer.index()}" required>

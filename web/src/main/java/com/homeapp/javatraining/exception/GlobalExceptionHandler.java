@@ -5,12 +5,7 @@ import com.homeapp.javatraining.exception.question.NotEnoughQuestionsException;
 import com.homeapp.javatraining.exception.question.QuestionImportException;
 import com.homeapp.javatraining.exception.question.QuestionNotFoundException;
 import com.homeapp.javatraining.exception.topic.TopicNotFoundException;
-import com.homeapp.javatraining.exception.user.CannotChangeOwnRoleException;
-import com.homeapp.javatraining.exception.user.DuplicateEmailException;
-import com.homeapp.javatraining.exception.user.DuplicateUsernameException;
-import com.homeapp.javatraining.exception.user.InvalidCredentialsException;
-import com.homeapp.javatraining.exception.user.InvalidRefreshTokenException;
-import com.homeapp.javatraining.exception.user.UserNotFoundException;
+import com.homeapp.javatraining.exception.user.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -91,7 +86,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
-    @ExceptionHandler(CannotChangeOwnRoleException.class)
+    @ExceptionHandler({CannotChangeOwnRoleException.class,
+            CannotBlockSelfException.class
+    })
     public ResponseEntity<ErrorResponse> handleForbidden(ApiException exception) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.FORBIDDEN.value(),

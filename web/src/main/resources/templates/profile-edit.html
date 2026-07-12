@@ -14,6 +14,7 @@
             <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
             <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
             <form th:action="@{/profile/edit}" method="post" class="form">
+                <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                 <div class="form-group">
                     <label for="nickname" class="form-label">Псевдоним</label>
                     <input type="text" id="nickname" name="nickname" class="form-input"
@@ -22,7 +23,7 @@
                 <div class="form-group">
                     <label for="about" class="form-label">О себе</label>
                     <textarea id="about" name="about" class="form-textarea"
-                              maxlength="500" th:text="${profile.about()}"></textarea>
+                              maxlength="500" th:text="${profile.about() != null ? profile.about() : ''}"></textarea>
                 </div>
                 <div class="profile-actions">
                     <button type="submit" class="btn btn-primary">Сохранить</button>

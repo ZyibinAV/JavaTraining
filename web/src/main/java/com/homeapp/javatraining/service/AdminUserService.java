@@ -1,5 +1,6 @@
 package com.homeapp.javatraining.service;
 
+import com.homeapp.javatraining.exception.user.CannotBlockSelfException;
 import com.homeapp.javatraining.exception.user.CannotChangeOwnRoleException;
 import com.homeapp.javatraining.exception.user.UserNotFoundException;
 import com.homeapp.javatraining.model.Role;
@@ -69,7 +70,7 @@ public class AdminUserService {
         User user = userRepository.findById(targetUserId)
                 .orElseThrow(() -> new UserNotFoundException(targetUserId));
         if (user.getId() == adminId) {
-            throw new CannotChangeOwnRoleException();
+            throw new CannotBlockSelfException();
         }
         user.setBlocked(!user.isBlocked());
     }

@@ -23,6 +23,9 @@ public class FormLoginSuccessHandler extends  SimpleUrlAuthenticationSuccessHand
     @Value("${jwt.expiration}")
     private long expirationMs;
 
+    @Value("${cookie.secure:false}")
+    private boolean cookieSecure;
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
@@ -33,7 +36,7 @@ public class FormLoginSuccessHandler extends  SimpleUrlAuthenticationSuccessHand
 
         Cookie cookie = new Cookie("jwt", token);
         cookie.setHttpOnly(true);
-        cookie.setSecure(false);
+        cookie.setSecure(cookieSecure);
         cookie.setPath("/");
         cookie.setMaxAge((int) (expirationMs / 1000));
         response.addCookie(cookie);

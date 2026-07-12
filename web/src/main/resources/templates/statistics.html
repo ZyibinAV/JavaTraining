@@ -25,7 +25,7 @@
                 <div class="stat-label">Не пройдено</div>
             </div>
             <div class="card stat-card">
-                <div class="stat-value" th:text="${statistics.totalTests > 0 ? #numbers.formatDecimal(statistics.passedTests * 100 / statistics.totalTests, 1, 1) : '0'} + '%'">75%</div>
+                <div class="stat-value" th:text="${statistics.totalTests > 0 ? #numbers.formatDecimal(statistics.passedTests * 100.0 / statistics.totalTests, 1, 1) : '0'} + '%'">75%</div>
                 <div class="stat-label">Успешность</div>
             </div>
         </div>

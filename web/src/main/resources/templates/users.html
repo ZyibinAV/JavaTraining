@@ -44,16 +44,19 @@
                             <td th:text="${#temporals.format(user.createdAt(), 'dd.MM.yyyy')}">01.01.2026</td>
                             <td>
                                 <div class="table-actions">
-                                    <form th:action="@{'/admin/users/' + ${user.id()} + '/block'}" method="post" class="inline-form">
+                                    <form th:action="@{'/admin/users/' + ${user.id()} + '/block'}" method="post" class="inline-form" onsubmit="return confirm(${user.blocked()} ? 'Разблокировать пользователя ' + '${user.username()}' + '?' : 'Заблокировать пользователя ' + '${user.username()}' + '?')">
+                                        <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                                         <button type="submit" th:class="'btn btn-sm ' + (${user.blocked()} ? 'btn-primary' : 'btn-danger')" th:text="${user.blocked()} ? 'Разблокировать' : 'Заблокировать'">Block</button>
                                     </form>
                                     <form th:action="@{'/admin/users/' + ${user.id()} + '/role'}" method="post" class="inline-form">
+                                        <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                                         <select name="role" class="form-select" style="width:auto;padding:6px 8px;font-size:.85rem;" onchange="this.form.submit()">
                                             <option value="USER" th:selected="${user.role().name() == 'USER'}">USER</option>
                                             <option value="ADMIN" th:selected="${user.role().name() == 'ADMIN'}">ADMIN</option>
                                         </select>
                                     </form>
                                     <form th:action="@{'/admin/users/' + ${user.id()} + '/delete'}" method="post" class="inline-form" onsubmit="return confirm('Удалить пользователя ' + '${user.username()}' + '?')">
+                                        <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                                         <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
                                     </form>
                                 </div>

@@ -42,8 +42,12 @@ public class UserServiceImpl implements UserService {
     public User updateProfile(Long userId, String nickname, String about) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
-        user.setNickname(nickname);
-        user.setAbout(about);
+        if (nickname != null) {
+            user.setNickname(nickname.isBlank() ? null : nickname);
+        }
+        if (about != null) {
+            user.setAbout(about.isBlank() ? null : about);
+        }
         log.info("User {} updated profile: nickname={}", userId, nickname);
         return user;
     }

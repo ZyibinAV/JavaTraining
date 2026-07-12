@@ -14,15 +14,23 @@
             <a href="/" class="navbar-brand">JavaTraining</a>
             <nav class="navbar-links">
                 <a th:if="${#authorization.expression('isAuthenticated()')}" href="/" class="nav-link">Главная</a>
-                <a th:if="${#authorization.expression('isAuthenticated()')}" href="/profile" class="nav-link">Профиль</a>
                 <a th:if="${#authorization.expression('isAuthenticated()')}" href="/test/settings" class="nav-link">Тест</a>
                 <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" href="/admin" class="nav-link nav-admin">Админка</a>
-                <a th:if="${#authorization.expression('!isAuthenticated()')}" href="/login" class="nav-link">Вход</a>
-                <a th:if="${#authorization.expression('!isAuthenticated()')}" href="/register" class="nav-link">Регистрация</a>
-                <form th:if="${#authorization.expression('isAuthenticated()')}" th:action="@{/logout}" method="post" class="nav-logout-form">
+            </nav>
+            <div th:if="${#authorization.expression('!isAuthenticated()')}" class="navbar-auth">
+                <a href="/login" class="nav-link">Вход</a>
+                <a href="/register" class="nav-link">Регистрация</a>
+            </div>
+            <div th:if="${currentUser != null}" class="navbar-user">
+                <a href="/profile" class="user-badge">
+                    <img th:src="@{${currentUser.avatarPath()}}" alt="avatar" class="user-avatar-small">
+                    <span class="user-name" th:text="${currentUser.nickname() ?: currentUser.username()}">user</span>
+                </a>
+                <form th:action="@{/logout}" method="post" class="nav-logout-form">
+                    <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                     <button type="submit" class="btn btn-link nav-link">Выйти</button>
                 </form>
-            </nav>
+            </div>
         </div>
     </header>
 

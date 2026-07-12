@@ -452,4 +452,28 @@
 
 **Build:** `mvn clean compile -pl web -am` — BUILD SUCCESS ✅ (76 source files)
 
-**Следующая сессия:** 20 — MinIO
+## Session 20 — Frontend QA: Auth Fixes + User Badge | 2026-07-12
+
+**Сделано — Первый запуск и отладка:**
+- Приложение запущено, выявлены и исправлены проблемы аутентификации
+- **401 на `/` без кук** — `.exceptionHandling()` с кастомным `AuthenticationEntryPoint`: API → 401, браузер → редирект на `/login`
+- **401 после регистрации** — JWT-кука игнорировалась для не-API путей; добавлено явное сохранение `SecurityContext` в сессию через `HttpSessionSecurityContextRepository`
+- **Логин не редиректит на `/`** — `BearerTokenAuthenticationFilter` перехватывал JWT-куку, не давая сессионной аутентификации отработать; фикс: `BearerTokenResolver` возвращает JWT только для `/api/**`
+- **Старая JWT-кука → 401** — `.oauth2ResourceServer().authenticationEntryPoint()` очищает невалидную куку и редиректит на `/login`
+
+**Сделано — Java (пользователь):**
+- `CurrentUserService.getCurrentUserId(Jwt)` → `getCurrentUserId(Authentication)` — поддержка Jwt, OAuth2User, String/UserDetails
+- Все контроллеры (6 файлов): `@AuthenticationPrincipal Jwt jwt` → `Authentication authentication`
+- `AdminUserController` + `AdminViewController` — инжект `CurrentUserService`
+- `SecurityConfig.java` — exceptionHandling, oauth2ResourceServer().authenticationEntryPoint, BearerTokenResolver (только `/api/**`)
+
+**Сделано — Java (opencode):**
+- `GlobalModelAdvice.java` — new `@ControllerAdvice`, добавляет `currentUser` (ProfileResponse) во все Thymeleaf-шаблоны
+
+**Сделано — Frontend (opencode):**
+- `layout.html` — user badge (аватар + никнейм, ссылка на /profile) в правом углу
+- `style.css` — стили `.navbar-user`, `.user-badge`, `.user-avatar-small`, `.user-name`
+
+**Build:** `mvn compile -pl web -am` — BUILD SUCCESS ✅
+
+**Следующая сессия:** 21 — Ручное тестирование (продолжение)
