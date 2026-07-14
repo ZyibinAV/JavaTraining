@@ -15,6 +15,7 @@
             <nav class="navbar-links">
                 <a th:if="${#authorization.expression('isAuthenticated()')}" href="/" class="nav-link">Главная</a>
                 <a th:if="${#authorization.expression('isAuthenticated()')}" href="/test/settings" class="nav-link">Тест</a>
+                <a th:if="${#authorization.expression('isAuthenticated()')}" href="/my-stats" class="nav-link">Моя статистика</a>
                 <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" href="/admin" class="nav-link nav-admin">Админка</a>
             </nav>
             <div th:if="${#authorization.expression('!isAuthenticated()')}" class="navbar-auth">

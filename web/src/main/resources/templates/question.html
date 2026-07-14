@@ -10,14 +10,14 @@
         <div class="question-card">
             <div class="page-header">
                 <h1 class="page-title">Тест</h1>
-                <span class="badge badge-user" th:text="'Счёт: ' + ${question.score()}">0</span>
+                <span class="badge badge-user" th:text="'Правильных: ' + ${question.score()} + ' из ' + (${question.questionNumber()} - 1)">0</span>
             </div>
             <div class="progress-bar">
                 <div class="progress-bar-fill" th:style="'width:' + (${question.questionNumber()} * 100 / ${question.totalQuestions()}) + '%'"></div>
             </div>
             <p class="progress-text" th:text="'Вопрос ' + ${question.questionNumber()} + ' из ' + ${question.totalQuestions()}">1 из 10</p>
 
-            <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+            <div th:if="${error}" class="alert alert-error" th:text="${error}" style="text-align:center;"></div>
 
             <h2 style="font-size:1.15rem;font-weight:600;margin-bottom:20px;line-height:1.5;" th:text="${question.questionText()}">Question text</h2>
 

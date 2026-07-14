@@ -11,17 +11,27 @@
             <h1 class="page-title">Настройки теста</h1>
         </div>
         <div class="card" style="max-width:500px;">
-            <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+            <div th:if="${error}" class="alert alert-error" th:text="${error}" style="text-align:center;"></div>
             <form th:action="@{/test/settings}" method="post" class="form">
                 <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                 <div class="form-group">
                     <label class="form-label">Выберите темы</label>
-                    <div class="checkbox-group">
+                    <div class="checkbox-group" id="checkboxGroup">
                         <label th:each="topic : ${topics}" class="checkbox-label">
-                            <input type="checkbox" th:name="topics" th:value="${topic.code()}" th:checked="${topic.code() != null}">
+                            <input type="checkbox" th:name="topics" th:value="${topic.code()}" class="topic-checkbox">
                             <span th:text="${topic.displayName()}">Topic</span>
                         </label>
                     </div>
+                    <p id="multiTopicNotice" class="text-muted" style="display:none;font-size:.8rem;margin-top:-12px;margin-bottom:16px;">
+                        Комбинированные тесты (несколько тем) не учитываются в статистике по темам на странице результатов.
+                    </p>
+                    <script>
+                        document.getElementById('checkboxGroup').addEventListener('change', function() {
+                            var checked = document.querySelectorAll('.topic-checkbox:checked').length;
+                            var notice = document.getElementById('multiTopicNotice');
+                            notice.style.display = checked > 1 ? 'block' : 'none';
+                        });
+                    </script>
                 </div>
                 <div class="form-group">
                     <label for="questionCount" class="form-label">Количество вопросов</label>

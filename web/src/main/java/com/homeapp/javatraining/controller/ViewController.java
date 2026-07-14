@@ -3,6 +3,7 @@ package com.homeapp.javatraining.controller;
 import com.homeapp.javatraining.config.JwtTokenProvider;
 import com.homeapp.javatraining.dto.mapper.UserMapper;
 import com.homeapp.javatraining.model.User;
+import com.homeapp.javatraining.service.AvatarService;
 import com.homeapp.javatraining.service.CurrentUserService;
 import com.homeapp.javatraining.service.RegistrationService;
 import com.homeapp.javatraining.service.UserService;
@@ -19,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequiredArgsConstructor
@@ -29,6 +31,7 @@ public class ViewController {
     private final UserService userService;
     private final CurrentUserService currentUserService;
     private final UserMapper userMapper;
+    private final AvatarService avatarService;
 
     @Value("${jwt.expiration}")
     private long expirationMs;
@@ -99,9 +102,35 @@ public class ViewController {
                                @RequestParam String avatar) {
         Long userId = currentUserService.getCurrentUserId(authentication);
         User user = userService.getProfile(userId);
-        user.setAvatarPath(avatar);
-        userService.updateProfile(userId, user.getNickname(), user.getAbout());
+        avatarService.deleteAvatar(user.getAvatarPath());
+        userService.updateAvatar(userId, avatar);
         return "redirect:/profile";
+    }
+
+    @PostMapping("/profile/avatar/upload")
+    public String uploadAvatar(Authentication authentication,
+                               @RequestParam("file") MultipartFile file,
+                               Model model) {
+        try {
+            Long userId = currentUserService.getCurrentUserId(authentication);
+            User user = userService.getProfile(userId);
+            avatarService.deleteAvatar(user.getAvatarPath());
+            String avatarPath = avatarService.saveAvatar(file, userId);
+            userService.updateAvatar(userId, avatarPath);
+            return "redirect:/profile";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+            Long userId = currentUserService.getCurrentUserId(authentication);
+            User user = userService.getProfile(userId);
+            model.addAttribute("currentAvatar", user.getAvatarPath());
+            return "avatar-select";
+        } catch (Exception e) {
+            model.addAttribute("error", "Ошибка при загрузке файла");
+            Long userId = currentUserService.getCurrentUserId(authentication);
+            User user = userService.getProfile(userId);
+            model.addAttribute("currentAvatar", user.getAvatarPath());
+            return "avatar-select";
+        }
     }
 
     @GetMapping("/register")

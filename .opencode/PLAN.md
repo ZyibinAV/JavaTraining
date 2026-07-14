@@ -9,10 +9,11 @@
 5. **Фаза 4 (Сессия 15):** DTO + MapStruct
 6. **Фаза 5 (Сессия 16):** Bean Validation
 7. **Фаза 6 (Сессии 17-19):** Thymeleaf Frontend
-8. **Фаза 7 (Сессия 20):** MinIO + Avatar Storage
-9. **Фаза 8 (Сессии 21-23):** Testing
-10. **Фаза 9 (Сессия 24):** Observability
-11. **Фаза 10 (Сессия 25):** Финальное ревью
+8. **Фаза 7 (Сессии 21-23):** Testing (manual) + Bug fixes
+9. **Фаза 8 (Сессия 24):** MinIO Avatar Storage
+10. **Фаза 9 (Сессии 25-27):** Unit + Integration tests, Coverage
+11. **Фаза 10 (Сессия 28):** Observability
+12. **Фаза 11 (Сессия 29):** Финальное ревью
 
 ---
 
@@ -179,43 +180,80 @@
 - [x] AdminViewController.java (Java, 10 методов)
 - [x] Полный CRUD для пользователей, тем, вопросов + статистика
 
-### Фаза 7: MinIO
+### Фаза 7: Manual Testing
 
-#### 🔲 Сессия 20 — MinIO storage
-- [ ] MinIO в docker-compose.yml
-- [ ] MinIOAdapter/AvatarStorageService
-- [ ] AvatarUploadController (Multipart → MinIO)
-- [ ] AvatarServeController (прокси)
-- [ ] Удаление AvatarUploadServlet, AvatarServeServlet
+#### ✅ Сессия 21 — Manual testing (Phase 1) (2026-07-12)
+- [x] Code review — 4 бага исправлено (double moveToNextQuestion, admin.html ссылки, users.html onsubmit, isExpired в getState())
+- [x] Schema fix: test_results DROP COLUMN topic_id
+- [x] JSON import UI (Thymeleaf)
+- [x] Edit question UI (question-edit.html)
+- [x] Тест-сеттинг: чекбоксы не отмечены по умолчанию
+- [x] User statistics page (/my-stats)
+- [x] Custom avatar upload (AvatarService, WebConfig)
+- [x] Ссылка «Моя статистика» в навбаре и на главной
 
-### Фаза 8: Testing
+#### ✅ Сессия 22 — Manual testing (Phase 2) (2026-07-14)
+- [x] TEST_PLAN.md полная переработка (Postman, новые фазы)
+- [x] Login blocked user: отдельное сообщение (FormLoginFailureHandler)
+- [x] Profile nickname: username fallback (не прятать строку)
+- [x] Upload >2MB: адекватная ошибка (resolve-lazily / max 10MB)
+- [x] Empty topics validation в TestService (не в контроллере)
+- [x] /test/result → /test/settings (если тест не завершён)
+- [x] Error messages center alignment
+- [x] GlobalExceptionHandler → только @RestController (+ MvcExceptionHandler)
+- [x] AdminUserService: Long.equals() вместо ==
+- [x] JWT: HS512 явно (алгоритм mismatch fix)
+- [x] Per-topic stats: комбинированные тесты исключены
+- [x] Test settings: CSS grid для чекбоксов
+- [x] Question page: "Правильных: X из Y"
+- [x] Admin dashboard: убрана стат-карточка "Тем"
+- [x] Уведомления о комбинированных тестах (JS + text)
 
-#### 🔲 Сессия 21 — Unit tests
+#### ✅ Сессия 23 — Auth Bug Fixes (2026-07-14)
+- [x] JwtAuthenticationConverter: маппинг claim("role") → ROLE_<value> (SecurityConfig)
+- [x] CustomOAuth2UserService: authorities из user.getRole() вместо GitHub scopes
+- [x] UserService.updateAvatar() + фикс detached entity в ViewController
+- [x] AuthenticationService: UserBlockedException вместо IllegalStateException
+- [x] OAuth2LoginSuccessHandler: cookie maxAge из конфига вместо 86400
+- [x] TEST_PLAN.md: Phase 10 — явный /api/ в путях
+
+### Фаза 8: MinIO Avatar Storage
+
+#### 🔲 Сессия 24 — MinIO Avatar Storage
+- [ ] MinIO client dependency (aws-java-sdk-s3 / minio-java)
+- [ ] AvatarService: MinIO storage вместо filesystem
+- [ ] docker-compose.yml: MinIO конфигурация проверена
+- [ ] WebConfig: resource handler через MinIO proxy
+- [ ] Миграция существующих аватаров
+
+### Фаза 9: Unit + Integration tests, Coverage
+
+#### 🔲 Сессия 25 — Unit tests
 - [ ] Сервисные тесты: @ExtendWith(MockitoExtension)
 - [ ] Контроллер тесты: @WebMvcTest
 - [ ] Util тесты
 
-#### 🔲 Сессия 22 — Integration + TestContainers
+#### 🔲 Сессия 26 — Integration + TestContainers
 - [ ] @SpringBootTest + TestContainers PostgreSQL
 - [ ] Repository integration tests
 - [ ] Security tests (JWT, OAuth2)
 - [ ] MockMvc
 
-#### 🔲 Сессия 23 — Coverage
+#### 🔲 Сессия 27 — Coverage
 - [ ] JaCoCo настройка
 - [ ] Достижение >80% service layer
 
-### Фаза 9: Observability
+### Фаза 10: Observability
 
-#### 🔲 Сессия 24 — Actuator + MDC
+#### 🔲 Сессия 28 — Actuator + MDC
 - [ ] spring-boot-starter-actuator
 - [ ] Health indicators (db, minio, redis)
 - [ ] Micrometer метрики
 - [ ] MDC userId в логи
 
-### Фаза 10: Финальное ревью
+### Фаза 11: Финальное ревью
 
-#### 🔲 Сессия 25 — Финальная проверка
+#### 🔲 Сессия 29 — Финальная проверка
 - [ ] Чек-лист 40 review issues
 - [ ] mvn clean verify — зелёный билд
 - [ ] Обновление README

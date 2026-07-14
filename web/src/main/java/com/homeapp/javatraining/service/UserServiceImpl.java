@@ -54,14 +54,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    public void updateAvatar(Long userId, String avatarPath) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+        user.setAvatarPath(avatarPath);
+    }
+
+    @Override
+    @Transactional
     public void changePassword(Long userId, String currentPassword, String newPassword, String confirmPassword) {
         if (!newPassword.equals(confirmPassword)) {
-            throw new ValidationException("confirmPassword", "New password and confirmation do not match");
+            throw new ValidationException("New password and confirmation do not match", "confirmPassword");
         }
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
         if (!passwordEncoder.matches(currentPassword, user.getPasswordHash())) {
-            throw new InvalidCredentialsException();
+            throw new ValidationException("Current password is incorrect", "currentPassword");
         }
         user.setPasswordHash(passwordEncoder.encode(newPassword));
         log.info("User {} changed password", userId);

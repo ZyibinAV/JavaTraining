@@ -40,7 +40,7 @@ public class JwtTokenProvider {
                 .claim("role", user.getRole().name())
                 .issuedAt(now)
                 .expiration(expiryDate)
-                .signWith(secretKey)
+                .signWith(secretKey, Jwts.SIG.HS512)
                 .compact();
     }
 

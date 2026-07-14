@@ -476,4 +476,89 @@
 
 **Build:** `mvn compile -pl web -am` — BUILD SUCCESS ✅
 
-**Следующая сессия:** 21 — Ручное тестирование (продолжение)
+## Session 21 — Ручное тестирование (продолжение) + Frontend QA | 2026-07-12
+
+**Сделано — Code Review и баг-фиксы (4):**
+- **TestViewController.java** (CRITICAL) — удалён `state.moveToNextQuestion()` — `QuestionService.processAnswer()` уже вызывает его внутри. Без фикса каждый второй вопрос пропускался
+- **admin.html** — исправлены ссылки на карточках статистики: "Всего тестов" и "Пройдено тестов" вели на `/admin/users` вместо `/admin/statistics`
+- **users.html** — исправлены `onsubmit` с Thymeleaf-выражениями (не обрабатывались): заменены на `th:data-username` + JS `this.dataset`
+- **TestViewController.getState()** — добавлена проверка `isExpired()` (была только в REST-контроллере)
+
+**Сделано — Исправление схемы БД:**
+- **`test_results`** — удалена старая колонка `topic_id` (NOT NULL), оставшаяся от предыдущей версии маппинга `@ManyToOne`. Текущий маппинг — `@ManyToMany` через join-таблицу `test_results_topics`. Из-за старой колонки INSERT падал с `"null value in column topic_id"` при сохранении результата теста
+
+**Сделано — JSON import UI (Thymeleaf):**
+- `AdminViewController.java` — `POST /admin/tests/{code}/questions/import` (MultipartFile)
+- `test-questions.html` — добавлен `<input type="file" accept=".json">` + раскрывающийся блок `<details>` с примером формата JSON
+
+**Сделано — Редактирование вопросов:**
+- `AdminViewController.java` — GET/POST `/admin/tests/{code}/questions/{id}/edit`
+- `question-edit.html` — новый шаблон: предзаполненные поля текста вопроса, каждого ответа в отдельном `<input>`, радио-кнопки выбора правильного, JS-кнопки «+ Добавить ответ» / «X» удалить
+
+**Сделано — Тема тестов (чекбоксы):**
+- `test-settings.html` — убран `th:checked="${topic.code() != null}"` (все темы были предотмечены, т.к. code всегда не-null)
+
+**Сделано — Личная статистика пользователя (USER):**
+- `StatisticsViewController.java` — новый `@Controller` с `GET /my-stats` (сводка, по темам, последние 20 результатов)
+- `my-statistics.html` — новый шаблон: 4 карточки (всего/пройдено/не пройдено/успешность), таблица по темам, таблица последних тестов
+- `layout.html` — добавлена ссылка «Моя статистика» в навбар (для всех аутентифицированных)
+- `home.html` — добавлена карточка «Моя статистика»
+
+**Сделано — Загрузка пользовательских аватаров:**
+- `AvatarService.java` — полная переработка: сохранение на диск (`uploads/avatars/`), валидация типа (jpg/png/gif/svg/webp) и размера (до 2MB), удаление старого аватара
+- `WebConfig.java` — новый `@Configuration`, resource handler `/uploads/avatars/**` → `file:...`
+- `ViewController.java` — `POST /profile/avatar/upload` (MultipartFile) с обработкой ошибок
+- `avatar-select.html` — добавлен разделитель «или загрузите свой» + форма с file input
+- `SecurityConfig.java` — `/uploads/**` добавлен в `.permitAll()`
+- `application.yaml` — `spring.servlet.multipart.max-file-size: 2MB`, `app.avatar.upload-dir: uploads/avatars`
+- Фикс: путь резолвится относительно `user.dir` (не Tomcat temp dir)
+
+**Build:** `mvn compile -pl web -am -q` — BUILD SUCCESS ✅ (82 source files)
+
+## Session 22 — Ручное тестирование (продолжение) | 2026-07-14
+
+**Bug fixes:**
+
+| # | Проблема | Корень | Фикс |
+|---|----------|--------|------|
+| 1 | Пароль: неверный current → "Invalid username or password" | Переиспользование InvalidCredentialsException | ValidationException с "Current password is incorrect" |
+| 2 | Блокировка: нет отдельного сообщения | DisabledException не обрабатывался | FormLoginFailureHandler (DisabledException → `/login?blocked`) |
+| 3 | Nickname: скрывается при пустом значении | `<p th:if="${nickname != null}">` | Убрано if, добавлен username как fallback |
+| 4 | Upload >2MB: соединение сброшено | `max-file-size: 2MB` в фильтре (до контроллера) | Поднят до 10MB, валидация в AvatarService |
+| 5 | Пустые темы: 500 Internal Server Error | `@RequestParam` required=true, service не проверял | `required=false` + проверка в TestService.startTest() |
+| 6 | `/test/result` до конца теста → `/test/question` | Неверный редирект | Изменён на `/test/settings` по TEST_PLAN |
+| 7 | JSON ответ для MVC при CannotBlockSelf | `@RestControllerAdvice` без фильтрации | `@RestControllerAdvice(annotations = RestController.class)`, создан MvcExceptionHandler |
+| 8 | Смена роли себе — срабатывает | `Long == Long` (ссылочное сравнение) | `Long.equals()` в changeUserRole() и toggleBlockUser() |
+| 9 | JWT 401: "Failed to authenticate since the JWT was invalid" | NimbusJwtDecoder мог выбирать не HS512 | Явно зафиксирован HS512 в генерации и декодинге |
+
+**Functional changes:**
+
+- **TEST_PLAN.md** — полная переработка: Postman-инструкции, новые фазы (my-stats, JSON import, edit question, avatar upload, admin statistics, OAuth2), обновлены предусловия, исправлены имена полей (token, userId)
+- **test-settings.html** — чекбоксы в CSS grid (2-3 колонки), JS-уведомление при выборе ≥2 тем
+- **question.html** — "Счёт: X" → "Правильных: X из Y"
+- **admin.html** — удалена дублирующая стат-карточка "Тем"
+- **UserStatisticsServiceImpl + AdminStatisticsService** — комбинированные тесты исключены из per-topic расчёта
+- **my-statistics.html** — добавлена заметка об исключении комбинированных тестов
+- **profile.html** — nickname всегда виден (username как fallback)
+- **users.html** — добавлен `<div th:if="${error}">` для flash-сообщений
+
+**Build:** `mvn compile -q` — BUILD SUCCESS ✅
+
+**Следующая сессия:** 23 — Auth Bug Fixes + Manual Testing
+
+## Session 23 — Auth Bug Fixes | 2026-07-14
+
+**Сделано — Анализ безопасности (5 критических/средних багов исправлено):**
+
+| # | Баг | Файл | Фикс |
+|---|-----|------|------|
+| 1 | **Admin REST API — 403 для JWT-клиентов** | `SecurityConfig.java:156-164` | `JwtAuthenticationConverter`: маппинг `claim("role")` → `ROLE_<value>` |
+| 2 | **OAuth2-админы — 403 в админку** | `CustomOAuth2UserService.java:55-59` | `List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()))` вместо GitHub scopes |
+| 3 | **Выбор/загрузка аватара — не сохраняется** | `UserService.java`, `UserServiceImpl.java:55-61`, `ViewController.java` | Новый `updateAvatar(userId, avatarPath)` с `@Transactional`. Контроллеры вызывают его вместо detached entity |
+| 4 | **Блокировка через REST — 500 вместо 403** | `UserBlockedException.java` (new), `AuthenticationService.java:25`, `GlobalExceptionHandler.java:92` | `IllegalStateException` → `UserBlockedException`, 403 Forbidden |
+| 5 | **OAuth2 cookie maxAge — 24ч (hardcode)** | `OAuth2LoginSuccessHandler.java:24-25,50` | `@Value("${jwt.expiration}")` + `expirationMs / 1000` вместо `86400` |
+
+**Сделано — TEST_PLAN.md:**
+- Phase 10: `base_url` без `/api`, явный `/api/...` во всех путях эндпоинтов
+
+**Build:** `mvn compile -q` — BUILD SUCCESS ✅

@@ -38,13 +38,19 @@ public class TestViewController {
     }
 
     @PostMapping("/settings")
-    public String startTest(@RequestParam List<String> topics,
+    public String startTest(@RequestParam(required = false) List<String> topics,
                             @RequestParam(defaultValue = "10") int questionCount,
-                            HttpSession session) {
-        TestStartRequest request = new TestStartRequest(topics, questionCount);
-        InterviewState state = testService.startTest(request);
-        session.setAttribute(SESSION_ATTR, state);
-        return "redirect:/test/question";
+                            HttpSession session, Model model) {
+        try {
+            TestStartRequest request = new TestStartRequest(topics, questionCount);
+            InterviewState state = testService.startTest(request);
+            session.setAttribute(SESSION_ATTR, state);
+            return "redirect:/test/question";
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("topics", topicMapper.toTopicDTOList(adminTestService.getAllTopics()));
+            return "test-settings";
+        }
     }
 
     @GetMapping("/question")
@@ -68,7 +74,6 @@ public class TestViewController {
             return "redirect:/test/settings";
         }
         testService.processAnswer(state, answerIndex);
-        state.moveToNextQuestion();
         if (state.isFinished()) {
             return "redirect:/test/result";
         }
@@ -83,7 +88,7 @@ public class TestViewController {
             return "redirect:/test/settings";
         }
         if (!state.isFinished()) {
-            return "redirect:/test/question";
+            return "redirect:/test/settings";
         }
         User user = userService.getProfile(currentUserService.getCurrentUserId(authentication));
         testResultService.saveResult(user, state);
@@ -111,6 +116,13 @@ public class TestViewController {
     }
 
     private InterviewState getState(HttpSession session) {
-        return (InterviewState) session.getAttribute(SESSION_ATTR);
+        InterviewState state = (InterviewState) session.getAttribute(SESSION_ATTR);
+        if (state == null || state.isExpired()) {
+            if (state != null) {
+                session.removeAttribute(SESSION_ATTR);
+            }
+            return null;
+        }
+        return state;
     }
 }

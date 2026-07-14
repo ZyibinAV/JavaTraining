@@ -11,6 +11,7 @@
             <h1 class="page-title">Управление пользователями</h1>
             <a href="/admin" class="btn btn-link">Назад</a>
         </div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}" style="text-align:center;"></div>
         <div class="card">
             <div class="table-wrapper">
                 <table>
@@ -44,7 +45,7 @@
                             <td th:text="${#temporals.format(user.createdAt(), 'dd.MM.yyyy')}">01.01.2026</td>
                             <td>
                                 <div class="table-actions">
-                                    <form th:action="@{'/admin/users/' + ${user.id()} + '/block'}" method="post" class="inline-form" onsubmit="return confirm(${user.blocked()} ? 'Разблокировать пользователя ' + '${user.username()}' + '?' : 'Заблокировать пользователя ' + '${user.username()}' + '?')">
+                                    <form th:action="@{'/admin/users/' + ${user.id()} + '/block'}" method="post" class="inline-form" th:data-username="${user.username()}" th:data-blocked="${user.blocked()}" onsubmit="var u=this.dataset.username;return confirm(this.dataset.blocked==='true'?'Разблокировать пользователя '+u+'?':'Заблокировать пользователя '+u+'?')">
                                         <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                                         <button type="submit" th:class="'btn btn-sm ' + (${user.blocked()} ? 'btn-primary' : 'btn-danger')" th:text="${user.blocked()} ? 'Разблокировать' : 'Заблокировать'">Block</button>
                                     </form>
@@ -55,7 +56,7 @@
                                             <option value="ADMIN" th:selected="${user.role().name() == 'ADMIN'}">ADMIN</option>
                                         </select>
                                     </form>
-                                    <form th:action="@{'/admin/users/' + ${user.id()} + '/delete'}" method="post" class="inline-form" onsubmit="return confirm('Удалить пользователя ' + '${user.username()}' + '?')">
+                                    <form th:action="@{'/admin/users/' + ${user.id()} + '/delete'}" method="post" class="inline-form" th:data-username="${user.username()}" onsubmit="return confirm('Удалить пользователя '+this.dataset.username+'?')">
                                         <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                                         <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
                                     </form>

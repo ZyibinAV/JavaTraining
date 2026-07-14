@@ -10,11 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Objects;
 
-@RestControllerAdvice
+@RestControllerAdvice(annotations = RestController.class)
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ValidationException.class)
@@ -87,7 +88,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({CannotChangeOwnRoleException.class,
-            CannotBlockSelfException.class
+            CannotBlockSelfException.class,
+            UserBlockedException.class
     })
     public ResponseEntity<ErrorResponse> handleForbidden(ApiException exception) {
         ErrorResponse response = new ErrorResponse(

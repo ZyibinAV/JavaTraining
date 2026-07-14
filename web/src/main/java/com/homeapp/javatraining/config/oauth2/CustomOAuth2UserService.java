@@ -5,6 +5,7 @@ import com.homeapp.javatraining.model.Role;
 import com.homeapp.javatraining.model.User;
 import com.homeapp.javatraining.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -13,6 +14,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -51,7 +53,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         enhancedAttributes.put("appUserId", user.getId().toString());
 
         return new DefaultOAuth2User(
-                oAuth2User.getAuthorities(),
+                List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name())),
                 enhancedAttributes,
                 "id"
         );

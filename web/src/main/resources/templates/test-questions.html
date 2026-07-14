@@ -28,6 +28,39 @@
             </form>
             <p class="text-muted" style="font-size:.85rem;margin-top:8px;">Ответы разделяйте символом |. Индекс правильного ответа начинается с 0.</p>
         </div>
+        <div class="card mb-4">
+            <h2 class="card-title" style="font-size:1.1rem;">Импорт из JSON</h2>
+            <form th:action="@{'/admin/tests/' + ${topicCode} + '/questions/import'}" method="post" enctype="multipart/form-data" class="form-inline">
+                <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <div class="form-group" style="flex:1;min-width:200px;">
+                    <input type="file" name="file" class="form-input" accept=".json" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Импортировать</button>
+            </form>
+            <details style="margin-top:8px;">
+                <summary class="text-muted" style="cursor:pointer;font-size:.85rem;">Формат JSON (нажмите для примера)</summary>
+                <pre style="background:var(--color-bg);padding:12px;border-radius:var(--radius);font-size:.8rem;margin-top:8px;overflow-x:auto;">[
+  {
+    "questionText": "Что такое JVM?",
+    "answers": [
+      "Среда выполнения Java-приложений",
+      "Компилятор Java",
+      "Фреймворк для веб-приложений"
+    ],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Какой тип данных является примитивным?",
+    "answers": [
+      "String",
+      "Integer",
+      "int"
+    ],
+    "correctAnswerIndex": 2
+  }
+]</pre>
+            </details>
+        </div>
         <div th:if="${#lists.isEmpty(questions)}" class="card text-center">
             <p class="text-muted">Вопросов пока нет.</p>
         </div>
@@ -43,10 +76,13 @@
                                 th:text="${answer.index() + 1} + '. ' + ${answer.text()}">1. Answer</li>
                         </ul>
                     </div>
-                    <form th:action="@{'/admin/tests/' + ${topicCode} + '/questions/' + ${question.id()} + '/delete'}" method="post" class="inline-form" onsubmit="return confirm('Удалить вопрос?')">
-                        <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                        <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
-                    </form>
+                    <div class="table-actions">
+                        <a th:href="@{'/admin/tests/' + ${topicCode} + '/questions/' + ${question.id()} + '/edit'}" class="btn btn-sm btn-primary">Редактировать</a>
+                        <form th:action="@{'/admin/tests/' + ${topicCode} + '/questions/' + ${question.id()} + '/delete'}" method="post" class="inline-form" onsubmit="return confirm('Удалить вопрос?')">
+                            <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                            <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

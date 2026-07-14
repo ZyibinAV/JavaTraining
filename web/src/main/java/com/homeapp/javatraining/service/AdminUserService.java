@@ -8,8 +8,6 @@ import com.homeapp.javatraining.model.User;
 import com.homeapp.javatraining.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +36,7 @@ public class AdminUserService {
                     return new UserNotFoundException(targetUserId);
                 });
 
-        if (user.getId() == adminId) {
+        if (user.getId().equals(adminId)) {
             log.warn("Admin {} attempted to change own role", adminId);
             throw new CannotChangeOwnRoleException();
         }
@@ -69,7 +67,7 @@ public class AdminUserService {
     public void toggleBlockUser(long adminId, long targetUserId) {
         User user = userRepository.findById(targetUserId)
                 .orElseThrow(() -> new UserNotFoundException(targetUserId));
-        if (user.getId() == adminId) {
+        if (user.getId().equals(adminId)) {
             throw new CannotBlockSelfException();
         }
         user.setBlocked(!user.isBlocked());

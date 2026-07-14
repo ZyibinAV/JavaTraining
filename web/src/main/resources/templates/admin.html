@@ -11,22 +11,18 @@
             <h1 class="page-title">Панель администратора</h1>
         </div>
         <div class="admin-grid">
-            <a href="/admin/users" class="card admin-card">
+            <div class="card stat-card">
                 <div class="stat-value" th:text="${statistics.totalTests}">0</div>
                 <div class="stat-label">Всего тестов</div>
-            </a>
-            <a href="/admin/users" class="card admin-card">
+            </div>
+            <div class="card stat-card">
                 <div class="stat-value" th:text="${statistics.passedTests}">0</div>
                 <div class="stat-label">Пройдено тестов</div>
-            </a>
-            <a href="/admin/tests" class="card admin-card">
-                <div class="stat-value" th:text="${#lists.size(statistics.topicStats)}">0</div>
-                <div class="stat-label">Тем</div>
-            </a>
-            <a href="/admin/users" class="card admin-card">
+            </div>
+            <div class="card stat-card">
                 <div class="stat-value" th:text="${#lists.size(statistics.userStats)}">0</div>
                 <div class="stat-label">Пользователей</div>
-            </a>
+            </div>
         </div>
         <div class="grid grid-3">
             <a href="/admin/users" class="card admin-card">

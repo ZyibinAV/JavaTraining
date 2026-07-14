@@ -1,6 +1,7 @@
 package com.homeapp.javatraining.service;
 
 import com.homeapp.javatraining.exception.user.InvalidCredentialsException;
+import com.homeapp.javatraining.exception.user.UserBlockedException;
 import com.homeapp.javatraining.model.User;
 import com.homeapp.javatraining.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class AuthenticationService {
             throw new InvalidCredentialsException();
         }
         if (user.isBlocked()) {
-            throw new IllegalStateException("User is blocked");
+            throw new UserBlockedException();
         }
         return user;
     }

@@ -11,8 +11,11 @@
             <div class="card auth-card">
                 <h1 class="card-title">Вход в JavaTraining</h1>
 
-                <div th:if="${param.error}" class="alert alert-error">
-                    Неверное имя пользователя или пароль.
+                <div th:if="${param.error}" class="alert alert-error" style="text-align:center;">
+                    Invalid username or password.
+                </div>
+                <div th:if="${param.blocked}" class="alert alert-error" style="text-align:center;">
+                    Your account is blocked. Contact an administrator.
                 </div>
                 <div th:if="${param.logout}" class="alert alert-info">
                     Вы вышли из системы.

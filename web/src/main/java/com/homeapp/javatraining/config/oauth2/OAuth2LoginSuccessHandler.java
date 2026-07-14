@@ -21,6 +21,9 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
 
+    @Value("${jwt.expiration}")
+    private long expirationMs;
+
     @Value("${cookie.secure:false}")
     private boolean cookieSecure;
 
@@ -44,7 +47,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         jwtCookie.setHttpOnly(true);
         jwtCookie.setSecure(cookieSecure);
         jwtCookie.setPath("/");
-        jwtCookie.setMaxAge(86400);
+        jwtCookie.setMaxAge((int) (expirationMs / 1000));
         response.addCookie(jwtCookie);
 
         setDefaultTargetUrl("/");

@@ -3,6 +3,7 @@ package com.homeapp.javatraining.service;
 
 import com.homeapp.javatraining.dto.AnswerResult;
 import com.homeapp.javatraining.dto.TestStartRequest;
+import com.homeapp.javatraining.exception.ValidationException;
 import com.homeapp.javatraining.model.InterviewState;
 import com.homeapp.javatraining.model.Question;
 import com.homeapp.javatraining.model.Topic;
@@ -24,6 +25,9 @@ public class TestService {
     private final TopicLoader topicLoader;
 
     public InterviewState startTest(TestStartRequest request) {
+        if (request.topics() == null || request.topics().isEmpty()) {
+            throw new ValidationException("Select at least one topic.", "topics");
+        }
         Set<Topic> topics = request.topics().stream()
                 .map(topicLoader::findByCode)
                 .collect(Collectors.toSet());

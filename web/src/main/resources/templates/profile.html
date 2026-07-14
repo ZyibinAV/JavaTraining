@@ -20,7 +20,7 @@
             <div class="profile-info">
                 <p><span class="profile-label">Имя пользователя</span><br><span th:text="${profile.username()}">username</span></p>
                 <p><span class="profile-label">Email</span><br><span th:text="${profile.email()}">email</span></p>
-                <p th:if="${profile.nickname() != null}"><span class="profile-label">Псевдоним</span><br><span th:text="${profile.nickname()}">nickname</span></p>
+                <p><span class="profile-label">Псевдоним</span><br><span th:text="${profile.nickname() != null ? profile.nickname() : profile.username()}">nickname</span></p>
                 <p th:if="${profile.about() != null}"><span class="profile-label">О себе</span><br><span th:text="${profile.about()}">about</span></p>
                 <p><span class="profile-label">Роль</span><br>
                     <span th:if="${profile.role() == 'ADMIN'}" class="badge badge-admin" th:text="${profile.role()}">ADMIN</span>

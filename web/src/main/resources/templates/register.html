@@ -11,7 +11,7 @@
             <div class="card auth-card">
                 <h1 class="card-title">Регистрация</h1>
 
-                <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+                <div th:if="${error}" class="alert alert-error" th:text="${error}" style="text-align:center;"></div>
 
                 <form th:action="@{/register}" method="post" class="form">
                     <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">

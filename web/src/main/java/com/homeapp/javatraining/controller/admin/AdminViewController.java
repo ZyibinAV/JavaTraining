@@ -4,6 +4,7 @@ import com.homeapp.javatraining.dto.*;
 import com.homeapp.javatraining.dto.mapper.QuestionMapper;
 import com.homeapp.javatraining.dto.mapper.TopicMapper;
 import com.homeapp.javatraining.dto.mapper.UserMapper;
+import com.homeapp.javatraining.exception.question.QuestionNotFoundException;
 import com.homeapp.javatraining.model.Role;
 import com.homeapp.javatraining.service.AdminStatisticsService;
 import com.homeapp.javatraining.service.AdminTestService;
@@ -14,9 +15,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -120,6 +124,41 @@ public class AdminViewController {
                 .filter(s -> !s.isEmpty())
                 .toList();
         adminTestService.createQuestion(code, questionText, correctAnswerIndex, answerList);
+        return "redirect:/admin/tests/" + code + "/questions";
+    }
+
+    @PostMapping("/tests/{code}/questions/import")
+    public String importQuestions(@PathVariable String code,
+                                  @RequestParam("file") MultipartFile file) throws IOException {
+        if (!file.isEmpty()) {
+            adminTestService.importQuestionsFromJson(code, file.getInputStream());
+        }
+        return "redirect:/admin/tests/" + code + "/questions";
+    }
+
+    @GetMapping("/tests/{code}/questions/{id}/edit")
+    public String editQuestionForm(@PathVariable String code,
+                                   @PathVariable Long id,
+                                   Model model) {
+        QuestionDTO question = questionMapper.toQuestionDTO(
+                adminTestService.getQuestionById(id)
+                        .orElseThrow(() -> new QuestionNotFoundException(id)));
+        model.addAttribute("question", question);
+        model.addAttribute("topicCode", code);
+        return "question-edit";
+    }
+
+    @PostMapping("/tests/{code}/questions/{id}/edit")
+    public String editQuestion(@PathVariable String code,
+                               @PathVariable Long id,
+                               @RequestParam String questionText,
+                               @RequestParam("answerText") List<String> answerTexts,
+                               @RequestParam int correctAnswerIndex) {
+        List<String> answerList = answerTexts.stream()
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
+        adminTestService.updateQuestion(id, code, questionText, correctAnswerIndex, answerList);
         return "redirect:/admin/tests/" + code + "/questions";
     }
 }

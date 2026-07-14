@@ -54,6 +54,10 @@ public class AdminStatisticsService {
             Set<Topic> topics = r.getTopics();
             if (topics == null || topics.isEmpty()) continue;
 
+            if (topics.size() > 1) {
+                continue;
+            }
+
             for (Topic topic : topics) {
                 TopicStats stats = topicStats.computeIfAbsent(
                         topic.getCode(),

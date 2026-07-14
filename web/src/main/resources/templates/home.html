@@ -20,6 +20,10 @@
                 <h2 class="card-title" style="font-size:1.2rem;">Пройти тест</h2>
                 <p style="color:var(--color-text-secondary);">Выберите темы и проверьте свои знания Java</p>
             </a>
+            <a href="/my-stats" class="card" style="text-decoration:none;color:inherit;display:block;">
+                <h2 class="card-title" style="font-size:1.2rem;">Моя статистика</h2>
+                <p style="color:var(--color-text-secondary);">Результаты тестов, успеваемость по темам</p>
+            </a>
             <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" href="/admin" class="card" style="text-decoration:none;color:inherit;display:block;">
                 <h2 class="card-title" style="font-size:1.2rem;">Панель администратора</h2>
                 <p style="color:var(--color-text-secondary);">Управление пользователями, темами и статистикой</p>

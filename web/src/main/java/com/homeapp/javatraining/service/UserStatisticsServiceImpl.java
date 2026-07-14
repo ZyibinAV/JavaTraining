@@ -21,6 +21,10 @@ public class UserStatisticsServiceImpl implements UserStatisticsService {
             Set<Topic> topics = result.getTopics();
             if (topics == null || topics.isEmpty()) continue;
 
+            if (topics.size() > 1) {
+                continue;
+            }
+
             for (Topic topic : topics) {
                 String displayName = topic.getDisplayName();
                 UserTopicStats stats = statsByTopic.computeIfAbsent(
