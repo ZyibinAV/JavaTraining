@@ -1,46 +1,34 @@
 package com.homeapp.javatraining.service;
 
-import jakarta.annotation.PostConstruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.IntStream;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class AvatarService {
-
-    private static final Logger log = LoggerFactory.getLogger(AvatarService.class);
 
     private static final Set<String> ALLOWED_EXTENSIONS = Set.of("jpg", "jpeg", "png", "gif", "svg", "webp");
     private static final long MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
     private static final String UPLOAD_PREFIX = "/uploads/avatars/";
     private static final int PRESET_COUNT = 12;
 
-    private final Path uploadDir;
+    private final MinioClient minioClient;
 
-    public AvatarService(@Value("${app.avatar.upload-dir:uploads/avatars}") String uploadDirConfig) {
-        Path configured = Paths.get(uploadDirConfig);
-        this.uploadDir = configured.isAbsolute() ? configured : Paths.get(System.getProperty("user.dir")).resolve(uploadDirConfig).normalize();
-    }
-
-    @PostConstruct
-    public void init() {
-        try {
-            Files.createDirectories(uploadDir);
-            log.info("Avatar upload directory initialized: {}", uploadDir.toAbsolutePath());
-        } catch (IOException e) {
-            log.error("Could not create avatar upload directory: {}", uploadDir.toAbsolutePath(), e);
-        }
-    }
+    @Value("${minio.bucket}")
+    private String bucket;
 
     public List<String> getPresetAvatars() {
         return IntStream.rangeClosed(1, PRESET_COUNT)
@@ -72,14 +60,17 @@ public class AvatarService {
         }
 
         String filename = "avatar_" + userId + "_" + System.currentTimeMillis() + "." + extension;
-        Path targetPath = uploadDir.resolve(filename);
-
-        try {
-            file.transferTo(targetPath.toFile());
-            log.info("Avatar saved: {} for user {}", targetPath, userId);
+        try (InputStream inputStream = new ByteArrayInputStream(file.getBytes())) {
+            minioClient.putObject(PutObjectArgs.builder()
+                    .bucket(bucket)
+                    .object(filename)
+                    .stream(inputStream, file.getSize(), -1)
+                    .contentType(file.getContentType())
+                    .build());
+            log.info("Avatar saved to MinIO: {} for user {}", filename, userId);
             return UPLOAD_PREFIX + filename;
-        } catch (IOException e) {
-            log.error("Failed to save avatar for user {}", userId, e);
+        } catch (Exception e) {
+            log.error("Failed to save avatar to MinIO for user {}", userId, e);
             throw new RuntimeException("Failed to save avatar file", e);
         }
     }
@@ -89,12 +80,28 @@ public class AvatarService {
             return;
         }
         String filename = avatarPath.substring(UPLOAD_PREFIX.length());
-        Path filePath = uploadDir.resolve(filename);
         try {
-            Files.deleteIfExists(filePath);
-            log.info("Deleted avatar file: {}", filePath);
-        } catch (IOException e) {
-            log.warn("Failed to delete avatar file: {}", filePath, e);
+            minioClient.removeObject(RemoveObjectArgs.builder()
+                    .bucket(bucket)
+                    .object(filename)
+                    .build());
+            log.info("Deleted avatar from MinIO: {}", filename);
+        } catch (Exception e) {
+            log.warn("Failed to delete avatar from MinIO: {}", filename, e);
+        }
+    }
+
+    public InputStream loadAvatar(String filename) {
+        try {
+            return minioClient.getObject(
+                    io.minio.GetObjectArgs.builder()
+                            .bucket(bucket)
+                            .object(filename)
+                            .build()
+            );
+        } catch (Exception e) {
+            log.warn("Failed to load avatar from MinIO: {}", filename, e);
+            return null;
         }
     }
 

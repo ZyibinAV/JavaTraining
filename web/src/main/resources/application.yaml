@@ -15,6 +15,7 @@ spring:
       max-lifetime: 1800000
 
   jpa:
+    open-in-view: false
     hibernate:
       ddl-auto: update
     show-sql: true
@@ -59,6 +60,8 @@ jwt:
 cookie:
   secure: false
 
-app:
-  avatar:
-    upload-dir: uploads/avatars
+minio:
+  endpoint: http://localhost:9000
+  access-key: minioadmin
+  secret-key: minioadmin
+  bucket: avatars

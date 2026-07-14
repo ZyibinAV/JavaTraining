@@ -36,3 +36,12 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Docker volumes ###
+/javatraining/
+
+### Uploads ###
+uploads/
+
+### App logs ###
+web/logs/

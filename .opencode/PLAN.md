@@ -219,12 +219,15 @@
 
 ### Фаза 8: MinIO Avatar Storage
 
-#### 🔲 Сессия 24 — MinIO Avatar Storage
-- [ ] MinIO client dependency (aws-java-sdk-s3 / minio-java)
-- [ ] AvatarService: MinIO storage вместо filesystem
-- [ ] docker-compose.yml: MinIO конфигурация проверена
-- [ ] WebConfig: resource handler через MinIO proxy
-- [ ] Миграция существующих аватаров
+#### ✅ Сессия 24 — MinIO Avatar Storage (2026-07-14)
+- [x] MinIO client dependency (io.minio:minio:8.5.17)
+- [x] MinioConfig: @ConfigurationProperties + MinioClient bean
+- [x] AvatarService: MinIO storage (putObject/removeObject/getObject) вместо filesystem
+- [x] docker-compose.yml: bind mount ./javatraining/minio вместо named volume, конфигурация проверена
+- [x] AvatarProxyController: proxy-эндпоинт для отдачи аватаров из MinIO (вместо WebConfig resource handler)
+- [x] AvatarMigrationService: @PostConstruct миграция существующих аватаров с диска в MinIO
+- [x] WebConfig: удалён filesystem resource handler
+- [x] .gitignore: добавлены javatraining/ и uploads/
 
 ### Фаза 9: Unit + Integration tests, Coverage
 

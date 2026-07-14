@@ -562,3 +562,48 @@
 - Phase 10: `base_url` без `/api`, явный `/api/...` во всех путях эндпоинтов
 
 **Build:** `mvn compile -q` — BUILD SUCCESS ✅
+
+## Session 24 — MinIO Avatar Storage | 2026-07-14
+
+**Сделано — Зависимости и конфигурация:**
+- `web/pom.xml` — добавлен `io.minio:minio:8.5.17` (официальный Java SDK для MinIO)
+- `application.yaml` — добавлена секция `minio:` (endpoint, access-key, secret-key, bucket), удалён устаревший `app.avatar.upload-dir`
+- `application.yaml` — добавлен `spring.jpa.open-in-view: false` (убирает warning)
+
+**Сделано — MinIO клиент (config/MinioConfig.java):**
+- `@ConfigurationProperties(prefix = "minio")` — читает endpoing/credentials/bucket из YAML
+- `MinioClient` bean через builder с endpoint и credentials
+- Инициализация бакета вынесена в AvatarMigrationService (чтобы избежать circular reference)
+
+**Сделано — AvatarService переписан на MinIO:**
+- Вместо `file.transferTo()` → `minioClient.putObject()` (PutObjectArgs с bucket, object name, content-type)
+- Вместо `Files.deleteIfExists()` → `minioClient.removeObject()`
+- Новый метод `loadAvatar(filename)` → `minioClient.getObject()` (используется AvatarProxyController)
+- Сохранена валидация расширения/размера и генерация filename
+
+**Сделано — AvatarProxyController (controller/AvatarProxyController.java, новый):**
+- `@GetMapping("/uploads/avatars/{filename}")` — заменяет старый filesystem resource handler
+- Загружает файл из MinIO через `avatarService.loadAvatar()`
+- Отдаёт как `InputStreamResource` с правильным Content-Type (image/jpeg, image/png и т.д.)
+- Cache-Control: max-age=365 дней, public (кеширование браузером)
+
+**Сделано — WebConfig упрощён:**
+- Удалён `addResourceHandlers()` с `file:` — теперь аватары отдаются через AvatarProxyController
+
+**Сделано — AvatarMigrationService (service/AvatarMigrationService.java, новый):**
+- `@PostConstruct init()` — при старте приложения:
+  1. `ensureBucketExists()` — создаёт bucket `avatars` в MinIO (если не существует)
+  2. `migrateExistingAvatars()` — находит файлы в `uploads/avatars/` и загружает их в MinIO
+- Ищет папку аватаров в двух местах: `user.dir/uploads/avatars` и `user.dir/../uploads/avatars` (поддержка `mvn spring-boot:run` из web/ модуля)
+
+**Сделано — Docker и инфраструктура:**
+- `docker-compose.yml` — named volumes (`postgres_data`, `minio_data`) заменены на bind mounts в `./javatraining/`
+- `.gitignore` — добавлены `javatraining/` и `uploads/`
+
+**Build:** `mvn compile -q` — BUILD SUCCESS ✅
+
+**Тестирование:**
+- MinIO контейнер запущен (порт 9000), bucket `avatars` создан автоматически при старте приложения
+- 4 существующих аватара мигрированы с диска в MinIO (avatar_27, avatar_28, avatar_29, avatar_30)
+- `GET /uploads/avatars/avatar_27_1783854348368.jpg` → HTTP 200, 788423 bytes, Content-Type: image/jpeg ✅
+- `GET /uploads/avatars/nonexistent.jpg` → HTTP 404 ✅
