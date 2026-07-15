@@ -225,41 +225,110 @@
 - [x] AvatarService: MinIO storage (putObject/removeObject/getObject) вместо filesystem
 - [x] docker-compose.yml: bind mount ./javatraining/minio вместо named volume, конфигурация проверена
 - [x] AvatarProxyController: proxy-эндпоинт для отдачи аватаров из MinIO (вместо WebConfig resource handler)
-- [x] AvatarMigrationService: @PostConstruct миграция существующих аватаров с диска в MinIO
+- [x] AvatarService.initBucket(): @PostConstruct создание бакета при старте (без отдельного класса)
 - [x] WebConfig: удалён filesystem resource handler
 - [x] .gitignore: добавлены javatraining/ и uploads/
 
-### Фаза 9: Unit + Integration tests, Coverage
+### Фаза 9: Project Cleanup
 
-#### 🔲 Сессия 25 — Unit tests
-- [ ] Сервисные тесты: @ExtendWith(MockitoExtension)
-- [ ] Контроллер тесты: @WebMvcTest
-- [ ] Util тесты
+#### 🔲 Сессия 25a — Project Cleanup (текущая)
+- [ ] Удаление `src/` (сервлеты, JSP, старые DTO, migration tools, CSS, JS, PNG)
+- [ ] `logs/`, `uploads/` — убрать из git (git rm --cached)
+- [ ] Перенос `questions/*.json` → `common/src/main/resources/questions/`
+- [ ] Удаление `docker/postgres/init.sql`
+- [ ] Исправление package в common тестах
+- [ ] Удаление пустых WebConfig.java, validation/
+- [ ] Переписать README.md под текущий стек
+- [ ] Проверка .gitignore
 
-#### 🔲 Сессия 26 — Integration + TestContainers
-- [ ] @SpringBootTest + TestContainers PostgreSQL
-- [ ] Repository integration tests
-- [ ] Security tests (JWT, OAuth2)
-- [ ] MockMvc
+### Фаза 10: Liquibase
 
-#### 🔲 Сессия 27 — Coverage
-- [ ] JaCoCo настройка
-- [ ] Достижение >80% service layer
+#### 🔲 Сессия 26 — Liquibase миграции
+- [ ] Добавление `liquibase-core` и `liquibase-maven-plugin` в POM
+- [ ] Создание `db/changelog/db.changelog-master.yaml`
+- [ ] Миграция init.sql в Liquibase changesets
+- [ ] Удаление init.sql из docker-compose
+- [ ] Тестирование: mvn liquibase:update
 
-### Фаза 10: Observability
+### Фаза 11: Redis
 
-#### 🔲 Сессия 28 — Actuator + MDC
-- [ ] spring-boot-starter-actuator
-- [ ] Health indicators (db, minio, redis)
-- [ ] Micrometer метрики
-- [ ] MDC userId в логи
+#### 🔲 Сессия 27 — Redis Session State
+- [ ] Добавление `spring-session-data-redis` + `lettuce-core`
+- [ ] Конфигурация Redis в docker-compose и application.yaml
+- [ ] Перенос InterviewState из HttpSession в Redis
+- [ ] Настройка `@EnableRedisHttpSession`
+- [ ] Docker: добавление контейнера Redis
 
-### Фаза 11: Финальное ревью
+### Фаза 12: Удаление Thymeleaf
 
-#### 🔲 Сессия 29 — Финальная проверка
-- [ ] Чек-лист 40 review issues
-- [ ] mvn clean verify — зелёный билд
+#### 🔲 Сессия 28 — Thymeleaf → REST only
+- [ ] Удаление `thymeleaf`, `thymeleaf-layout-dialect`, `thymeleaf-extras-springsecurity6` из POM
+- [ ] Удаление `templates/` (14 .html файлов)
+- [ ] Удаление `static/` (CSS, JS)
+- [ ] Удаление ViewController, TestViewController, AdminViewController, StatisticsViewController, GlobalModelAdvice
+- [ ] Удаление FormLoginSuccessHandler, CustomUserDetailsService, MvcExceptionHandler
+- [ ] SecurityConfig: удаление formLogin(), oauth2Login(), настройка STATELESS + CORS
+- [ ] AvatarProxyController: переход на REST
+
+### Фаза 13: React Frontend
+
+#### 🔲 Сессия 29 — React Auth + Profile
+- [ ] Инициализация React (Vite + TypeScript)
+- [ ] Настройка прокси (vite.config.ts → localhost:8080)
+- [ ] React Router: /login, /register, /profile
+- [ ] Страницы: Login, Register, Profile
+- [ ] API service layer (axios)
+
+#### 🔲 Сессия 30 — React Tests + Admin
+- [ ] Компоненты: TestSettings, Question, Result, MyStats
+- [ ] Admin: Users, Topics, Questions, Statistics
+- [ ] Тесты: Vitest + React Testing Library
+- [ ] Проверка маршрутов и навигации
+
+### Фаза 14: Kafka
+
+#### 🔲 Сессия 31 — Kafka Event Bus
+- [ ] Добавление `spring-kafka` в POM
+- [ ] Создание топиков (user-events, test-events)
+- [ ] Продюсеры: UserEventProducer, TestEventProducer
+- [ ] Консьюмеры: обработка событий
+- [ ] Тестирование с TestContainers Kafka
+
+### Фаза 15: Микросервисы
+
+#### 🔲 Сессия 32 — Eureka + Gateway
+- [ ] Создание модуля `gateway` (Spring Cloud Gateway)
+- [ ] Создание модуля `discovery` (Eureka Server)
+- [ ] Настройка маршрутов: auth → 8081, user → 8082, test → 8083, admin → 8084
+- [ ] docker-compose: добавление Eureka, Gateway
+
+#### 🔲 Сессия 33 — auth-service (8081)
+- [ ] Выделение AuthController, JwtTokenProvider, RefreshToken
+- [ ] Настройка security только для auth
+- [ ] Подключение к общей БД (пока единая)
+
+#### 🔲 Сессия 34 — user-service (8082)
+- [ ] Выделение ProfileController, UserService, AvatarService
+- [ ] Kafka consumer для user-events
+- [ ] REST client для auth-service (JWT validation)
+
+#### 🔲 Сессия 35 — test-service (8083)
+- [ ] Выделение TestController, TestService, TestResultService
+- [ ] Kafka consumer для test-events
+- [ ] REST client для user-service
+
+#### 🔲 Сессия 36 — admin-service + интеграция (8084)
+- [ ] Выделение AdminUserController, AdminTopicController, AdminStatisticsController
+- [ ] Gateway security: Centralized JWT validation
+- [ ] Интеграционное тестирование всех сервисов
+
+### Фаза 16: Финальное ревью
+
+#### 🔲 Сессия 37 — Final Review
+- [ ] Чек-лист финальной проверки (40 пунктов)
+- [ ] `mvn clean verify` — зелёный билд
 - [ ] Обновление README
+- [ ] Финальный коммит
 
 ---
 
@@ -274,16 +343,16 @@
 | 3 | ProfileEditServlet.java | 45 | 11 | ✅ |
 | 4 | ResultServlet.java | 55 | 13 | ✅ |
 | 5 | AvatarUploadServlet.java | 52 | 20 | 🔲 |
-| 6 | AdminBlockUserServlet.java | 27 | 14 | ✅ (сервлет удалён, логика в AdminUserService.toggleBlockUser) |
-| 7 | AdminChangeRoleServlet.java | 31 | 14 | ✅ (сервлет удалён, Role.valueOf в контроллере) |
-| 8 | AdminUserService.java | 40 | 14 | ✅ (@Transactional + dirty checking вместо save()) |
+| 6 | AdminBlockUserServlet.java | 27 | 14 | ✅ |
+| 7 | AdminChangeRoleServlet.java | 31 | 14 | ✅ |
+| 8 | AdminUserService.java | 40 | 14 | ✅ |
 | 9 | ResultServlet.java | 46 | 13 | ✅ |
 | 10 | AdminStatisticsService.java | 1 | 4 | ✅ |
 | 11 | BaseServlet.java | 91 | 4 | ✅ |
 | 12 | AuthenticationService.java | 1 | 4 | ✅ |
 | 13 | AdminStatisticsService.java | 20 | 14 | 🔲 |
 
-### WARNING (20 шт)
+### WARNING (21 шт)
 
 | # | Файл | Строка | Сессия | Статус |
 |---|------|--------|--------|--------|
@@ -292,22 +361,22 @@
 | 3 | BaseServlet.java | 62 | 4 | ✅ |
 | 4 | LoginServlet.java | 34 | 10 | ✅ |
 | 5 | ProfileEditServlet.java | 48 | 11 | 🔲 |
-| 6 | QuestionServlet.java | 71 | 12 | ✅ (файл удалён) |
-| 7 | QuestionServlet.java | 79 | 12 | ✅ (файл удалён) |
-| 8 | ResultServlet.java | 62 | 13 | ✅ (файл удалён) |
+| 6 | QuestionServlet.java | 71 | 12 | ✅ |
+| 7 | QuestionServlet.java | 79 | 12 | ✅ |
+| 8 | ResultServlet.java | 62 | 13 | ✅ |
 | 9 | AvatarUploadServlet.java | 56 | 20 | 🔲 |
-| 10 | AdminUserServlet.java | 82 | 14 | ✅ (файл удалён) |
-| 11 | AdminTestServlet.java | 262 | 14 | ✅ (файл удалён) |
+| 10 | AdminUserServlet.java | 82 | 14 | ✅ |
+| 11 | AdminTestServlet.java | 262 | 14 | ✅ |
 | 12 | QuestionService.java | 45 | 12 | 🔲 |
-| 13 | TestResultService.java | 30 | 13 | ✅ (split process+save) |
-| 14 | StartServlet.java | 46 | 12 | ✅ (файл удалён, логика в TopicLoader.findByCode → orElseThrow) |
+| 13 | TestResultService.java | 30 | 13 | ✅ |
+| 14 | StartServlet.java | 46 | 12 | ✅ |
 | 15 | QuestionValidator.java | 36 | 16 | 🔲 |
-| 16 | QuestionServlet.java | 35 | 12 | ✅ (файл удалён) |
-| 17 | AdminUserServlet.java | 56 | 14 | ✅ (файл удалён) |
+| 16 | QuestionServlet.java | 35 | 12 | ✅ |
+| 17 | AdminUserServlet.java | 56 | 14 | ✅ |
 | 18 | AvatarSelectServlet.java | 51 | 20 | 🔲 |
 | 19 | ProfileEditServlet.java | 44 (old) | 11 | ✅ |
-| 20 | AdminUserServlet.java | 82 (duplicate) | 14 | ✅ (файл удалён) |
-| 21 | TopicLoader.java | 21 | 12 | ✅ (orElse(null) → orElseThrow) |
+| 20 | AdminUserServlet.java | 82 (dup) | 14 | ✅ |
+| 21 | TopicLoader.java | 21 | 12 | ✅ |
 
 ### INFO (7 шт)
 
@@ -315,8 +384,8 @@
 |---|------|--------|--------|--------|
 | 1 | UserValidation.java | 19 | 16 | 🔲 |
 | 2 | BaseStatsTest.java | 208 | 22 | 🔲 |
-| 3 | ErrorHandlerTest.java | 90 | — | ✅ (удалён в S5) |
-| 4 | RequestHandlerTest.java | 55 | — | ✅ (удалён в S5) |
+| 3 | ErrorHandlerTest.java | 90 | — | ✅ |
+| 4 | RequestHandlerTest.java | 55 | — | ✅ |
 | 5 | DtoStatsTest.java | 70 | 21 | 🔲 |
 | 6 | SessionUtils.java | 10 | 12 | 🔲 |
 | 7 | UserValidation.java | class | 16 | 🔲 |

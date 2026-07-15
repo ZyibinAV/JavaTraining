@@ -590,11 +590,9 @@
 **Сделано — WebConfig упрощён:**
 - Удалён `addResourceHandlers()` с `file:` — теперь аватары отдаются через AvatarProxyController
 
-**Сделано — AvatarMigrationService (service/AvatarMigrationService.java, новый):**
-- `@PostConstruct init()` — при старте приложения:
-  1. `ensureBucketExists()` — создаёт bucket `avatars` в MinIO (если не существует)
-  2. `migrateExistingAvatars()` — находит файлы в `uploads/avatars/` и загружает их в MinIO
-- Ищет папку аватаров в двух местах: `user.dir/uploads/avatars` и `user.dir/../uploads/avatars` (поддержка `mvn spring-boot:run` из web/ модуля)
+**Сделано — AvatarService.initBucket():**
+- `@PostConstruct` — создаёт bucket `avatars` в MinIO при старте приложения (если не существует)
+- Инициализация встроена в AvatarService, отдельный класс миграции удалён (миграция 4 аватаров уже выполнена при первом запуске)
 
 **Сделано — Docker и инфраструктура:**
 - `docker-compose.yml` — named volumes (`postgres_data`, `minio_data`) заменены на bind mounts в `./javatraining/`
@@ -607,3 +605,24 @@
 - 4 существующих аватара мигрированы с диска в MinIO (avatar_27, avatar_28, avatar_29, avatar_30)
 - `GET /uploads/avatars/avatar_27_1783854348368.jpg` → HTTP 200, 788423 bytes, Content-Type: image/jpeg ✅
 - `GET /uploads/avatars/nonexistent.jpg` → HTTP 404 ✅
+
+## Session 25a — Project Cleanup | 2026-07-16
+
+**Сделано — .opencode обновления:**
+- `PLAN.md` — новый roadmap 25a–37 (Liquibase, Redis, удаление Thymeleaf, React, Kafka, микросервисы, ревью)
+- `AGENTS.md` — обновлены правила (React-фронтенд), добавлен прогресс на 25a–37
+- `CHANGELOG.md` — запись о сессии 25a
+
+**Сделано — Очистка проекта:**
+- `src/` — удалена целиком (сервлеты, JSP, старые DTO, migration tools, CSS, JS, PNG)
+- `logs/` — убраны из git (git rm --cached)
+- `uploads/` — убраны из git (git rm --cached)
+- `questions/*.json` — перенесены в `common/src/main/resources/questions/`
+- `docker/postgres/init.sql` — удалён (Legacy-схема, больше не нужна)
+- `CommonApplicationTests.java` — package исправлен на `com.homeapp.javatraining`
+- `WebConfig.java` — удалён (пустой @Configuration)
+- `web/.../validation/` — удалена (пустая директория)
+- `README.md` — переписан под текущий стек
+- `.gitignore` — обновлён (добавлены `logs/`, `web/logs/`)
+
+**Build:** `mvn install -DskipTests -q` — BUILD SUCCESS ✅

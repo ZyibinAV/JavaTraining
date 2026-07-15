@@ -1,8 +1,11 @@
 package com.homeapp.javatraining.service;
 
+import io.minio.BucketExistsArgs;
+import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +32,21 @@ public class AvatarService {
 
     @Value("${minio.bucket}")
     private String bucket;
+
+    @PostConstruct
+    public void initBucket() {
+        try {
+            boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucket).build());
+            if (!found) {
+                minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucket).build());
+                log.info("Created MinIO bucket: {}", bucket);
+            } else {
+                log.info("MinIO bucket already exists: {}", bucket);
+            }
+        } catch (Exception e) {
+            log.warn("MinIO not available (bucket init skipped): {}", e.getMessage());
+        }
+    }
 
     public List<String> getPresetAvatars() {
         return IntStream.rangeClosed(1, PRESET_COUNT)

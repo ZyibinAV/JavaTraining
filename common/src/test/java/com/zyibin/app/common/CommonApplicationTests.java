@@ -1,4 +1,4 @@
-package com.zyibin.app.common;
+package com.homeapp.javatraining;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

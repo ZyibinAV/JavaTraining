@@ -61,7 +61,7 @@ cookie:
   secure: false
 
 minio:
-  endpoint: http://localhost:9000
+  endpoint: http://localhost:8060
   access-key: minioadmin
   secret-key: minioadmin
   bucket: avatars

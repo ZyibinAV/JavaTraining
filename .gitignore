@@ -45,3 +45,7 @@ uploads/
 
 ### App logs ###
 web/logs/
+logs/
+
+### Legacy src/ ###
+src/
