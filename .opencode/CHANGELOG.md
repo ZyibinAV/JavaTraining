@@ -626,3 +626,28 @@
 - `.gitignore` — обновлён (добавлены `logs/`, `web/logs/`)
 
 **Build:** `mvn install -DskipTests -q` — BUILD SUCCESS ✅
+
+## Session 26 — Liquibase миграции | 2026-07-16
+
+**Сделано — POM:**
+- `pom.xml` — добавлен `liquibase-maven-plugin 4.29.2` в build/plugins с конфигурацией БД
+- `common/pom.xml` — добавлен `liquibase-core` (версия из Spring Boot BOM)
+
+**Сделано — Changelog (2 файла):**
+- `common/src/main/resources/db/changelog/db.changelog-master.yaml` — мастер-файл
+- `v001-init-schema.yaml` — 8 changeset'ов:
+  - users (с индексами username, email)
+  - topics (с индексом code)
+  - questions (FK → topics)
+  - answers (FK → questions)
+  - test_results (FK → users)
+  - test_results_topics (join-таблица с составным PK)
+  - refresh_tokens (FK → users, с индексом)
+
+**Сделано — Конфигурация:**
+- `application.yaml`: `ddl-auto: validate`, добавлен `spring.liquibase.change-log`
+- `docker-compose.yml`: удалена строка init.sql, пути volumes → `./docker/volumes/`
+- `javatraining/` → `docker/volumes/` (данные контейнеров)
+
+**Build:** `mvn compile -q` — BUILD SUCCESS ✅
+**Liquibase:** создаёт таблицы при старте приложения ✅

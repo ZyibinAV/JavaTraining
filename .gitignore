@@ -38,7 +38,7 @@ build/
 .DS_Store
 
 ### Docker volumes ###
-/javatraining/
+/docker/volumes/
 
 ### Uploads ###
 uploads/
@@ -48,4 +48,4 @@ web/logs/
 logs/
 
 ### Legacy src/ ###
-src/
+/src/

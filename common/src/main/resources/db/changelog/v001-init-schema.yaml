@@ -1,0 +1,131 @@
+databaseChangeLog:
+  - changeSet:
+      id: v001-create-users
+      author: javatraining
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column: { name: id, type: BIGSERIAL, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: username, type: VARCHAR(100), constraints: { nullable: false, unique: true } }
+              - column: { name: password_hash, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: email, type: VARCHAR(100), constraints: { nullable: false, unique: true } }
+              - column: { name: github_id, type: VARCHAR(255), constraints: { unique: true } }
+              - column: { name: nickname, type: VARCHAR(100) }
+              - column: { name: about, type: TEXT }
+              - column: { name: avatar_path, type: VARCHAR(255) }
+              - column: { name: role, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: created_at, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: blocked, type: BOOLEAN, defaultValueBoolean: false, constraints: { nullable: false } }
+              - column: { name: version, type: BIGINT, defaultValueNumeric: 0, constraints: { nullable: false } }
+        - createIndex:
+            tableName: users
+            indexName: idx_users_username
+            columns:
+              - column: { name: username }
+        - createIndex:
+            tableName: users
+            indexName: idx_users_email
+            columns:
+              - column: { name: email }
+
+  - changeSet:
+      id: v001-create-topics
+      author: javatraining
+      changes:
+        - createTable:
+            tableName: topics
+            columns:
+              - column: { name: id, type: BIGSERIAL, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: code, type: VARCHAR(50), constraints: { nullable: false, unique: true } }
+              - column: { name: display_name, type: VARCHAR(100), constraints: { nullable: false } }
+              - column: { name: version, type: BIGINT, defaultValueNumeric: 0, constraints: { nullable: false } }
+        - createIndex:
+            tableName: topics
+            indexName: idx_topics_code
+            columns:
+              - column: { name: code }
+
+  - changeSet:
+      id: v001-create-questions
+      author: javatraining
+      changes:
+        - createTable:
+            tableName: questions
+            columns:
+              - column: { name: id, type: BIGSERIAL, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: topic_id, type: BIGINT, constraints: { nullable: false, foreignKeyName: fk_question_topic, referencedTableName: topics, referencedColumnNames: id } }
+              - column: { name: question_text, type: TEXT, constraints: { nullable: false } }
+              - column: { name: correct_answer_index, type: INT, constraints: { nullable: false } }
+              - column: { name: version, type: BIGINT, defaultValueNumeric: 0, constraints: { nullable: false } }
+        - createIndex:
+            tableName: questions
+            indexName: idx_questions_topic_id
+            columns:
+              - column: { name: topic_id }
+
+  - changeSet:
+      id: v001-create-answers
+      author: javatraining
+      changes:
+        - createTable:
+            tableName: answers
+            columns:
+              - column: { name: id, type: BIGSERIAL, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: question_id, type: BIGINT, constraints: { nullable: false, foreignKeyName: fk_answer_question, referencedTableName: questions, referencedColumnNames: id } }
+              - column: { name: answer_text, type: TEXT, constraints: { nullable: false } }
+              - column: { name: answer_index, type: INT, constraints: { nullable: false } }
+              - column: { name: version, type: BIGINT, defaultValueNumeric: 0, constraints: { nullable: false } }
+
+  - changeSet:
+      id: v001-create-test-results
+      author: javatraining
+      changes:
+        - createTable:
+            tableName: test_results
+            columns:
+              - column: { name: id, type: BIGSERIAL, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: user_id, type: BIGINT, constraints: { nullable: false, foreignKeyName: fk_result_user, referencedTableName: users, referencedColumnNames: id } }
+              - column: { name: total_questions, type: INT, constraints: { nullable: false } }
+              - column: { name: correct_answers, type: INT, constraints: { nullable: false } }
+              - column: { name: passed, type: BOOLEAN, constraints: { nullable: false } }
+              - column: { name: finished_at, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: version, type: BIGINT, defaultValueNumeric: 0, constraints: { nullable: false } }
+        - createIndex:
+            tableName: test_results
+            indexName: idx_test_results_user_id
+            columns:
+              - column: { name: user_id }
+
+  - changeSet:
+      id: v001-create-test-results-topics
+      author: javatraining
+      changes:
+        - createTable:
+            tableName: test_results_topics
+            columns:
+              - column: { name: test_result_id, type: BIGINT, constraints: { nullable: false, foreignKeyName: fk_trt_result, referencedTableName: test_results, referencedColumnNames: id } }
+              - column: { name: topic_id, type: BIGINT, constraints: { nullable: false, foreignKeyName: fk_trt_topic, referencedTableName: topics, referencedColumnNames: id } }
+        - addPrimaryKey:
+            tableName: test_results_topics
+            columnNames: test_result_id, topic_id
+            constraintName: pk_test_results_topics
+
+  - changeSet:
+      id: v001-create-refresh-tokens
+      author: javatraining
+      changes:
+        - createTable:
+            tableName: refresh_tokens
+            columns:
+              - column: { name: id, type: BIGSERIAL, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: user_id, type: BIGINT, constraints: { nullable: false, foreignKeyName: fk_refresh_token_user, referencedTableName: users, referencedColumnNames: id } }
+              - column: { name: token, type: VARCHAR(255), constraints: { nullable: false, unique: true } }
+              - column: { name: expires_at, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: revoked, type: BOOLEAN, defaultValueBoolean: false, constraints: { nullable: false } }
+        - createIndex:
+            tableName: refresh_tokens
+            indexName: idx_refresh_tokens_user_id
+            columns:
+              - column: { name: user_id }
+

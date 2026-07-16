@@ -231,24 +231,26 @@
 
 ### Фаза 9: Project Cleanup
 
-#### 🔲 Сессия 25a — Project Cleanup (текущая)
-- [ ] Удаление `src/` (сервлеты, JSP, старые DTO, migration tools, CSS, JS, PNG)
-- [ ] `logs/`, `uploads/` — убрать из git (git rm --cached)
-- [ ] Перенос `questions/*.json` → `common/src/main/resources/questions/`
-- [ ] Удаление `docker/postgres/init.sql`
-- [ ] Исправление package в common тестах
-- [ ] Удаление пустых WebConfig.java, validation/
-- [ ] Переписать README.md под текущий стек
-- [ ] Проверка .gitignore
+#### ✅ Сессия 25a — Project Cleanup (2026-07-16)
+- [x] Удаление `src/` (сервлеты, JSP, старые DTO, migration tools, CSS, JS, PNG)
+- [x] `logs/`, `uploads/` — убрать из git (git rm --cached)
+- [x] Перенос `questions/*.json` → `common/src/main/resources/questions/`
+- [x] Удаление `docker/postgres/init.sql`
+- [x] Исправление package в common тестах
+- [x] Удаление пустых WebConfig.java, validation/
+- [x] Переписать README.md под текущий стек
+- [x] Проверка .gitignore
 
 ### Фаза 10: Liquibase
 
-#### 🔲 Сессия 26 — Liquibase миграции
-- [ ] Добавление `liquibase-core` и `liquibase-maven-plugin` в POM
-- [ ] Создание `db/changelog/db.changelog-master.yaml`
-- [ ] Миграция init.sql в Liquibase changesets
-- [ ] Удаление init.sql из docker-compose
-- [ ] Тестирование: mvn liquibase:update
+#### ✅ Сессия 26 — Liquibase миграции (2026-07-16)
+- [x] Добавление `liquibase-core` и `liquibase-maven-plugin` в POM
+- [x] Создание `db/changelog/db.changelog-master.yaml`
+- [x] Создание `v001-init-schema.yaml` (8 changeset'ов: 7 таблиц + join-таблица)
+- [x] Переключение `ddl-auto: update` → `validate`
+- [x] Удаление init.sql из docker-compose
+- [x] Переименование `javatraining/` → `docker/volumes/` (volumes data)
+- [x] Тестирование: Liquibase создаёт таблицы при старте ✅
 
 ### Фаза 11: Redis
 
